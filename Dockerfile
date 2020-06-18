@@ -12,6 +12,7 @@ RUN npm install
 
 COPY src /opt/rancher-scaler/src
 COPY config /opt/rancher-scaler/config
+COPY tsconfig.json /opt/rancher-scaler/tsconfig.json
 
 FROM node:12.16.1-alpine
 WORKDIR /opt/rancher-scaler
