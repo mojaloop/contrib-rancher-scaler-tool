@@ -1,20 +1,7 @@
-
-// TODO: better specify the config...
-// @ts-ignore
-import config from '../config/rancher-scaler.config.js'
 import makeRancherScaler from './RancherScaler'
 import makeRancherRequests from './RancherRequests'
 import axios from 'axios'
-
-
-// Entrypoint for rancher-scaler
-// TODO: refactor and modularize etc.
-
-type EnvConfig = {
-  cattleAccessKey: string;
-  cattleSecretKey: string;
-  scale: 'UP' | 'DOWN',
-}
+import EnvConfig from './types/EnvConfig';
 
 /**
  * @function getEnvConfig
@@ -25,6 +12,7 @@ function getEnvConfig(): EnvConfig {
     CATTLE_ACCESS_KEY,
     CATTLE_SECRET_KEY,
     SCALE,
+    PATH_TO_CONFIG
   } = process.env;
 
   if (!CATTLE_ACCESS_KEY || !CATTLE_SECRET_KEY ) {
@@ -39,10 +27,18 @@ function getEnvConfig(): EnvConfig {
     throw new Error('SCALE must be `UP` or `DOWN`')
   }
 
+  let pathToConfig
+  if (!PATH_TO_CONFIG) {
+    pathToConfig = '../config/rancher-scaler.config.js';
+  } else {
+    pathToConfig = PATH_TO_CONFIG
+  }
+
   return { 
     cattleAccessKey: CATTLE_ACCESS_KEY,
     cattleSecretKey: CATTLE_SECRET_KEY,
-    scale: SCALE
+    scale: SCALE,
+    pathToConfig,
   };
 }
 
@@ -51,10 +47,16 @@ function main() {
     cattleAccessKey,
     cattleSecretKey,
     scale,
+    pathToConfig,
   } = getEnvConfig()
 
+  const config = require(pathToConfig)
+
+  if (!config) {
+    throw new Error(`no config found at path: ${pathToConfig}`)
+  }
+
   //TODO: validate the config
-  //TODO: send a slack notification?
 
   const rancherRequests = makeRancherRequests(axios, cattleAccessKey, cattleSecretKey, config.rancherBaseUrl);
   const scaler = makeRancherScaler(rancherRequests, config);
