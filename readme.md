@@ -12,8 +12,11 @@ Work in progress repo for scheduling our kube clusters to save 💲💲💲
 ## Configuring the CronJobs
 
 ```bash
-# create the rancher access_key_secret
-kubectl create secret generic rancher-scaler-secrets --from-literal="cattle_secret_key=${CATTLE_SECRET_KEY}"
+source .env.local
+# create the rancher-scaler-secrets secret
+kubectl create secret generic rancher-scaler-secrets \
+  --from-literal="cattle_secret_key=${CATTLE_SECRET_KEY}"\
+  --from-literal="rancher_base_url=${RANCHER_BASE_URL}"
 
 # create the cronjob
 kubectl create -f ./rancher-scaler-cron-up.yaml
@@ -36,6 +39,7 @@ kubectl logs $pods
 touch .env.local
 # `.env.local` should take the format:
 #
+# export RANCHER_BASE_URL=
 # export CATTLE_ACCESS_KEY=
 # export CATTLE_SECRET_KEY=
 #
@@ -47,6 +51,9 @@ npm run scale:down
 # Scale up the node pools in ./config/rancher-scaler.config.js
 npm run scale:up
 
+#Scale up, then run boostrap
+npm run scale:up && npm run bootstrap
+
 ```
 
 ### `docker-compose` runner:
@@ -57,6 +64,7 @@ npm run scale:up
 touch .env.docker
 # `.env.docker` should take the format:
 #
+#RANCHER_BASE_URL=
 #CATTLE_ACCESS_KEY=
 #CATTLE_SECRET_KEY=
 #
@@ -74,8 +82,10 @@ docker-compose up
 
 ```bash
 source .env.local
-# create the rancher access_key_secret
-kubectl create secret generic rancher-scaler-secrets --from-literal="cattle_secret_key=${CATTLE_SECRET_KEY}"
+# create the rancher-scaler-secrets secret
+kubectl create secret generic rancher-scaler-secrets \
+  --from-literal="cattle_secret_key=${CATTLE_SECRET_KEY}"\
+  --from-literal="rancher_base_url=${RANCHER_BASE_URL}"
 
 # create the one time job
 kubectl create -f ./rancher-scaler-job-down.yaml
@@ -111,14 +121,14 @@ curl -u "${CATTLE_ACCESS_KEY}:${CATTLE_SECRET_KEY}" \
 -X GET \
 -H 'Accept: application/json' \
 -H 'Content-Type: application/json' \
-'https://k8s-tanuki-rancher.mojaloop.live/v3/nodePools/c-vsm2w:np-mg5wr' 
+"${RANCHER_BASE_URL}/nodePools/c-vsm2w:np-mg5wr" 
 
 # change the number of nodes
 curl -u "${CATTLE_ACCESS_KEY}:${CATTLE_SECRET_KEY}" \
 -X PUT \
 -H 'Accept: application/json' \
 -H 'Content-Type: application/json' \
-'https://k8s-tanuki-rancher.mojaloop.live/v3/nodePools/c-vsm2w:np-mg5wr' \
+"${RANCHER_BASE_URL}/nodePools/c-vsm2w:np-mg5wr" \
 -d '{"quantity": 2, "nodeTemplateId": "cattle-global-nt:nt-user-s7l26-nt-2s4x5"}'
 ```
 
@@ -131,8 +141,6 @@ in `./config/rancher-scaler.config.js`, we have the following:
 `rancher-scaler.config.js`
 ```js
 const config = {
-  // The base for the Rancher Managmenet Cluster
-  rancherBaseUrl: 'https://k8s-tanuki-rancher.mojaloop.live/v3',
   //A list of node pools that should be scaled up and down
   nodes: [
     {
@@ -149,6 +157,33 @@ const config = {
 }
 
 module.exports = config
+```
+
+## Testing out formatting nvme:
+
+```bash
+# run a pod
+kubectl create -f ./rancher-scaler-job-tmp.yaml
+
+kubectl get po
+kubectl exec -it rancher-scaler-tmp-s55ct sh
+
+
+# download keys from rancher
+# nodes > master > ... > download keys
+
+# log into master node? or can we exec into a container?
+ssh -i ~/Downloads/master1/key.pem  ubuntu@35.179.97.99
+
+
+#Download key files
+#inputs: access key, secret key, nodes? baseurl
+curl -u "${CATTLE_ACCESS_KEY}:${CATTLE_SECRET_KEY}" --location --request GET "${BASE_URL}/v3/nodes/c-kbc2d:m-26tkk/nodeconfig" -o /tmp/keys
+
+
+
+
+
 ```
 
 ## Questions/TODO

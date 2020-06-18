@@ -1,3 +1,5 @@
+import BootstapActionType from './BootstrapActionType'
+
 type NodeType = {
   // The nodePoolId that should be scaled
   nodePoolId: string;
@@ -10,6 +12,11 @@ type NodeType = {
 
   // The number of nodes to scale UP to
   maxQuantity: number
+
+  // Things to run on the nodes once they are ready
+  bootstrapActions?: Array<BootstapActionType>
 }
+
+
 
 export default NodeType

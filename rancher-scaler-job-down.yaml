@@ -11,6 +11,11 @@ spec:
           env:
             - name: SCALE
               value: DOWN
+            - name: RANCHER_BASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: rancher-scaler-secrets
+                  key: rancher_base_url
             - name: CATTLE_ACCESS_KEY
               value: token-czddw
             - name: CATTLE_SECRET_KEY
