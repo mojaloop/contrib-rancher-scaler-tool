@@ -22,13 +22,12 @@ kubectl logs $pods
 1. create a new access token in Rancher with global scope (it needs to talk to the root rancher cluster)
 ```
 ENDPOINT=https://k8s-tanuki-rancher.mojaloop.live/v3
-CATTLE_ACCESS_KEY=token-czddw
-CATTLE_SECRET_KEY=9ndcw8zjcfgg8pzdd689b84gzxft8zk75zlmbl9wt2fxsgr62lpg9c
-#BEARER_TOKEN=token-czddw:9ndcw8zjcfgg8pzdd689b84gzxft8zk75zlmbl9wt2fxsgr62lpg9c
 ```
 
 
 ```bash
+source .env
+
 # get the nodePool
 curl -u "${CATTLE_ACCESS_KEY}:${CATTLE_SECRET_KEY}" \
 -X GET \
@@ -54,7 +53,7 @@ Arguments:
 - quantity
 - nodeTemplateId
 
-rancher-scaler.config.yaml
+rancher-scaler.config.js
 ```js
 {
   cattleAccessKey: 'XXXX',
@@ -68,6 +67,24 @@ rancher-scaler.config.yaml
     }
   ]
 }
+```
+
+## Rancher Scaler tool:
+
+```bash
+# .env should take the format:
+#
+# export CATTLE_ACCESS_KEY=
+# export CATTLE_SECRET_KEY=
+#
+source .env
+
+# Scale down the node pools in ./config/rancher-scaler.config.js
+npm run scale:down
+
+# Scale up the node pools in ./config/rancher-scaler.config.js
+npm run scale:up
+
 ```
 
 
