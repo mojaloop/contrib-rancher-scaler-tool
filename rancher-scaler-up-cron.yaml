@@ -1,0 +1,22 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: rancher-scaler-up-cron
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: rancher-scaler-up-cron
+              image: mojaloop/rancher-scaler:latest
+              env:
+                - name: SCALE
+                  value: UP
+                - name: CATTLE_ACCESS_KEY
+                  value: token-czddw
+                - name: CATTLE_SECRET_KEY
+                  value: XXXXXX
+            
+          restartPolicy: OnFailure

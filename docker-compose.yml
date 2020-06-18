@@ -7,11 +7,9 @@ services:
     container_name: rancher-scaler
     volumes:
        - ./config/:/opt/rancher-scaler/config/
-      #  TMP testing only
-       - ./src/:/opt/rancher-scaler/src/
     environment:
+      # Can be UP or DOWN
       - SCALE=DOWN
       - PATH_TO_CONFIG=/opt/rancher-scaler/config/rancher-scaler.config.js
     env_file:
       - .env.docker
-    # command: 'sh -c "tail -f /dev/null"'

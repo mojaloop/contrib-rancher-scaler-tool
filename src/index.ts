@@ -8,6 +8,7 @@ import EnvConfig from './types/EnvConfig';
  * @description Gets the necessary env config, throws if not found or invalid.
  */
 function getEnvConfig(): EnvConfig {
+  console.log("process.env", process.env)
   const {
     CATTLE_ACCESS_KEY,
     CATTLE_SECRET_KEY,
@@ -66,6 +67,8 @@ function main() {
     case 'UP': return scaler.scaleUp()
     case 'DOWN': return scaler.scaleDown()
   }
+
+  //TODO: add some logic to wait for nodes and bootstrap them if required
 }
 
 main()

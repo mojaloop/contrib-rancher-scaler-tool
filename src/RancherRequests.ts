@@ -1,4 +1,4 @@
-import { AxiosStatic } from 'axios';
+import { AxiosStatic, AxiosRequestConfig } from 'axios';
 
 /**
  * @class RancherRequests
@@ -42,7 +42,32 @@ export class RancherRequests {
       -d '{"quantity": 2, "nodeTemplateId": "cattle-global-nt:nt-user-s7l26-nt-2s4x5"}'
     */
 
-    console.log("todo: update node pool", nodePoolId, config)
+    const requestConfig: AxiosRequestConfig = {
+      method: 'put',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      auth: {
+        username: this.cattleAccessKey,
+        password: this.cattleSecretKey,
+      },
+      baseURL: this.rancherBaseUrl,
+      url: `/nodePools/${nodePoolId}`,
+      data: {
+        ...config
+      }
+    }
+    console.log("requestConfig is", requestConfig)
+
+    try {
+      const response = await this.requests(requestConfig)
+      
+      return response.data;
+    } catch (err) {
+      console.log("RancherRequests.putNodePoolQuantity() Error", err)
+      throw err;
+    }
   }
 }
 
