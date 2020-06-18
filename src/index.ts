@@ -1,5 +1,5 @@
-import fs from 'fs'
-import unzipper from 'unzipper'
+import * as fs from 'fs'
+import * as unzipper from 'unzipper'
 import axios from 'axios'
 import { execSync } from 'child_process'
 
@@ -55,10 +55,6 @@ async function main() {
         case 'UP': return scaler.scaleUp()
         case 'DOWN': return scaler.scaleDown()
       }
-
-      //TODO: if config.nodes[].bootstrapScript exists:
-      // 1. wait for nodes to be up and running
-      // 2. run the `bootstrapScript`
     }
     default: {
       throw new Error(`Unhandled method: ${method}`);

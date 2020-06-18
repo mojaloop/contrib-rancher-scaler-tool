@@ -166,6 +166,8 @@ module.exports = config
 kubectl create -f ./rancher-scaler-job-tmp.yaml
 
 kubectl get po
+
+kubectl logs rancher-scaler-tmp-hhtdt
 kubectl exec -it rancher-scaler-tmp-s55ct sh
 
 
@@ -180,6 +182,7 @@ ssh -i ~/Downloads/master1/key.pem  ubuntu@35.179.97.99
 #inputs: access key, secret key, nodes? baseurl
 curl -u "${CATTLE_ACCESS_KEY}:${CATTLE_SECRET_KEY}" --location --request GET "${BASE_URL}/v3/nodes/c-kbc2d:m-26tkk/nodeconfig" -o /tmp/keys
 
+kubectl delete -f ./rancher-scaler-job-tmp.yaml
 
 
 

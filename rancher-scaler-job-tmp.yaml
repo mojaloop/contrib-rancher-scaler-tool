@@ -8,10 +8,10 @@ spec:
       containers:
         - name: rancher-scaler-tmp
           image: mojaloop/rancher-scaler:latest
-          command: ["sh", "-c", "tail -f /dev/null"]
+          # command: ["sh", "-c", "tail -f /dev/null"]
           env:
-            - name: SCALE
-              value: DOWN
+            - name: METHOD
+              value: BOOTSTRAP
             - name: RANCHER_BASE_URL
               valueFrom:
                 secretKeyRef:
