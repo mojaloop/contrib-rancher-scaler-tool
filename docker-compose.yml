@@ -7,7 +7,9 @@ services:
     container_name: rancher-scaler
     volumes:
        - ./config/rancher-scaler.config.js:/opt/rancher-scaler/config/rancher-scaler.config.js
+      #  TMP testing only
+       - ./src/:/opt/rancher-scaler/src/
     environment:
-      - SCALE=down
+      - SCALE=DOWN
     env_file:
       - .env.docker

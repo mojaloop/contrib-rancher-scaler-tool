@@ -1,6 +1,6 @@
-import NodeType from 'types/NodeType';
-import RancherScalerConfigType from 'types/RancherScalerConfigType';
-import { RancherRequests } from 'RancherRequests';
+import NodeType from './types/NodeType';
+import RancherScalerConfigType from './types/RancherScalerConfigType';
+import { RancherRequests } from './RancherRequests';
 
 export class RancherScaler {
   rancherRequests: RancherRequests;
