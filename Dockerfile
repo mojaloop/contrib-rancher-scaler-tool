@@ -1,6 +1,8 @@
 FROM node:12.16.1-alpine as builder
 WORKDIR /opt/rancher-scaler
 
+RUN apk add --no-cache openssh
+
 # RUN apk add --no-cache -t build-dependencies git make gcc g++ python libtool autoconf automake \
 #   && cd $(npm root -g)/npm \
 #   && npm config set unsafe-perm true \
