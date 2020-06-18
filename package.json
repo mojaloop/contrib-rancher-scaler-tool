@@ -20,12 +20,8 @@
   "author": "Lewis Daly",
   "license": "Apache-2.0",
   "dependencies": {
-<<<<<<< HEAD
-    "axios": "^0.19.2"
-=======
     "axios": "^0.19.2",
     "unzipper": "^0.10.11"
->>>>>>> 868a1fd9f8aeb121bbd4b013270a299a306b65e9
   },
   "devDependencies": {
     "@types/jest": "25.2.2",
