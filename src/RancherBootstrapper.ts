@@ -100,6 +100,7 @@ export class RancherBootstrapper {
    * @description Run the 
    */
   public async _runBootstrapForNode(node: RancherNode) {
+    console.log('_runBootstrapForNode', node)
     //TODO:
     // Download some file
     // copy file to node

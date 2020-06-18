@@ -120,6 +120,18 @@ export class RancherRequests {
       throw err;
     }
   }
+
+  /**
+   * @function downloadConfigForNodes
+   * @description Download the nodeconfig for a set of nodes
+   * @param nodePoolId 
+   * @param configPath 
+   */
+  public async downloadConfigForNodes(nodePoolId: string, configPath: string): Promise<any> {
+    // curl -u "${CATTLE_ACCESS_KEY}:${CATTLE_SECRET_KEY}" --location --request GET "${BASE_URL}/v3/nodes/c-kbc2d:m-26tkk/nodeconfig" -o /tmp/keys
+    
+  }
+  
 }
 
 /* Dependency Injection */
