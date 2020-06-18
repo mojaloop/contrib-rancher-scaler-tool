@@ -112,8 +112,7 @@ export class RancherRequests {
 
     try {
       const response = await this.requests.get<GetNodesForNodePoolResponse>(url, this.baseRequestConfig)
-
-      console.log('getNodesForNodePool, response.data', response.data.data)
+      // console.log('getNodesForNodePool, response.data', response.data.data)
 
       return response.data;
     } catch (err) {

@@ -159,6 +159,19 @@ const config = {
 module.exports = config
 ```
 
+## Testing out formatting nvme:
+
+```bash
+# download keys from rancher
+
+
+# log into master node
+
+
+
+
+```
+
 ## Questions/TODO
 
 1. How can we make sure that the job will _always_ be scheduled? Maybe we need an affinity so it ends up on the masters?

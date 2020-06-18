@@ -1,6 +1,6 @@
 
 // I'm just adding the typing for what we know we will need
-export type Node = {
+export type RancherNode = {
   baseType: 'node';
   clusterId: string;
   created: string;
@@ -12,5 +12,5 @@ export type Node = {
 }
 
 export type GetNodesForNodePoolResponse = {
-  data: Array<Node>
+  data: Array<RancherNode>
 }

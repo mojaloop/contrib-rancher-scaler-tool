@@ -36,7 +36,6 @@ async function main() {
     case 'BOOTSTRAP': {
       //TODO: implement
       const bootstrapper = makeRancherBootstrapper(rancherRequests, config, wrapWithRetries);
-
       await bootstrapper.runBootstrapper()
 
       return;
@@ -59,8 +58,6 @@ async function main() {
       throw new Error(`Unhandled method: ${method}`);
     }
   }
-
-  return;
 }
 
 main()

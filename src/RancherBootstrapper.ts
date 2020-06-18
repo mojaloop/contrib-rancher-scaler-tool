@@ -1,3 +1,4 @@
+import { RancherNode } from './types/RancherRequestsTypes';
 import { RancherRequests } from './RancherRequests';
 import RancherScalerConfigType from './types/RancherScalerConfigType';
 import NodeType from './types/NodeType';
@@ -45,9 +46,10 @@ export class RancherBootstrapper {
   public async _runBootstrapperForNodePool(nodePoolId: string, bootstrapActions: any) {
     console.log("running bootstrapper for node pool", nodePoolId, bootstrapActions)
 
-    //TODO: wait for nodePoolId
-    await this.wrapWithRetries(() => this._isNodePoolReady(nodePoolId), 10, 1000 * 20)
+    //wait for nodePoolId's nodes to be ready
+    await this.wrapWithRetries(() => this._isNodePoolReady(nodePoolId), 15, 1000 * 30)
 
+    await this._runBootstrapForNodePool(nodePoolId)
   }
 
   /**
@@ -60,7 +62,7 @@ export class RancherBootstrapper {
     console.log("RancherBootstrapper._isNodePoolReady", nodePoolId)
 
     const result = await this.rancherRequests.getNodesForNodePool(nodePoolId);
-    const nodeTransitioningCount = result.data.map(node => node.transitioning === 'yes').length
+    const nodeTransitioningCount = result.data.filter(node => node.transitioning === 'yes').length
 
     if (nodeTransitioningCount > 0) {
       throw new Error(`Found ${nodeTransitioningCount} nodes still transitioning.`)
@@ -75,6 +77,33 @@ export class RancherBootstrapper {
    */
   public async _runBootstrapForNodePool(nodePoolId: string) {
     console.log("RancherBootstrapper._runBootstrapForNodePool", nodePoolId)
+    //TODO: be able to configure this dynamically
+    const { data: nodes } = await this.rancherRequests.getNodesForNodePool(nodePoolId);
+
+    const runnerErrors: any = []
+
+    Promise.all(
+      nodes
+        .map(async node => this._runBootstrapForNode(node)
+          .catch(error => runnerErrors.push(error))
+        )
+    )
+
+    if (runnerErrors.length > 0) {
+      throw new Error(`_runBootstrapForNodePool failed with errors: \n${runnerErrors.join('\n')}`)
+    }
+
+  }
+
+  /**
+   * @function _runBootstrapForNode
+   * @description Run the 
+   */
+  public async _runBootstrapForNode(node: RancherNode) {
+    //TODO:
+    // Download some file
+    // copy file to node
+    // login and run file on node
   }
 }
 
