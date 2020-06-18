@@ -5,8 +5,9 @@
   "main": "index.ts",
   "scripts": {
     "start": "ts-node ./src/index.ts",
-    "scale:up": "SCALE=UP ts-node ./src/index.ts",
-    "scale:down": "SCALE=DOWN ts-node ./src/index.ts",
+    "scale:up": "METHOD=SCALE SCALE=UP ts-node ./src/index.ts",
+    "scale:down": "METHOD=SCALE SCALE=DOWN ts-node ./src/index.ts",
+    "verify": "METHOD=VERIFY ts-node ./src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint ./src/**/*.ts *.js",
     "build": "tsc",

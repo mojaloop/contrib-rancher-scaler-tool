@@ -17,15 +17,35 @@ export class RancherRequests {
     this.rancherBaseUrl = rancherBaseUrl;
   }
 
-
   /**
    * @function getNodePool
    * @description gets the node pool
    * @param nodePoolId 
    */
   public async getNodePool(nodePoolId: string) {
-    console.log("todo: get node pool", nodePoolId)
+    const requestConfig: AxiosRequestConfig = {
+      method: 'get',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      auth: {
+        username: this.cattleAccessKey,
+        password: this.cattleSecretKey,
+      },
+      baseURL: this.rancherBaseUrl,
+      url: `/nodePools/${nodePoolId}`
+    }
+    // console.log("requestConfig is", requestConfig)
 
+    try {
+      const response = await this.requests(requestConfig)
+
+      return response.data;
+    } catch (err) {
+      console.log("RancherRequests.getNodePool() Error", err)
+      throw err;
+    }
   }
   /**
    * @function getNodePool
@@ -58,7 +78,7 @@ export class RancherRequests {
         ...config
       }
     }
-    console.log("requestConfig is", requestConfig)
+    // console.log("requestConfig is", requestConfig)
 
     try {
       const response = await this.requests(requestConfig)

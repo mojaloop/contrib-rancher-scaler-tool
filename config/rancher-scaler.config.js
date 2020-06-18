@@ -1,5 +1,4 @@
 const config = {
-  rancherBaseUrl: 'https://k8s-tanuki-rancher.mojaloop.live/v3',
   nodes: [
     {
       nodePoolId: 'c-vsm2w:np-mg5wr',
