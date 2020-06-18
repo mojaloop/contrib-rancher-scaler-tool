@@ -10,11 +10,14 @@ spec:
           image: mojaloop/rancher-scaler:latest
           env:
             - name: SCALE
-              value: UP
+              value: DOWN
             - name: CATTLE_ACCESS_KEY
               value: token-czddw
             - name: CATTLE_SECRET_KEY
-              value: XXXXXX
+              valueFrom:
+                secretKeyRef:
+                  name: rancher-scaler-secrets
+                  key: cattle_secret_key
       restartPolicy: Never
 
 

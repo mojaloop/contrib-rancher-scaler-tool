@@ -8,7 +8,6 @@ import EnvConfig from './types/EnvConfig';
  * @description Gets the necessary env config, throws if not found or invalid.
  */
 function getEnvConfig(): EnvConfig {
-  console.log("process.env", process.env)
   const {
     CATTLE_ACCESS_KEY,
     CATTLE_SECRET_KEY,
@@ -68,7 +67,9 @@ function main() {
     case 'DOWN': return scaler.scaleDown()
   }
 
-  //TODO: add some logic to wait for nodes and bootstrap them if required
+  //TODO: if config.nodes[].bootstrapScript exists:
+  // 1. wait for nodes to be up and running
+  // 2. run the `bootstrapScript`
 }
 
 main()

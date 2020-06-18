@@ -1,12 +1,12 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: rancher-scaler-job-up
+  name: rancher-scaler-job-down
 spec:
   template:
     spec:
       containers:
-        - name: rancher-scaler-job-up
+        - name: rancher-scaler-job-down
           image: mojaloop/rancher-scaler:latest
           env:
             - name: SCALE
@@ -14,7 +14,10 @@ spec:
             - name: CATTLE_ACCESS_KEY
               value: token-czddw
             - name: CATTLE_SECRET_KEY
-              value: XXXXXX
+              valueFrom:
+                secretKeyRef:
+                  name: rancher-scaler-secrets
+                  key: cattle_secret_key
       restartPolicy: Never
 
 
