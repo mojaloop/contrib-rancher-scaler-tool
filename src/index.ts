@@ -1,8 +1,10 @@
+import axios from 'axios'
 import makeRancherScaler from './RancherScaler'
 import makeRancherRequests from './RancherRequests'
-import axios from 'axios'
-import RancherScalerConfigType from 'types/RancherScalerConfigType';
+import RancherScalerConfigType from './types/RancherScalerConfigType';
 import getEnvConfig from './config';
+import makeRancherBootstrapper from './RancherBootstrapper';
+import wrapWithRetries from './lib/WrapWithRetries';
 
 async function main() {
   const {
@@ -28,13 +30,16 @@ async function main() {
       // Verify that the config works by calling `getNodePool`
       const result = await rancherRequests.getNodePool(config.nodes[0].nodePoolId)
       console.log('getNodePool reply', result)
-      break;
+      return;
     }
-    // TODO: maybe we don't need/want this
-    case 'RUN_SCRIPT': {
+    // TODO: change to BOOTSTRAP
+    case 'BOOTSTRAP': {
       //TODO: implement
-      console.log('Running script or something')
-      break
+      const bootstrapper = makeRancherBootstrapper(rancherRequests, config, wrapWithRetries);
+
+      await bootstrapper.runBootstrapper()
+
+      return;
     }
     case 'SCALE': {
       const scaler = makeRancherScaler(rancherRequests, config);

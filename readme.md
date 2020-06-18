@@ -51,6 +51,9 @@ npm run scale:down
 # Scale up the node pools in ./config/rancher-scaler.config.js
 npm run scale:up
 
+#Scale up, then run boostrap
+npm run scale:up && npm run bootstrap
+
 ```
 
 ### `docker-compose` runner:

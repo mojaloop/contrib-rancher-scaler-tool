@@ -14,13 +14,13 @@ function getEnvConfig(): EnvConfig {
   } = process.env;
   let { SCALE } = process.env;
 
-  let method: 'SCALE' | 'VERIFY' | 'RUN_SCRIPT';
+  let method: 'SCALE' | 'VERIFY' | 'BOOTSTRAP';
   switch (METHOD) {
     case 'VERIFY':
       method = 'VERIFY'
       break;
-    case 'RUN_SCRIPT':
-      method = 'RUN_SCRIPT';
+    case 'BOOTSTRAP':
+      method = 'BOOTSTRAP';
       break;
     default:
       // default for backwards compatibility

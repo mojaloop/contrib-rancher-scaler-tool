@@ -8,7 +8,9 @@ services:
     volumes:
        - ./config/:/opt/rancher-scaler/config/
     environment:
-      # Can be UP or DOWN
+      # Can be VERIFY, SCALE
+      - METHOD=VERIFY
+      # Can be UP or DOWN: required when METHOD=scale
       - SCALE=DOWN
       - PATH_TO_CONFIG=/opt/rancher-scaler/config/rancher-scaler.config.js
     env_file:
