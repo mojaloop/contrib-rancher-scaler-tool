@@ -7,6 +7,7 @@ import { GetNodesForNodePoolResponse } from './types/RancherRequestsTypes';
  * @description RancherRequests is responsible for executing API calls to the rancher api
  */
 export class RancherRequests {
+  fs: any;
   requests: AxiosStatic;
   cattleAccessKey: string;
   cattleSecretKey: string;
@@ -23,7 +24,8 @@ export class RancherRequests {
     baseURL: string,
   }
 
-  constructor(requests: AxiosStatic, cattleAccessKey: string, cattleSecretKey: string, rancherBaseUrl: string) {
+  constructor(fs: any, requests: AxiosStatic, cattleAccessKey: string, cattleSecretKey: string, rancherBaseUrl: string) {
+    this.fs = fs;
     this.requests = requests;
     this.cattleAccessKey = cattleAccessKey;
     this.cattleSecretKey = cattleSecretKey;
@@ -90,7 +92,6 @@ export class RancherRequests {
         ...config
       }
     }
-    // console.log("requestConfig is", requestConfig)
 
     try {
       const response = await this.requests(requestConfig)
@@ -127,16 +128,32 @@ export class RancherRequests {
    * @param nodePoolId 
    * @param configPath 
    */
-  public async downloadConfigForNodes(nodePoolId: string, configPath: string): Promise<any> {
+  public async downloadConfigForNode(nodeId: string, configPath: string): Promise<any> {
     // curl -u "${CATTLE_ACCESS_KEY}:${CATTLE_SECRET_KEY}" --location --request GET "${BASE_URL}/v3/nodes/c-kbc2d:m-26tkk/nodeconfig" -o /tmp/keys
-    
+    const requestConfig: AxiosRequestConfig = {
+      ...this.baseRequestConfig,
+      responseType: 'stream',
+      method: 'get',
+      url: `/nodes/${nodeId}/nodeconfig`,
+    }
+
+    try {
+      const response = await this.requests(requestConfig)
+      return new Promise((resolve, reject) => {
+        response.data.pipe(this.fs.createWriteStream(configPath))
+          .on('error', reject)
+          .on('finish', () => resolve(configPath))
+      })
+    } catch (err) {
+      console.log("RancherRequests.getNodesForNodePool() Error", err.message)
+      throw err;
+    }
   }
-  
 }
 
 /* Dependency Injection */
-const makeRancherRequests = (requests: AxiosStatic, cattleAccessKey: string, cattleSecretKey: string, rancherBaseUrl: string) => {
-  const rancherRequests = new RancherRequests(requests, cattleAccessKey, cattleSecretKey, rancherBaseUrl);
+const makeRancherRequests = (fs: any, requests: AxiosStatic, cattleAccessKey: string, cattleSecretKey: string, rancherBaseUrl: string) => {
+  const rancherRequests = new RancherRequests(fs, requests, cattleAccessKey, cattleSecretKey, rancherBaseUrl);
 
   return rancherRequests;
 }

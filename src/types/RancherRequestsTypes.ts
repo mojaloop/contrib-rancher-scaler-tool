@@ -1,6 +1,7 @@
 
 // I'm just adding the typing for what we know we will need
 export type RancherNode = {
+  id: string;
   baseType: 'node';
   clusterId: string;
   created: string;
@@ -9,6 +10,11 @@ export type RancherNode = {
   state: string;
   transitioning: 'yes' | 'no'
   transitioningMessage: string,
+  sshUser: string, 
+  externalIpAddress: string,
+  hostname: string,
+  nodeName: string,
+
 }
 
 export type GetNodesForNodePoolResponse = {

@@ -12,7 +12,11 @@ const config = {
       minQuantity: 1,
       maxQuantity: 2,
       bootstrapActions: [
-        { actionId: 'SCP_COOL_SCRIPT' }
+        // note: only 1 action is currently supported
+        { 
+          actionId: 'RUN_STARTUP_SCRIPT',
+          script: 'echo "HELLO WORLD"'
+        }
       ]
     }
   ]

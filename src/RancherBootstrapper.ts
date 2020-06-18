@@ -1,7 +1,13 @@
+import fs from 'fs'
+import os from 'os'
+import path from 'path'
+
 import { RancherNode } from './types/RancherRequestsTypes';
 import { RancherRequests } from './RancherRequests';
 import RancherScalerConfigType from './types/RancherScalerConfigType';
 import NodeType from './types/NodeType';
+import { Exec } from 'Exec';
+import BootstapActionType from 'types/BootstrapActionType';
 
 /**
  * @class RancherBootstrapper
@@ -11,11 +17,18 @@ export class RancherBootstrapper {
   rancherRequests: RancherRequests;
   nodes: Array<NodeType>;
   wrapWithRetries: (func: any, retries: number, waitTimeMs: number) => Promise<any>
+  exec: Exec;
 
-  constructor(rancherRequests: RancherRequests, config: RancherScalerConfigType, wrapWithRetries: (func: any, retries: number, waitTimeMs: number) => Promise<any>) {
+  constructor(
+    rancherRequests: RancherRequests, 
+    config: RancherScalerConfigType, 
+    wrapWithRetries: (func: any, retries: number, waitTimeMs: number) => Promise<any>,
+    exec: Exec
+  ) {
     this.rancherRequests = rancherRequests;
     this.nodes = config.nodes
     this.wrapWithRetries = wrapWithRetries;
+    this.exec = exec
   }
 
   /**
@@ -29,7 +42,7 @@ export class RancherBootstrapper {
 
     Promise.all(
       bootstrapNodes
-        .map(async n => this._runBootstrapperForNodePool(n.nodePoolId, n.bootstrapActions)
+        .map(async n => this._runBootstrapperForNodePool(n.nodePoolId, n.bootstrapActions!)
         .catch(error => bootstrapperErrors.push(error))
       )
     )
@@ -43,13 +56,13 @@ export class RancherBootstrapper {
    * @function _runBootstrapperForNodePool
    * @description Run the bootstrapper for a given node pool
    */
-  public async _runBootstrapperForNodePool(nodePoolId: string, bootstrapActions: any) {
+  public async _runBootstrapperForNodePool(nodePoolId: string, bootstrapActions: Array<BootstapActionType>) {
     console.log("running bootstrapper for node pool", nodePoolId, bootstrapActions)
 
     //wait for nodePoolId's nodes to be ready
     await this.wrapWithRetries(() => this._isNodePoolReady(nodePoolId), 15, 1000 * 30)
 
-    await this._runBootstrapForNodePool(nodePoolId)
+    await this._runBootstrapForNodePool(nodePoolId, bootstrapActions)
   }
 
   /**
@@ -75,7 +88,7 @@ export class RancherBootstrapper {
    * @function _runBootstrapForNodePool
    * @description For each node in the node pool, run the bootstrap command
    */
-  public async _runBootstrapForNodePool(nodePoolId: string) {
+  public async _runBootstrapForNodePool(nodePoolId: string, bootstrapActions: Array<BootstapActionType>) {
     console.log("RancherBootstrapper._runBootstrapForNodePool", nodePoolId)
     //TODO: be able to configure this dynamically
     const { data: nodes } = await this.rancherRequests.getNodesForNodePool(nodePoolId);
@@ -84,7 +97,7 @@ export class RancherBootstrapper {
 
     Promise.all(
       nodes
-        .map(async node => this._runBootstrapForNode(node)
+        .map(async node => this._runBootstrapForNode(node, bootstrapActions)
           .catch(error => runnerErrors.push(error))
         )
     )
@@ -92,18 +105,37 @@ export class RancherBootstrapper {
     if (runnerErrors.length > 0) {
       throw new Error(`_runBootstrapForNodePool failed with errors: \n${runnerErrors.join('\n')}`)
     }
-
   }
 
   /**
    * @function _runBootstrapForNode
    * @description Run the 
    */
-  public async _runBootstrapForNode(node: RancherNode) {
-    console.log('_runBootstrapForNode', node)
-    //TODO:
-    // Download some file
-    // copy file to node
+  public async _runBootstrapForNode(node: RancherNode, actions: Array<BootstapActionType>) {
+    if (actions.length > 1) {
+      console.warn("only 1 bootstrapAction is supported")
+    }
+    // TODO: make a tmp folder
+    // TODO: refactor into Exec.makeTempDir
+    // const basePath = fs.mkdtempSync(path.join(os.tmpdir(), 'rb-'))
+    const basePath = fs.mkdtempSync(path.join('/tmp/', 'rb-'))
+    console.log("basePath", basePath)
+
+    //Download the keys
+    const keyZipPath = `${basePath}/keys.zip`
+    await this.rancherRequests.downloadConfigForNode(node.id, keyZipPath)
+
+    // //unzip the keys
+    const keyDirPath = `${basePath}/keys`
+    await this.exec.unzip(keyZipPath, keyDirPath)
+
+    // // //ssh into instance and run command
+    const keyPath = `${basePath}/keys/key.pem`
+    // // For now this just takes the first thing in our actions
+    await this.exec.runInSsh(keyPath, node.sshUser, node.nodeName, actions[0].script)
+
+    // scp using the key
+
     // login and run file on node
   }
 }
@@ -112,9 +144,10 @@ export class RancherBootstrapper {
 const makeRancherBootstrapper = (
   rancherRequests: RancherRequests, 
   config: RancherScalerConfigType, 
-  wrapWithRetries: (func: any, retries: number, waitTimeMs: number) => Promise<any>
+  wrapWithRetries: (func: any, retries: number, waitTimeMs: number) => Promise<any>,
+  exec: Exec,
 ): RancherBootstrapper => {
-  const rancherBootstrapper = new RancherBootstrapper(rancherRequests, config, wrapWithRetries)
+  const rancherBootstrapper = new RancherBootstrapper(rancherRequests, config, wrapWithRetries, exec)
 
   return rancherBootstrapper;
 }

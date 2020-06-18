@@ -1,10 +1,15 @@
+import fs from 'fs'
+import unzipper from 'unzipper'
 import axios from 'axios'
+import { execSync } from 'child_process'
+
 import makeRancherScaler from './RancherScaler'
 import makeRancherRequests from './RancherRequests'
 import RancherScalerConfigType from './types/RancherScalerConfigType';
 import getEnvConfig from './config';
 import makeRancherBootstrapper from './RancherBootstrapper';
 import wrapWithRetries from './lib/WrapWithRetries';
+import makeExec from './Exec';
 
 async function main() {
   const {
@@ -23,7 +28,7 @@ async function main() {
   }
 
   //TODO: validate the config
-  const rancherRequests = makeRancherRequests(axios, cattleAccessKey, cattleSecretKey, rancherBaseUrl);
+  const rancherRequests = makeRancherRequests(fs, axios, cattleAccessKey, cattleSecretKey, rancherBaseUrl);
   console.log(`Running method: ${method}`)
   switch (method) {
     case 'VERIFY': {
@@ -35,7 +40,8 @@ async function main() {
     // TODO: change to BOOTSTRAP
     case 'BOOTSTRAP': {
       //TODO: implement
-      const bootstrapper = makeRancherBootstrapper(rancherRequests, config, wrapWithRetries);
+      const exec = makeExec(fs, unzipper, execSync)
+      const bootstrapper = makeRancherBootstrapper(rancherRequests, config, wrapWithRetries, exec);
       await bootstrapper.runBootstrapper()
 
       return;
