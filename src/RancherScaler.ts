@@ -14,7 +14,7 @@ export class RancherScaler {
   /**
    * @function scaleUp
    * @description Scale up the cluster by iterating through each of the nodes, 
-   *   and applying the maxQuantity
+  *   and applying the maxQuantity
    */
   public async scaleUp() {
     const errors: any = []

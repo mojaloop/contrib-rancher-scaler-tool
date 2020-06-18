@@ -1,0 +1,13 @@
+version: "3.7"
+
+services:
+  rancher-scale:
+    build:
+      context: .
+    container_name: rancher-scaler
+    volumes:
+       - ./config/rancher-scaler.config.js:/opt/rancher-scaler/config/rancher-scaler.config.js
+    environment:
+      - SCALE=down
+    env_file:
+      - .env.docker

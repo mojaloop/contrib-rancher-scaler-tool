@@ -4,7 +4,8 @@
   "description": "A simple cli tool to scale rancher clusters",
   "main": "index.ts",
   "scripts": {
-    "scale:up": "SCALE=DOWN ts-node ./src/index.ts",
+    "start": "ts-node ./src/index.ts",
+    "scale:up": "SCALE=UP ts-node ./src/index.ts",
     "scale:down": "SCALE=DOWN ts-node ./src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint ./src/**/*.ts *.js",

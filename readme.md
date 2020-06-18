@@ -87,6 +87,20 @@ npm run scale:up
 
 ```
 
+## Docker commands for local testing:
+
+```bash
+# .env.docker should take the format:
+#
+#CATTLE_ACCESS_KEY=
+#CATTLE_SECRET_KEY=
+#
+docker build -t mojaloop/rancher-scaler:local .
+
+
+
+```
+
 
 ## Questions:
 
