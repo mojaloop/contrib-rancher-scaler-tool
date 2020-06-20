@@ -4,8 +4,10 @@ export enum Method {
   SCALE='SCALE',
   VERIFY='VERIFY',
   BOOTSTRAP='BOOTSTRAP',
-  PRE_SCALE_GLOBAL='PRE_SCALE_GLOBAL',
-  POST_SCALE_GLOBAL='POST_SCALE_GLOBAL',
+  PRE_SCALE_UP_GLOBAL ='PRE_SCALE_UP_GLOBAL',
+  PRE_SCALE_DOWN_GLOBAL ='PRE_SCALE_DOWN_GLOBAL',
+  POST_SCALE_UP_GLOBAL ='POST_SCALE_UP_GLOBAL',
+  POST_SCALE_DOWN_GLOBAL ='POST_SCALE_DOWN_GLOBAL',
 }
 
 /**
@@ -30,11 +32,17 @@ function getEnvConfig(): EnvConfig {
     case 'BOOTSTRAP':
       method = Method.BOOTSTRAP
       break;
-    case 'PRE_SCALE_GLOBAL':
-      method = Method.PRE_SCALE_GLOBAL
+    case 'PRE_SCALE_UP_GLOBAL':
+      method = Method.PRE_SCALE_UP_GLOBAL
       break;
-    case 'POST_SCALE_GLOBAL':
-      method = Method.POST_SCALE_GLOBAL
+    case 'PRE_SCALE_DOWN_GLOBAL':
+      method = Method.PRE_SCALE_DOWN_GLOBAL
+      break;
+    case 'POST_SCALE_UP_GLOBAL':
+      method = Method.POST_SCALE_UP_GLOBAL
+      break;
+    case 'POST_SCALE_DOWN_GLOBAL':
+      method = Method.POST_SCALE_DOWN_GLOBAL
       break;
     default:
       // default for backwards compatibility

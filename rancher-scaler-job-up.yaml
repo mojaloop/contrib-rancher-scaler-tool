@@ -8,9 +8,8 @@ spec:
       containers:
         - name: rancher-scaler-job-up
           image: mojaloop/rancher-scaler:latest
+          command: ["sh", "-c", "npm run scale:pre_up && npm run scale:up && npm run scale:post_up"]
           env:
-            - name: SCALE
-              value: DOWN
             - name: RANCHER_BASE_URL
               valueFrom:
                 secretKeyRef:

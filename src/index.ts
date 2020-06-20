@@ -5,14 +5,47 @@ import { execSync } from 'child_process'
 
 import Logger from '@mojaloop/central-services-logger'
 
-import makeRancherScaler from './RancherScaler'
+import makeRancherScaler, { RancherScaler } from './RancherScaler'
 import makeRancherRequests from './RancherRequests'
 import RancherScalerConfigType from './types/RancherScalerConfigType';
 import getEnvConfig, { Method } from './config';
 import makeRancherBootstrapper from './RancherBootstrapper';
 import wrapWithRetries from './lib/WrapWithRetries';
 import makeExec from './Exec';
-import makeHooksHandler from 'hooks/HooksHandler'
+import makeHooksHandler, { HooksHandler } from './hooks/HooksHandler'
+import AnyHookType from './types/HookTypes'
+
+async function runGlobals(hooks: Array<AnyHookType>, hooksHandler: HooksHandler, scale: 'UP' | 'DOWN', config: RancherScalerConfigType) {
+  try {
+    await hooksHandler.runHooks(hooks)
+  } catch (err) {
+    Logger.error(`error running globals: ${err}`)
+    await hooksHandler.runHooks(config.global.onFailure || [])
+  }
+}
+
+async function runScale(scaler: RancherScaler, hooksHandler: HooksHandler, scale: 'UP' | 'DOWN', config: RancherScalerConfigType) {
+  // We pass in the hooksHandler to run the pre and post local hooks
+  //Scale up or down
+  Logger.info(`    scale: ${scale}`)
+  let scalerPromise;
+  switch (scale) {
+    case 'UP':
+      scalerPromise = scaler.scaleUp();
+      break;
+    case 'DOWN':
+      scalerPromise = scaler.scaleDown()
+      break;
+  }
+
+  try {
+    await scalerPromise
+  } catch (err) {
+    await hooksHandler.runHooks(config.global.onFailure || [])
+  }
+
+  return;
+}
 
 async function main() {
   const {
@@ -49,34 +82,13 @@ async function main() {
       throw new Error('no longer supported, use hooks instead...')
     }
     case Method.SCALE: {
-      // We pass in the hooksHandler to run the pre and post local hooks
       const scaler = makeRancherScaler(rancherRequests, Logger, hooksHandler, config);
-      //Scale up or down
-      Logger.info(`    scale: ${scale}`)
-      let scalerPromise;
-      switch (scale) {
-        case 'UP': 
-          scalerPromise = scaler.scaleUp();
-          break;
-        case 'DOWN': 
-          scalerPromise = scaler.scaleDown()
-          break;
-      }
-
-      try {
-        await scalerPromise
-        return;
-      } catch (err) {
-        hooksHandler.runHooks(config.global.onError)
-      }
-      break;
+      return runScale(scaler, hooksHandler, scale, config)
     }
-    case Method.PRE_SCALE_GLOBAL: {
-      return hooksHandler.runHooks(config.global.onError)
-    }
-    case Method.POST_SCALE_GLOBAL: {
-      return hooksHandler.runHooks(config.global.onError)
-    }
+    case Method.PRE_SCALE_UP_GLOBAL: return runGlobals(config.global.preScaleUp || [], hooksHandler, scale, config)
+    case Method.POST_SCALE_UP_GLOBAL: return runGlobals(config.global.postScaleUp || [], hooksHandler, scale, config)
+    case Method.PRE_SCALE_DOWN_GLOBAL: return runGlobals(config.global.preScaleDown || [], hooksHandler, scale, config)
+    case Method.POST_SCALE_DOWN_GLOBAL: return runGlobals(config.global.postScaleDown || [], hooksHandler, scale, config)
     default: {
       throw new Error(`Unhandled method: ${method}`);
     }

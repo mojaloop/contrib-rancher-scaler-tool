@@ -15,12 +15,12 @@ interface NodeType {
   maxQuantity: number;
 
   // Hooks to run before/after scaling
-  hooks: {
-    preScaleUp: Array<AnyHookType>,
-    postScaleUp: Array<AnyHookType>,
-    preScaleDown: Array<AnyHookType>,
-    postScaleDown: Array<AnyHookType>,
-    onFailure: Array<AnyHookType>,
+  hooks?: {
+    preScaleUp?: Array<AnyHookType>,
+    postScaleUp?: Array<AnyHookType>,
+    preScaleDown?: Array<AnyHookType>,
+    postScaleDown?: Array<AnyHookType>,
+    onFailure?: Array<AnyHookType>,
   }
 }
 

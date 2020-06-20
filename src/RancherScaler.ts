@@ -53,6 +53,8 @@ export class RancherScaler {
         .then(() => this._scaleNodePoolDown(node))
         .catch(err => {
           errors.push(err)
+          // Run the individual failure hooks
+          return this.hooksHandler.runHooks(node.hooks && node.hooks.onFailure || [])
         })
     }, Promise.resolve())
 
@@ -65,29 +67,28 @@ export class RancherScaler {
 
   public async _scaleNodePoolUp(node: NodeType): Promise<void> {
     this.logger.info(`RancherScaler.scaleUp - preScaleUp}`)
-    await this.hooksHandler.runHooks(node.hooks.preScaleUp)
+    await this.hooksHandler.runHooks(node.hooks && node.hooks.preScaleUp || [])
 
     this.logger.info(`RancherScaler.scaleUp - Scaling node: ${node.nodePoolId} to ${node.maxQuantity}`)
     const config = { quantity: node.maxQuantity, nodeTemplateId: node.nodeTemplateId };
     await this.rancherRequests.putNodePoolQuantity(node.nodePoolId, config)
 
     this.logger.info(`RancherScaler.scaleUp - postScaleUp}`)
-    await this.hooksHandler.runHooks(node.hooks.postScaleUp)
+    await this.hooksHandler.runHooks(node.hooks && node.hooks.postScaleUp || [])
   }
 
   public async _scaleNodePoolDown(node: NodeType): Promise<void> {
     this.logger.info(`RancherScaler.scaleDown - preScaleDown}`)
-    await this.hooksHandler.runHooks(node.hooks.preScaleDown)
+    await this.hooksHandler.runHooks(node.hooks && node.hooks.preScaleDown || [])
 
     this.logger.info(`RancherScaler.scaleDown - Scaling node: ${node.nodePoolId} to ${node.minQuantity}`)
     const config = { quantity: node.maxQuantity, nodeTemplateId: node.nodeTemplateId };
     await this.rancherRequests.putNodePoolQuantity(node.nodePoolId, config)
 
     this.logger.info(`RancherScaler.scaleDown - postScaleDown}`)
-    await this.hooksHandler.runHooks(node.hooks.postScaleDown)
+    await this.hooksHandler.runHooks(node.hooks && node.hooks.postScaleDown || [])
   }
 }
-
 
 /* Dependency Injection */
 const makeRancherScaler = (rancherRequests: RancherRequests, logger: any, hooksHandler: HooksHandler, config: RancherScalerConfigType): RancherScaler =>  {

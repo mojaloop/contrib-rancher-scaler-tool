@@ -1,16 +1,21 @@
 const config = {
+  // Global hooks.
+  //At least `global: {}` is required
   global: {
     preScaleUp: [
       { actionType: 'SLACK_NOTIFICATION', contents: 'Scaling up' }
     ],
     postScaleUp: [
-      { actionType: 'SLACK_NOTIFICATION', contents: 'Scaling up' }
+      { actionType: 'SLACK_NOTIFICATION', contents: 'Scaled up succesfully' }
     ],
     preScaleDown: [
-      { actionType: 'SLACK_NOTIFICATION', contents: 'Scaling down n node pools in 2 minutes' }
+      { actionType: 'SLACK_NOTIFICATION', contents: 'Scaling down 1 node pool in 2 minutes' },
       { actionType: 'SLEEP', timeMs: 1000 * 60 * 2 }
     ],
-  }
+    onFailure: [
+      { actionType: 'SLACK_NOTIFICATION', contents: 'Rancher-scaler failed to scale' }
+    ]
+  },
   nodes: [
     // {
     //   nodePoolId: 'c-vsm2w:np-mg5wr',

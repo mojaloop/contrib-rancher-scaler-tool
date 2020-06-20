@@ -5,8 +5,12 @@
   "main": "index.ts",
   "scripts": {
     "start": "ts-node ./src/index.ts",
+    "scale:pre_up": "METHOD=PRE_SCALE_UP_GLOBAL ts-node ./src/index.ts",
     "scale:up": "METHOD=SCALE SCALE=UP ts-node ./src/index.ts",
+    "scale:post_up": "METHOD=POST_SCALE_UP_GLOBAL ts-node ./src/index.ts",
+    "scale:pre_down": "METHOD=PRE_SCALE_DOWN_GLOBAL ts-node ./src/index.ts",
     "scale:down": "METHOD=SCALE SCALE=DOWN ts-node ./src/index.ts",
+    "scale:post_down": "METHOD=POST_SCALE_DOWN_GLOBAL ts-node ./src/index.ts",
     "bs": "npm run bootstrap",
     "bootstrap": "METHOD=BOOTSTRAP ts-node ./src/index.ts",
     "verify": "METHOD=VERIFY ts-node ./src/index.ts",

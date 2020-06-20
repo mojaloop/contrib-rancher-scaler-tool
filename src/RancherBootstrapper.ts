@@ -37,6 +37,7 @@ export class RancherBootstrapper {
     this.logger = logger
   }
 
+  // TODO: remove? We are no longer running bootstrapper across the whole config...
   // /**
   //  * @function runBootsrapper
   //  * @description Run the bootstrapper across all node configs

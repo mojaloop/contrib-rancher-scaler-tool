@@ -1,7 +1,7 @@
-import AnyHookType from "types/HookTypes";
-import LoggerType from 'types/LoggerType';
-import { ActionEnum } from 'types/ActionEnum';
-import { RancherBootstrapper } from 'RancherBootstrapper';
+import AnyHookType from "../types/HookTypes";
+import LoggerType from '../types/LoggerType';
+import { ActionEnum } from '../types/ActionEnum';
+import { RancherBootstrapper } from '../RancherBootstrapper';
 
 
 // For now, just support global hooks...
@@ -16,8 +16,6 @@ export class HooksHandler {
     this.bootstrapper = bootstrapper;
   }
 
-
-
   /**
    * @function runHooks
    * @description Run the given hooks
@@ -25,6 +23,21 @@ export class HooksHandler {
    */
   public async runHooks(hooks: Array<AnyHookType>): Promise<void> {
     this.logger.debug(`HooksHandler.runHooks - running ${hooks.length} hooks`);
+
+    const errors: any = [];
+    await hooks.reduce(async (acc: Promise<void>, hook: AnyHookType) => {
+      return acc
+        .then(() => this._runHook(hook))
+        .catch(err => {
+          errors.push(err)
+        })
+    }, Promise.resolve())
+
+    if (errors.length > 0) {
+      const message = `HooksHandler.runHooks - finished running with errors: \n${errors.map((e: any) => `${e}\n`)}`
+      this.logger.error(message)
+      throw new Error(message)
+    }
   }
 
   public async _runHook(hook: AnyHookType, nodePoolId?: string): Promise<any> {
@@ -44,7 +57,6 @@ export class HooksHandler {
       }
     }
   }
-
 }
 
 /* Dependency injection */
