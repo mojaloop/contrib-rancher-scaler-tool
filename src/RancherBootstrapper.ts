@@ -37,28 +37,6 @@ export class RancherBootstrapper {
     this.logger = logger
   }
 
-  // TODO: remove? We are no longer running bootstrapper across the whole config...
-  // /**
-  //  * @function runBootsrapper
-  //  * @description Run the bootstrapper across all node configs
-  //  */
-  // public async runBootstrapper() {
-  //   //Filter through the config until we have just all configs with boostrap commands
-  //   const bootstrapNodes = this.nodes.filter(n => n.bootstrapActions)
-  //   const bootstrapperErrors: any = []
-
-  //   Promise.all(
-  //     bootstrapNodes
-  //       .map(async n => this._runBootstrapperForNodePool(n.nodePoolId, n.bootstrapActions!)
-  //       .catch(error => bootstrapperErrors.push(error))
-  //     )
-  //   )
-
-  //   if (bootstrapperErrors.length > 0) {
-  //     throw new Error(`Bootstrapper failed with errors: \n${bootstrapperErrors.join('\n')}`)
-  //   }
-  // }
-
   /**
    * @function runScriptForNodePool
    * @description Run the bootstrapper for a given node pool
@@ -115,14 +93,13 @@ export class RancherBootstrapper {
 
     const runnerErrors: any = []
 
-    Promise.all(
+    await Promise.all(
       nodes
-        .map(async node => this._runBootstrapForNode(node, action)
-          .catch(error => runnerErrors.push(error))
-        )
+        .map(async node => this._runBootstrapForNode(node, action).catch(error => runnerErrors.push(error)))
     )
 
     if (runnerErrors.length > 0) {
+      this.logger.error(`RancherBootstrapper._runBootstrapForNodePool, failed with ${runnerErrors.length} errors.`)
       throw new Error(`_runBootstrapForNodePool failed with errors: \n${runnerErrors.join('\n')}`)
     }
   }
@@ -138,18 +115,23 @@ export class RancherBootstrapper {
     const basePath = fs.mkdtempSync(path.join('/tmp/', 'rb-'))
     this.logger.debug(`RancherBootstrapper._runBootstrapForNode : ${basePath}`)
 
-    //Download the keys
-    const keyZipPath = `${basePath}/keys.zip`
-    await this.rancherRequests.downloadConfigForNode(node.id, keyZipPath)
-
-    // //unzip the keys
-    const keyDirPath = `${basePath}/keys`
-    await this.exec.unzip(keyZipPath, keyDirPath)
-
-    // // //ssh into instance and run command
-    const keyPath = `${basePath}/keys/id_rsa`
-    // // For now this just takes the first thing in our actions
-    await this.exec.runInSsh(keyPath, node.sshUser, node.nodeName, action.script)
+    try {
+      //Download the keys
+      const keyZipPath = `${basePath}/keys.zip`
+      await this.rancherRequests.downloadConfigForNode(node.id, keyZipPath)
+      
+      // //unzip the keys
+      const keyDirPath = `${basePath}/keys`
+      await this.exec.unzip(keyZipPath, keyDirPath)
+      
+      // // //ssh into instance and run command
+      const keyPath = `${basePath}/keys/id_rsa`
+      // // For now this just takes the first thing in our actions
+      await this.exec.runInSsh(keyPath, node.sshUser, node.nodeName, action.script)
+    } catch (err) {
+      this.logger.error(`RancherBootstrapper._runBootstrapForNode, ${node.id}, failed with error: ${err}`)
+      throw err;
+    }
   }
 }
 

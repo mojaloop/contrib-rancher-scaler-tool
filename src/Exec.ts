@@ -62,7 +62,7 @@ export class Exec {
     } catch (err) {
       // This is thrown on any non-zero exit code... nice!
       this.logger.error(`Exec.runInSsh - ${err}`)
-      throw err;
+      throw new Error('Exec.runInSsh failed.')
     }
   }
 }

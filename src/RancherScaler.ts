@@ -29,6 +29,8 @@ export class RancherScaler {
         .then(() => this._scaleNodePoolUp(node))
         .catch(err => {
           errors.push(err)
+          
+          return this.hooksHandler.runHooks(node.hooks && node.hooks.onFailure || [])
         })
     }, Promise.resolve())
 
