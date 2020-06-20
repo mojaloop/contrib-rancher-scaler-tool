@@ -136,24 +136,9 @@ export class RancherBootstrapper {
     await this.exec.unzip(keyZipPath, keyDirPath)
 
     // // //ssh into instance and run command
-    // TODO: I'm not sure which one...
-    /*
-      ca.pem
-      cert.pem
-      id_rsa
-      id_rsa.pub
-      key.pem - NO
-      server-key.pem
-      server.pem
-    */
-    // const keyPath = `${basePath}/keys/key.pem`
-    const keyPath = `${basePath}/keys/server-key.pem`
+    const keyPath = `${basePath}/keys/id_rsa`
     // // For now this just takes the first thing in our actions
     await this.exec.runInSsh(keyPath, node.sshUser, node.nodeName, actions[0].script)
-
-    // scp using the key
-
-    // login and run file on node
   }
 }
 
