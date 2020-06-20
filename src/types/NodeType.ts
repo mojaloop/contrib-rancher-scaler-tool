@@ -1,4 +1,5 @@
-import BootstapActionType from './BootstrapActionType'
+import BootstrapHookType from './HookTypes'
+import AnyHookType from './HookTypes'
 
 interface NodeType {
   // The nodePoolId that should be scaled
@@ -13,8 +14,14 @@ interface NodeType {
   // The number of nodes to scale UP to
   maxQuantity: number;
 
-  // Things to run on the nodes once they are ready
-  bootstrapActions?: BootstapActionType[];
+  // Hooks to run before/after scaling
+  hooks: {
+    preScaleUp: Array<AnyHookType>,
+    postScaleUp: Array<AnyHookType>,
+    preScaleDown: Array<AnyHookType>,
+    postScaleDown: Array<AnyHookType>,
+    onFailure: Array<AnyHookType>,
+  }
 }
 
 export default NodeType

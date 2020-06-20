@@ -192,7 +192,6 @@ kubectl delete -f ./rancher-scaler-job-tmp.yaml
 
 ## TODO
 
-1. Run script in remote nodes
 1. How can we make sure that the job will _always_ be scheduled? Maybe we need an affinity so it ends up on the masters?
 1. How can we specify the `rancher-scaler.config.js` at runtime?
   I guess volume mounts would be the way to do this.
@@ -204,3 +203,5 @@ kubectl delete -f ./rancher-scaler-job-tmp.yaml
 1. Better cli interface (right now it's all ENV vars)
 1. Add tests to ci/cd pipeline
 1. Properly compile ts in `docker build` (we are currently using `ts-node`)
+1. Deploy live on one of our clusters (dev1? Prod?)
+1. Add tags to 

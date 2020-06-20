@@ -1,5 +1,13 @@
 import EnvConfig from './types/EnvConfig';
 
+export enum Method {
+  SCALE='SCALE',
+  VERIFY='VERIFY',
+  BOOTSTRAP='BOOTSTRAP',
+  PRE_SCALE_GLOBAL='PRE_SCALE_GLOBAL',
+  POST_SCALE_GLOBAL='POST_SCALE_GLOBAL',
+}
+
 /**
  * @function getEnvConfig
  * @description Gets the necessary env config, throws if not found or invalid.
@@ -14,17 +22,23 @@ function getEnvConfig(): EnvConfig {
   } = process.env;
   let { SCALE } = process.env;
 
-  let method: 'SCALE' | 'VERIFY' | 'BOOTSTRAP';
+  let method: Method
   switch (METHOD) {
     case 'VERIFY':
-      method = 'VERIFY'
+      method = Method.VERIFY
       break;
     case 'BOOTSTRAP':
-      method = 'BOOTSTRAP';
+      method = Method.BOOTSTRAP
+      break;
+    case 'PRE_SCALE_GLOBAL':
+      method = Method.PRE_SCALE_GLOBAL
+      break;
+    case 'POST_SCALE_GLOBAL':
+      method = Method.POST_SCALE_GLOBAL
       break;
     default:
       // default for backwards compatibility
-      method = 'SCALE'
+      method = Method.SCALE
   }
 
   if (!RANCHER_BASE_URL) {

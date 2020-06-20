@@ -1,4 +1,16 @@
 const config = {
+  global: {
+    preScaleUp: [
+      { actionType: 'SLACK_NOTIFICATION', contents: 'Scaling up' }
+    ],
+    postScaleUp: [
+      { actionType: 'SLACK_NOTIFICATION', contents: 'Scaling up' }
+    ],
+    preScaleDown: [
+      { actionType: 'SLACK_NOTIFICATION', contents: 'Scaling down n node pools in 2 minutes' }
+      { actionType: 'SLEEP', timeMs: 1000 * 60 * 2 }
+    ],
+  }
   nodes: [
     // {
     //   nodePoolId: 'c-vsm2w:np-mg5wr',
@@ -11,17 +23,32 @@ const config = {
       nodeTemplateId: 'cattle-global-nt:nt-user-s7l26-nt-2s4x5',
       minQuantity: 1,
       maxQuantity: 2,
-      bootstrapActions: [
-        // note: only 1 action is currently supported
-        { 
-          // Only this action type is supported
-          actionType: 'RUN_STARTUP_SCRIPT',
-          // TODO: to run the script, this could be something like `curl url_of_file | sh`
-          script: `echo "HELLO WORLD"; 
+      hooks: {
+        postScaleUp: [
+          {
+            // Only this action type is supported
+            actionType: 'RUN_STARTUP_SCRIPT',
+            // TODO: to run the script, this could be something like `curl url_of_file | sh`
+            script: `echo "HELLO WORLD"; 
                   wget https://google.com/ -O /tmp/hello; 
                   cat /tmp/hello`
-        }
-      ]
+          },
+        ],
+        onFailure: [
+          { actionType: 'SLACK_NOTIFICATION', contents: 'Scaling NodePool Id: c-vsm2w:np-mg5wr failed' }
+        ]
+      }
+      // bootstrapActions: [
+      //   // note: only 1 action is currently supported
+      //   { 
+      //     // Only this action type is supported
+      //     actionType: 'RUN_STARTUP_SCRIPT',
+      //     // TODO: to run the script, this could be something like `curl url_of_file | sh`
+      //     script: `echo "HELLO WORLD"; 
+      //             wget https://google.com/ -O /tmp/hello; 
+      //             cat /tmp/hello`
+      //   }
+      // ]
     }
   ]
 }

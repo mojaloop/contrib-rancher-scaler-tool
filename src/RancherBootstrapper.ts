@@ -8,7 +8,7 @@ import { RancherRequests } from './RancherRequests';
 import RancherScalerConfigType from './types/RancherScalerConfigType';
 import NodeType from './types/NodeType';
 import { Exec } from 'Exec';
-import BootstapActionType from 'types/BootstrapActionType';
+import { BootstrapHookType } from 'types/HookTypes';
 import LoggerType from './types/LoggerType';
 
 
@@ -37,38 +37,51 @@ export class RancherBootstrapper {
     this.logger = logger
   }
 
+  // /**
+  //  * @function runBootsrapper
+  //  * @description Run the bootstrapper across all node configs
+  //  */
+  // public async runBootstrapper() {
+  //   //Filter through the config until we have just all configs with boostrap commands
+  //   const bootstrapNodes = this.nodes.filter(n => n.bootstrapActions)
+  //   const bootstrapperErrors: any = []
+
+  //   Promise.all(
+  //     bootstrapNodes
+  //       .map(async n => this._runBootstrapperForNodePool(n.nodePoolId, n.bootstrapActions!)
+  //       .catch(error => bootstrapperErrors.push(error))
+  //     )
+  //   )
+
+  //   if (bootstrapperErrors.length > 0) {
+  //     throw new Error(`Bootstrapper failed with errors: \n${bootstrapperErrors.join('\n')}`)
+  //   }
+  // }
+
   /**
-   * @function runBootsrapper
-   * @description Run the bootstrapper across all node configs
+   * @function runScriptForNodePool
+   * @description Run the bootstrapper for a given node pool
    */
-  public async runBootstrapper() {
-    //Filter through the config until we have just all configs with boostrap commands
-    const bootstrapNodes = this.nodes.filter(n => n.bootstrapActions)
-    const bootstrapperErrors: any = []
+  public async runScriptForNodePool(nodePoolId: string, action: BootstrapHookType) {
+    this.logger.debug(`RancherBootstrapper.runScriptForNodePool - running bootstrapper for node pool ${nodePoolId}, ${action}`)
 
-    Promise.all(
-      bootstrapNodes
-        .map(async n => this._runBootstrapperForNodePool(n.nodePoolId, n.bootstrapActions!)
-        .catch(error => bootstrapperErrors.push(error))
-      )
-    )
+    //wait for nodePoolId's nodes to be ready
+    await this.wrapWithRetries(() => this._isNodePoolReady(nodePoolId), 15, 1000 * 30)
 
-    if (bootstrapperErrors.length > 0) {
-      throw new Error(`Bootstrapper failed with errors: \n${bootstrapperErrors.join('\n')}`)
-    }
+    await this._runBootstrapForNodePool(nodePoolId, action)
   }
 
   /**
    * @function _runBootstrapperForNodePool
    * @description Run the bootstrapper for a given node pool
    */
-  public async _runBootstrapperForNodePool(nodePoolId: string, bootstrapActions: Array<BootstapActionType>) {
-    this.logger.debug(`RancherBootstrapper._runBootstrapperForNodePool - running bootstrapper for node pool ${nodePoolId}, ${bootstrapActions}`)
+  public async _runBootstrapperForNodePool(nodePoolId: string, action: BootstrapHookType) {
+    this.logger.debug(`RancherBootstrapper._runBootstrapperForNodePool - running bootstrapper for node pool ${nodePoolId}, ${action}`)
 
     //wait for nodePoolId's nodes to be ready
     await this.wrapWithRetries(() => this._isNodePoolReady(nodePoolId), 15, 1000 * 30)
 
-    await this._runBootstrapForNodePool(nodePoolId, bootstrapActions)
+    await this._runBootstrapForNodePool(nodePoolId, action)
   }
 
   /**
@@ -94,7 +107,7 @@ export class RancherBootstrapper {
    * @function _runBootstrapForNodePool
    * @description For each node in the node pool, run the bootstrap command
    */
-  public async _runBootstrapForNodePool(nodePoolId: string, bootstrapActions: Array<BootstapActionType>) {
+  public async _runBootstrapForNodePool(nodePoolId: string, action: BootstrapHookType) {
     this.logger.debug(`RancherBootstrapper._runBootstrapForNodePool - ${nodePoolId}`)
     //TODO: be able to configure this dynamically
     const { data: nodes } = await this.rancherRequests.getNodesForNodePool(nodePoolId);
@@ -103,7 +116,7 @@ export class RancherBootstrapper {
 
     Promise.all(
       nodes
-        .map(async node => this._runBootstrapForNode(node, bootstrapActions)
+        .map(async node => this._runBootstrapForNode(node, action)
           .catch(error => runnerErrors.push(error))
         )
     )
@@ -117,10 +130,7 @@ export class RancherBootstrapper {
    * @function _runBootstrapForNode
    * @description Run the bootstrap steps
    */
-  public async _runBootstrapForNode(node: RancherNode, actions: Array<BootstapActionType>) {
-    if (actions.length > 1) {
-      this.logger.error(`RancherBootstrapper._runBootstrapForNode WARNING: Only 1 bootstrapAction is supported. Ignoring others.`)
-    }
+  public async _runBootstrapForNode(node: RancherNode, action: BootstrapHookType) {
     // TODO: make a tmp folder
     // TODO: refactor into Exec.makeTempDir
     // const basePath = fs.mkdtempSync(path.join(os.tmpdir(), 'rb-'))
@@ -138,7 +148,7 @@ export class RancherBootstrapper {
     // // //ssh into instance and run command
     const keyPath = `${basePath}/keys/id_rsa`
     // // For now this just takes the first thing in our actions
-    await this.exec.runInSsh(keyPath, node.sshUser, node.nodeName, actions[0].script)
+    await this.exec.runInSsh(keyPath, node.sshUser, node.nodeName, action.script)
   }
 }
 

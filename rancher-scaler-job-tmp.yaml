@@ -8,7 +8,7 @@ spec:
       containers:
         - name: rancher-scaler-tmp
           image: mojaloop/rancher-scaler:latest
-          command: ["sh", "-c", "tail -f /dev/null"]
+          # command: ["sh", "-c", "tail -f /dev/null"]
           env:
             - name: METHOD
               value: BOOTSTRAP
