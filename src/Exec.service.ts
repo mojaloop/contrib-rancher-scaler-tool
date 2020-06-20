@@ -20,7 +20,7 @@ describe('Exec', () => {
     })
   })
 
-  describe('runInSsh', () => {
+  describe.skip('runInSsh', () => {
     // Manual run only
     it('Runs a shell script in an ssh session', async () => {
       // Arrange
