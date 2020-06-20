@@ -1,5 +1,5 @@
+// TODO: remove these hard dependencies
 import fs from 'fs'
-import os from 'os'
 import path from 'path'
 
 import { RancherNode } from './types/RancherRequestsTypes';
@@ -18,17 +18,20 @@ export class RancherBootstrapper {
   nodes: Array<NodeType>;
   wrapWithRetries: (func: any, retries: number, waitTimeMs: number) => Promise<any>
   exec: Exec;
+  logger: any;
 
   constructor(
     rancherRequests: RancherRequests, 
     config: RancherScalerConfigType, 
     wrapWithRetries: (func: any, retries: number, waitTimeMs: number) => Promise<any>,
-    exec: Exec
+    exec: Exec,
+    logger: any
   ) {
     this.rancherRequests = rancherRequests;
     this.nodes = config.nodes
     this.wrapWithRetries = wrapWithRetries;
     this.exec = exec
+    this.logger = logger
   }
 
   /**
@@ -57,7 +60,7 @@ export class RancherBootstrapper {
    * @description Run the bootstrapper for a given node pool
    */
   public async _runBootstrapperForNodePool(nodePoolId: string, bootstrapActions: Array<BootstapActionType>) {
-    console.log("running bootstrapper for node pool", nodePoolId, bootstrapActions)
+    this.logger.debug(`RancherBootstrapper._runBootstrapperForNodePool - running bootstrapper for node pool ${nodePoolId}, ${bootstrapActions}`)
 
     //wait for nodePoolId's nodes to be ready
     await this.wrapWithRetries(() => this._isNodePoolReady(nodePoolId), 15, 1000 * 30)
@@ -72,7 +75,7 @@ export class RancherBootstrapper {
    *   rejects a promise if they are not ready
    */
   public async _isNodePoolReady(nodePoolId: string): Promise<true> {
-    console.log("RancherBootstrapper._isNodePoolReady", nodePoolId)
+    this.logger.debug(`RancherBootstrapper._isNodePoolReady - ${nodePoolId}`)
 
     const result = await this.rancherRequests.getNodesForNodePool(nodePoolId);
     const nodeTransitioningCount = result.data.filter(node => node.transitioning === 'yes').length
@@ -89,7 +92,7 @@ export class RancherBootstrapper {
    * @description For each node in the node pool, run the bootstrap command
    */
   public async _runBootstrapForNodePool(nodePoolId: string, bootstrapActions: Array<BootstapActionType>) {
-    console.log("RancherBootstrapper._runBootstrapForNodePool", nodePoolId)
+    this.logger.debug(`RancherBootstrapper._runBootstrapForNodePool - ${nodePoolId}`)
     //TODO: be able to configure this dynamically
     const { data: nodes } = await this.rancherRequests.getNodesForNodePool(nodePoolId);
 
@@ -113,13 +116,13 @@ export class RancherBootstrapper {
    */
   public async _runBootstrapForNode(node: RancherNode, actions: Array<BootstapActionType>) {
     if (actions.length > 1) {
-      console.warn("only 1 bootstrapAction is supported")
+      this.logger.error(`RancherBootstrapper._runBootstrapForNode WARNING: Only 1 bootstrapAction is supported. Ignoring others.`)
     }
     // TODO: make a tmp folder
     // TODO: refactor into Exec.makeTempDir
     // const basePath = fs.mkdtempSync(path.join(os.tmpdir(), 'rb-'))
     const basePath = fs.mkdtempSync(path.join('/tmp/', 'rb-'))
-    console.log("basePath", basePath)
+    this.logger.debug(`RancherBootstrapper._runBootstrapForNode : ${basePath}`)
 
     //Download the keys
     const keyZipPath = `${basePath}/keys.zip`
@@ -146,8 +149,9 @@ const makeRancherBootstrapper = (
   config: RancherScalerConfigType, 
   wrapWithRetries: (func: any, retries: number, waitTimeMs: number) => Promise<any>,
   exec: Exec,
+  logger: any,
 ): RancherBootstrapper => {
-  const rancherBootstrapper = new RancherBootstrapper(rancherRequests, config, wrapWithRetries, exec)
+  const rancherBootstrapper = new RancherBootstrapper(rancherRequests, config, wrapWithRetries, exec, logger)
 
   return rancherBootstrapper;
 }

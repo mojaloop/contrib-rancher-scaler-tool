@@ -30,7 +30,7 @@ async function main() {
   }
 
   //TODO: validate the config
-  const rancherRequests = makeRancherRequests(fs, axios, cattleAccessKey, cattleSecretKey, rancherBaseUrl);
+  const rancherRequests = makeRancherRequests(fs, axios, Logger, cattleAccessKey, cattleSecretKey, rancherBaseUrl);
   Logger.info(`Running method: ${method}`)
   switch (method) {
     case 'VERIFY': {
@@ -43,7 +43,7 @@ async function main() {
     case 'BOOTSTRAP': {
       //TODO: implement
       const exec = makeExec(fs, unzipper, execSync, Logger)
-      const bootstrapper = makeRancherBootstrapper(rancherRequests, config, wrapWithRetries, exec);
+      const bootstrapper = makeRancherBootstrapper(rancherRequests, config, wrapWithRetries, exec, Logger);
       await bootstrapper.runBootstrapper()
 
       return;

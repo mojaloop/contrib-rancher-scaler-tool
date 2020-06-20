@@ -9,6 +9,7 @@ import { GetNodesForNodePoolResponse } from './types/RancherRequestsTypes';
 export class RancherRequests {
   fs: any;
   requests: AxiosStatic;
+  logger: any
   cattleAccessKey: string;
   cattleSecretKey: string;
   rancherBaseUrl: string;
@@ -24,9 +25,17 @@ export class RancherRequests {
     baseURL: string,
   }
 
-  constructor(fs: any, requests: AxiosStatic, cattleAccessKey: string, cattleSecretKey: string, rancherBaseUrl: string) {
+  constructor(
+    fs: any, 
+    requests: AxiosStatic, 
+    logger: any,
+    cattleAccessKey: string, 
+    cattleSecretKey: string, 
+    rancherBaseUrl: string
+    ) {
     this.fs = fs;
     this.requests = requests;
+    this.logger = logger;
     this.cattleAccessKey = cattleAccessKey;
     this.cattleSecretKey = cattleSecretKey;
     this.rancherBaseUrl = rancherBaseUrl;
@@ -65,7 +74,7 @@ export class RancherRequests {
 
       return response.data;
     } catch (err) {
-      console.log("RancherRequests.getNodePool() Error", err.message)
+      this.logger.error(`RancherRequests.getNodePool() Error: ${err.message}`)
       throw err;
     }
   }
@@ -152,8 +161,14 @@ export class RancherRequests {
 }
 
 /* Dependency Injection */
-const makeRancherRequests = (fs: any, requests: AxiosStatic, cattleAccessKey: string, cattleSecretKey: string, rancherBaseUrl: string) => {
-  const rancherRequests = new RancherRequests(fs, requests, cattleAccessKey, cattleSecretKey, rancherBaseUrl);
+const makeRancherRequests = (
+  fs: any, 
+  requests: AxiosStatic, 
+  logger: any,
+  cattleAccessKey: string, 
+  cattleSecretKey: string, 
+  rancherBaseUrl: string) => {
+  const rancherRequests = new RancherRequests(fs, requests, logger, cattleAccessKey, cattleSecretKey, rancherBaseUrl);
 
   return rancherRequests;
 }
