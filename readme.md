@@ -5,7 +5,7 @@
 ## Prerequisites:
 
 - Rancher API Access, and an access token (see [rancher api](#rancher-api) below)
-- An `.env.local` for running with npm, or `.env.docker` for running with docker-compose (see [Running Locally](#Running-Locally) for more information)
+- An `.env` file, following the format outlined in `example.env` (see [Running Locally](#Running-Locally) for more information)
 - `kubectl` access (this doesn't need to run on the same cluster that does the scaling)
 - A valid `rancher-scaler.config.js` file (see [The Config File](#The-Config-File))
 - `kubectx` and `kubetail`
@@ -13,7 +13,7 @@
 ## Configuring the CronJobs
 
 ```bash
-source .env.local
+set -a; source .env ;set +a
 # create the rancher-scaler-secrets secret
 kubectl create secret generic rancher-scaler-secrets \
   --from-literal="cattle_secret_key=${CATTLE_SECRET_KEY}"\
@@ -41,11 +41,13 @@ kubetail rancher-scaler
 
 ```bash
 # copy the env var template
-cp example.env.local .env.local
+cp example.env .env
 
 # Edit the template and fill out the values
-vim .env.local
-source .env.local
+vim .env
+
+# Souce the .env file to your local environment
+set -a; source .env ;set +a
 
 # Scale down the node pools in ./config/rancher-scaler.config.js
 npm run scale:down
@@ -61,15 +63,12 @@ npm run scale:up && npm run bootstrap
 ### `docker-compose` runner:
 > This is useful as it mimics the way that K8s will run the job: inside a docker container
 
-
 ```bash
-touch .env.docker
-# `.env.docker` should take the format:
-#
-#RANCHER_BASE_URL=
-#CATTLE_ACCESS_KEY=
-#CATTLE_SECRET_KEY=
-#
+cp example.env .env
+
+# Edit the template and fill out the values
+vim .env
+
 docker build -t mojaloop/rancher-scaler:local .
 
 # configure whether or not to scale UP or DOWN, in the `docker-compose.yml` file
@@ -83,7 +82,9 @@ docker-compose up
 > A one-time job, which is easier to debug
 
 ```bash
-source .env.local
+# Souce the .env file to your local environment
+set -a; source .env ;set +a
+
 # create the rancher-scaler-secrets secret
 kubectl create secret generic rancher-scaler-secrets \
   --from-literal="cattle_secret_key=${CATTLE_SECRET_KEY}"\
@@ -116,7 +117,7 @@ CircleCI manages this, by publishing a `mojaloop/rancher-scaler:latest` image to
 2. Make sure you can issue the following commands (the `nodePoolId` and `nodeTemplateId` may change for your environment)
 
 ```bash
-source .env.local
+set -a; source .env ;set +a
 
 # get the nodePool
 curl -u "${CATTLE_ACCESS_KEY}:${CATTLE_SECRET_KEY}" \
@@ -155,6 +156,7 @@ const config = {
       // When SCALE=UP, how many instances should be running?
       maxQuantity: 2,
     }
+    // TODO: Add bootstrap actions here
   ]
 }
 

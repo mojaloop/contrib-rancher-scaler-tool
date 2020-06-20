@@ -2,8 +2,9 @@ version: "3.7"
 
 services:
   rancher-scale:
-    build:
-      context: .
+    image: mojaloop/rancher-scaler:latest
+    # build:
+    #   context: .
     container_name: rancher-scaler
     volumes:
        - ./config/:/opt/rancher-scaler/config/
@@ -14,4 +15,4 @@ services:
       - SCALE=DOWN
       - PATH_TO_CONFIG=/opt/rancher-scaler/config/rancher-scaler.config.js
     env_file:
-      - .env.docker
+      - .env
