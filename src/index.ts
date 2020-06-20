@@ -67,7 +67,7 @@ async function main() {
   const rancherRequests = makeRancherRequests(fs, axios, Logger, cattleAccessKey, cattleSecretKey, rancherBaseUrl);
   const exec = makeExec(fs, unzipper, execSync, Logger)
   const bootstrapper = makeRancherBootstrapper(rancherRequests, config, wrapWithRetries, exec, Logger);
-  const hooksHandler = makeHooksHandler(Logger, {}, bootstrapper)
+  const hooksHandler = makeHooksHandler(Logger, {sendMessage: () => console.log('sending slack message!')}, bootstrapper)
 
   Logger.info(`Running method: ${method}`)
   switch (method) {

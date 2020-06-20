@@ -41,6 +41,8 @@ export class HooksHandler {
   }
 
   public async _runHook(hook: AnyHookType, nodePoolId?: string): Promise<any> {
+    this.logger.debug(`HooksHandler._runHook - ${hook.hookType}`);
+
     switch (hook.hookType) {
       case ActionEnum.SLEEP: {
         return new Promise((resolve) => setTimeout(resolve, hook.timeMs))

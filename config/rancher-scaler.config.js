@@ -3,17 +3,17 @@ const config = {
   //At least `global: {}` is required
   global: {
     preScaleUp: [
-      { actionType: 'SLACK_NOTIFICATION', contents: 'Scaling up' }
+      { hookType: 'SLACK_NOTIFICATION', contents: 'Scaling up' }
     ],
     postScaleUp: [
-      { actionType: 'SLACK_NOTIFICATION', contents: 'Scaled up succesfully' }
+      { hookType: 'SLACK_NOTIFICATION', contents: 'Scaled up succesfully' }
     ],
     preScaleDown: [
-      { actionType: 'SLACK_NOTIFICATION', contents: 'Scaling down 1 node pool in 2 minutes' },
-      { actionType: 'SLEEP', timeMs: 1000 * 60 * 2 }
+      { hookType: 'SLACK_NOTIFICATION', contents: 'Scaling down 1 node pool in 2 minutes' },
+      { hookType: 'SLEEP', timeMs: 1000 * 60 * 2 }
     ],
     onFailure: [
-      { actionType: 'SLACK_NOTIFICATION', contents: 'Rancher-scaler failed to scale' }
+      { hookType: 'SLACK_NOTIFICATION', contents: 'Rancher-scaler failed to scale' }
     ]
   },
   nodes: [
@@ -32,7 +32,7 @@ const config = {
         postScaleUp: [
           {
             // Only this action type is supported
-            actionType: 'RUN_STARTUP_SCRIPT',
+            hookType: 'RUN_STARTUP_SCRIPT',
             // TODO: to run the script, this could be something like `curl url_of_file | sh`
             script: `echo "HELLO WORLD"; 
                   wget https://google.com/ -O /tmp/hello; 
@@ -40,7 +40,7 @@ const config = {
           },
         ],
         onFailure: [
-          { actionType: 'SLACK_NOTIFICATION', contents: 'Scaling NodePool Id: c-vsm2w:np-mg5wr failed' }
+          { hookType: 'SLACK_NOTIFICATION', contents: 'Scaling NodePool Id: c-vsm2w:np-mg5wr failed' }
         ]
       }
       // bootstrapActions: [
