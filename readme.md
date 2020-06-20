@@ -198,8 +198,10 @@ kubectl delete -f ./rancher-scaler-job-tmp.yaml
 1. How can we specify the `rancher-scaler.config.js` at runtime?
 1. Add nice logging in with `@mojaloop/central-services-logging` library
 1. Slack notification to alert when:
-  - scale down is about to happen
-  - scale up succeeded
-  - bootstrap steps failed
+    - scale down is about to happen
+    - scale up succeeded
+    - bootstrap steps failed
 1. Unit Tests
 1. Better cli interface (right now it's all ENV vars)
+1. Add tests to ci/cd pipeline
+1. Properly compile ts in `docker build` (we are currently using `ts-node`)

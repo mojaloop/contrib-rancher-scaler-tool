@@ -24,6 +24,8 @@ spec:
                 secretKeyRef:
                   name: rancher-scaler-secrets
                   key: cattle_secret_key
+            - name: LOG_LEVEL
+              value: debug
       restartPolicy: Never
 
 

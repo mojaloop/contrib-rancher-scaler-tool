@@ -2,6 +2,7 @@ import * as fs from 'fs'
 import * as unzipper from 'unzipper'
 import axios from 'axios'
 import { execSync } from 'child_process'
+const Logger = require('@mojaloop/central-services-logger')
 
 import makeRancherScaler from './RancherScaler'
 import makeRancherRequests from './RancherRequests'
@@ -10,6 +11,7 @@ import getEnvConfig from './config';
 import makeRancherBootstrapper from './RancherBootstrapper';
 import wrapWithRetries from './lib/WrapWithRetries';
 import makeExec from './Exec';
+
 
 async function main() {
   const {
@@ -29,12 +31,12 @@ async function main() {
 
   //TODO: validate the config
   const rancherRequests = makeRancherRequests(fs, axios, cattleAccessKey, cattleSecretKey, rancherBaseUrl);
-  console.log(`Running method: ${method}`)
+  Logger.info(`Running method: ${method}`)
   switch (method) {
     case 'VERIFY': {
       // Verify that the config works by calling `getNodePool`
       const result = await rancherRequests.getNodePool(config.nodes[0].nodePoolId)
-      console.log('getNodePool reply', result)
+      Logger.info('getNodePool reply', result)
       return;
     }
     // TODO: change to BOOTSTRAP
@@ -50,7 +52,7 @@ async function main() {
       const scaler = makeRancherScaler(rancherRequests, config);
 
       //Scale up or down
-      console.log(`    scale: ${scale}`)
+      Logger.info(`    scale: ${scale}`)
       switch (scale) {
         case 'UP': return scaler.scaleUp()
         case 'DOWN': return scaler.scaleDown()
