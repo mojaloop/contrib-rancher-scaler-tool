@@ -29,7 +29,7 @@ export class RancherScaler {
         .then(() => this._scaleNodePoolUp(node))
         .catch(err => {
           errors.push(err)
-          
+
           return this.hooksHandler.runHooks(node.hooks && node.hooks.onFailure || [])
         })
     }, Promise.resolve())
@@ -84,7 +84,7 @@ export class RancherScaler {
     await this.hooksHandler.runHooks(node.hooks && node.hooks.preScaleDown || [], node.nodePoolId)
 
     this.logger.info(`RancherScaler.scaleDown - Scaling node: ${node.nodePoolId} to ${node.minQuantity}`)
-    const config = { quantity: node.maxQuantity, nodeTemplateId: node.nodeTemplateId };
+    const config = { quantity: node.minQuantity, nodeTemplateId: node.nodeTemplateId };
     await this.rancherRequests.putNodePoolQuantity(node.nodePoolId, config)
 
     this.logger.info(`RancherScaler.scaleDown - postScaleDown`)

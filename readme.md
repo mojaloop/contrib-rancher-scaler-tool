@@ -166,12 +166,6 @@ module.exports = config
 
 ## TODO
 
-1. Slack notification to alert when:
-    - scale down is about to happen
-    - scale up succeeded
-    - bootstrap steps failed
-
-
 1. How can we make sure that the job will _always_ be scheduled? Maybe we need an affinity so it ends up on the masters?
 1. How can we specify the `rancher-scaler.config.js` at runtime?
   I guess volume mounts would be the way to do this.

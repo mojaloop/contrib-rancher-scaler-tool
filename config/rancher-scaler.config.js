@@ -9,8 +9,11 @@ const config = {
       { hookType: 'SLACK_NOTIFICATION', contents: '[Rancher-Scaler] Scaled up succesfully! 🎉🎉🎉' }
     ],
     preScaleDown: [
-      { hookType: 'SLACK_NOTIFICATION', contents: '[Rancher-Scaler] Scaling down `1` node pool in `3 minutes`' },
-      { hookType: 'SLEEP', timeMs: 1000 * 60 * 3 }
+      { hookType: 'SLACK_NOTIFICATION', contents: '[Rancher-Scaler] Scaling down `1` node pool in `1 minute`' },
+      { hookType: 'SLEEP', timeMs: 1000 * 60 * 1 }
+    ],
+    postScaleDown: [
+      { hookType: 'SLACK_NOTIFICATION', contents: '[Rancher-Scaler] Scaled down succesfully! 🎉🎉🎉' }
     ],
     onFailure: [
       { hookType: 'SLACK_NOTIFICATION', contents: '[Rancher-Scaler] Failed to scale' }
@@ -24,21 +27,21 @@ const config = {
       maxQuantity: 2,
       hooks: {
         preScaleUp: [
-          { hookType: 'SLACK_NOTIFICATION', contents: '••• Scaling `c-vsm2w:np-mg5wr` to `2` nodes' }
+          { hookType: 'SLACK_NOTIFICATION', contents: ' ↳ Scaling `c-vsm2w:np-mg5wr` to `2` nodes' }
         ],
+        // Example config for running a shell script on all of the nodes
+        // postScaleUp: [
+        // {
+        //   // Only this action type is supported
+        //   hookType: 'RUN_STARTUP_SCRIPT',
+        //   // TODO: to run the script, this could be something like `curl url_of_file | sh`
+        //   script: `echo "HELLO WORLD"; 
+        //         wget https://google.com/ -O /tmp/hello; 
+        //         cat /tmp/hello`
+        // },
+        // ],
         preScaleDown: [
-          { hookType: 'SLACK_NOTIFICATION', contents: '••• Scaling `c-vsm2w:np-mg5wr` to `1` node' }
-        ],
-        postScaleUp: [
-          // Example config for running a shell script on all of the nodes
-          // {
-          //   // Only this action type is supported
-          //   hookType: 'RUN_STARTUP_SCRIPT',
-          //   // TODO: to run the script, this could be something like `curl url_of_file | sh`
-          //   script: `echo "HELLO WORLD"; 
-          //         wget https://google.com/ -O /tmp/hello; 
-          //         cat /tmp/hello`
-          // },
+          { hookType: 'SLACK_NOTIFICATION', contents: ' ↳ Scaling `c-vsm2w:np-mg5wr` to `1` node' }
         ],
         onFailure: [
           { hookType: 'SLACK_NOTIFICATION', contents: '•••Failed to scale `c-vsm2w:np-mg5wr` "@Lewis Daly" !!!' }
