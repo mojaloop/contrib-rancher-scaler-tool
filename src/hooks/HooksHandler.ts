@@ -22,13 +22,13 @@ export class HooksHandler {
    * @description Run the given hooks
    * @param hooks 
    */
-  public async runHooks(hooks: Array<AnyHookType>): Promise<void> {
+  public async runHooks(hooks: Array<AnyHookType>, nodePoolId?: string): Promise<void> {
     this.logger.debug(`HooksHandler.runHooks - running ${hooks.length} hooks`);
 
     const errors: any = [];
     await hooks.reduce(async (acc: Promise<void>, hook: AnyHookType) => {
       return acc
-        .then(() => this._runHook(hook))
+        .then(() => this._runHook(hook, nodePoolId))
         .catch(err => {
           errors.push(err)
         })

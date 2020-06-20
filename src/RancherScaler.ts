@@ -66,27 +66,27 @@ export class RancherScaler {
   }
 
   public async _scaleNodePoolUp(node: NodeType): Promise<void> {
-    this.logger.info(`RancherScaler.scaleUp - preScaleUp}`)
-    await this.hooksHandler.runHooks(node.hooks && node.hooks.preScaleUp || [])
+    this.logger.info(`RancherScaler.scaleUp - preScaleUp`)
+    await this.hooksHandler.runHooks(node.hooks && node.hooks.preScaleUp || [], node.nodePoolId)
 
     this.logger.info(`RancherScaler.scaleUp - Scaling node: ${node.nodePoolId} to ${node.maxQuantity}`)
     const config = { quantity: node.maxQuantity, nodeTemplateId: node.nodeTemplateId };
     await this.rancherRequests.putNodePoolQuantity(node.nodePoolId, config)
 
-    this.logger.info(`RancherScaler.scaleUp - postScaleUp}`)
-    await this.hooksHandler.runHooks(node.hooks && node.hooks.postScaleUp || [])
+    this.logger.info(`RancherScaler.scaleUp - postScaleUp`)
+    await this.hooksHandler.runHooks(node.hooks && node.hooks.postScaleUp || [], node.nodePoolId)
   }
 
   public async _scaleNodePoolDown(node: NodeType): Promise<void> {
-    this.logger.info(`RancherScaler.scaleDown - preScaleDown}`)
-    await this.hooksHandler.runHooks(node.hooks && node.hooks.preScaleDown || [])
+    this.logger.info(`RancherScaler.scaleDown - preScaleDown`)
+    await this.hooksHandler.runHooks(node.hooks && node.hooks.preScaleDown || [], node.nodePoolId)
 
     this.logger.info(`RancherScaler.scaleDown - Scaling node: ${node.nodePoolId} to ${node.minQuantity}`)
     const config = { quantity: node.maxQuantity, nodeTemplateId: node.nodeTemplateId };
     await this.rancherRequests.putNodePoolQuantity(node.nodePoolId, config)
 
-    this.logger.info(`RancherScaler.scaleDown - postScaleDown}`)
-    await this.hooksHandler.runHooks(node.hooks && node.hooks.postScaleDown || [])
+    this.logger.info(`RancherScaler.scaleDown - postScaleDown`)
+    await this.hooksHandler.runHooks(node.hooks && node.hooks.postScaleDown || [], node.nodePoolId)
   }
 }
 

@@ -164,46 +164,21 @@ const config = {
 module.exports = config
 ```
 
-## Testing out shell scripts
-
-```bash
-# run a pod
-kubectl create -f ./rancher-scaler-job-tmp.yaml
-
-kubectl get po
-
-kubectl logs rancher-scaler-tmp-hhtdt
-kubectl exec -it rancher-scaler-tmp-s55ct sh
-
-
-# download keys from rancher
-# nodes > master > ... > download keys
-
-# log into master node? or can we exec into a container?
-ssh -i ~/Downloads/master1/key.pem  ubuntu@35.179.97.99
-
-
-#Download key files
-#inputs: access key, secret key, nodes? baseurl
-curl -u "${CATTLE_ACCESS_KEY}:${CATTLE_SECRET_KEY}" --location --request GET "${BASE_URL}/v3/nodes/c-kbc2d:m-26tkk/nodeconfig" -o /tmp/keys
-
-kubectl delete -f ./rancher-scaler-job-tmp.yaml
-
-
-```
-
 ## TODO
 
-1. How can we make sure that the job will _always_ be scheduled? Maybe we need an affinity so it ends up on the masters?
-1. How can we specify the `rancher-scaler.config.js` at runtime?
-  I guess volume mounts would be the way to do this.
 1. Slack notification to alert when:
     - scale down is about to happen
     - scale up succeeded
     - bootstrap steps failed
+
+
+1. How can we make sure that the job will _always_ be scheduled? Maybe we need an affinity so it ends up on the masters?
+1. How can we specify the `rancher-scaler.config.js` at runtime?
+  I guess volume mounts would be the way to do this.
 1. Unit Tests
 1. Better cli interface (right now it's all ENV vars)
 1. Add tests to ci/cd pipeline
 1. Properly compile ts in `docker build` (we are currently using `ts-node`)
 1. Deploy live on one of our clusters (dev1? Prod?)
-1. Add tags to 
+1. Add tags to node templates
+1. Set up cloudwatch post scale script
