@@ -30,18 +30,18 @@ const config = {
           { hookType: 'SLACK_NOTIFICATION', contents: '-   [Rancher-Scaler] Scaling `c-vsm2w:np-mg5wr` to `1` node' }
         ],
 
-        // postScaleUp: [
-        //   {
-        //     // Only this action type is supported
-        //     hookType: 'RUN_STARTUP_SCRIPT',
-        //     // TODO: to run the script, this could be something like `curl url_of_file | sh`
-        //     script: `echo "HELLO WORLD"; 
-        //           wget https://google.com/ -O /tmp/hello; 
-        //           cat /tmp/hello`
-        //   },
-        // ],
+        postScaleUp: [
+          {
+            // Only this action type is supported
+            hookType: 'RUN_STARTUP_SCRIPT',
+            // TODO: to run the script, this could be something like `curl url_of_file | sh`
+            script: `echo "HELLO WORLD"; 
+                  wget https://google.com/ -O /tmp/hello; 
+                  cat /tmp/hello`
+          },
+        ],
         onFailure: [
-          { hookType: 'SLACK_NOTIFICATION', contents: '-    [Rancher-Scaler] Failed to scale `c-vsm2w:np-mg5wr` @Lewis Daly !!!' }
+          { hookType: 'SLACK_NOTIFICATION', contents: '-    [Rancher-Scaler] Failed to scale `c-vsm2w:np-mg5wr` "@Lewis Daly" !!!' }
         ]
       }
     }

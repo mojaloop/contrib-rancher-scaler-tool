@@ -12,7 +12,7 @@ spec:
           containers:
             - name: rancher-scaler-cron-up
               image: mojaloop/rancher-scaler:latest
-              command: ["sh", "-c", "npm run scale:pre_up && npm run scale:up && npm run scale:post_up"]
+              command: ["sh", "-c", "npm run scale:up"]
               env:
                 - name: CATTLE_ACCESS_KEY
                   value: token-czddw

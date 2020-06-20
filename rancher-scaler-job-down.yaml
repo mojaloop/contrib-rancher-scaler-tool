@@ -8,7 +8,7 @@ spec:
       containers:
         - name: rancher-scaler-job-down
           image: mojaloop/rancher-scaler:latest
-          command: ["sh", "-c", "npm run scale:pre_down && npm run scale:down && npm run scale:post_down"]
+          command: ["sh", "-c", "npm run scale:down"]
           env:
             - name: CATTLE_ACCESS_KEY
               value: token-czddw

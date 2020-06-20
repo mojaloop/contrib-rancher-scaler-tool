@@ -28,25 +28,23 @@ async function runGlobals(hooks: Array<AnyHookType>, hooksHandler: HooksHandler,
 
 async function runScale(scaler: RancherScaler, hooksHandler: HooksHandler, scale: 'UP' | 'DOWN', config: RancherScalerConfigType) {
   // We pass in the hooksHandler to run the pre and post local hooks
-  //Scale up or down
+  // Scale up or down
   Logger.info(`    scale: ${scale}`)
-  let scalerPromise;
+  let scalerPromise = Promise.resolve(true)
   switch (scale) {
     case 'UP':
-      scalerPromise = scaler.scaleUp();
-      break;
+      return scalerPromise
+      .then(() => hooksHandler.runHooks(config.global.preScaleUp || []))
+      .then(() => scaler.scaleUp())
+      .then(() => hooksHandler.runHooks(config.global.postScaleUp || []))
+      .catch(() => hooksHandler.runHooks(config.global.onFailure || []))
     case 'DOWN':
-      scalerPromise = scaler.scaleDown()
-      break;
+      return scalerPromise
+      .then(() => hooksHandler.runHooks(config.global.preScaleDown || []))
+      .then(() => scaler.scaleDown())
+      .then(() => hooksHandler.runHooks(config.global.postScaleDown || []))
+      .catch(() => hooksHandler.runHooks(config.global.onFailure || []))
   }
-
-  try {
-    await scalerPromise
-  } catch (err) {
-    await hooksHandler.runHooks(config.global.onFailure || [])
-  }
-
-  return;
 }
 
 async function main() {
@@ -93,6 +91,7 @@ async function main() {
       const scaler = makeRancherScaler(rancherRequests, Logger, hooksHandler, config);
       return runScale(scaler, hooksHandler, scale, config)
     }
+    // Manually run the hooks
     case Method.PRE_SCALE_UP_GLOBAL: return runGlobals(config.global.preScaleUp || [], hooksHandler, scale, config)
     case Method.POST_SCALE_UP_GLOBAL: return runGlobals(config.global.postScaleUp || [], hooksHandler, scale, config)
     case Method.PRE_SCALE_DOWN_GLOBAL: return runGlobals(config.global.preScaleDown || [], hooksHandler, scale, config)
