@@ -17,7 +17,8 @@ set -a; source .env ;set +a
 # create the rancher-scaler-secrets secret
 kubectl create secret generic rancher-scaler-secrets \
   --from-literal="cattle_secret_key=${CATTLE_SECRET_KEY}"\
-  --from-literal="rancher_base_url=${RANCHER_BASE_URL}"
+  --from-literal="rancher_base_url=${RANCHER_BASE_URL}"\
+  --from-literal="slack_webhook_url=${SLACK_WEBHOOK_URL}"
 
 # create the cronjob
 kubectl create -f ./rancher-scaler-cron-up.yaml
@@ -92,7 +93,8 @@ set -a; source .env ;set +a
 # create the rancher-scaler-secrets secret
 kubectl create secret generic rancher-scaler-secrets \
   --from-literal="cattle_secret_key=${CATTLE_SECRET_KEY}"\
-  --from-literal="rancher_base_url=${RANCHER_BASE_URL}"
+  --from-literal="rancher_base_url=${RANCHER_BASE_URL}"\
+  --from-literal="slack_webhook_url=${SLACK_WEBHOOK_URL}"
 
 # create the one time job
 kubectl create -f ./rancher-scaler-job-tmp.yaml

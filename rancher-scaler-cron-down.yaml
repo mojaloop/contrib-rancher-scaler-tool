@@ -12,14 +12,8 @@ spec:
           containers:
             - name: rancher-scaler-cron-down
               image: mojaloop/rancher-scaler:latest
+              command: ["sh", "-c", "npm run scale:pre_down && npm run scale:down && npm run scale:post_down"]
               env:
-                - name: SCALE
-                  value: DOWN
-                - name: RANCHER_BASE_URL
-                  valueFrom:
-                    secretKeyRef:
-                      name: rancher-scaler-secrets
-                      key: rancher_base_url
                 - name: CATTLE_ACCESS_KEY
                   value: token-czddw
                 - name: CATTLE_SECRET_KEY
@@ -27,5 +21,17 @@ spec:
                     secretKeyRef:
                       name: rancher-scaler-secrets
                       key: cattle_secret_key
+                - name: LOG_LEVEL
+                  value: debug
+                - name: RANCHER_BASE_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: rancher-scaler-secrets
+                      key: rancher_base_url
+                - name: SLACK_WEBHOOK_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: rancher-scaler-secrets
+                      key: slack_webhook_url
             
           restartPolicy: OnFailure
