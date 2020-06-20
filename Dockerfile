@@ -1,8 +1,6 @@
 FROM node:12.16.1-alpine as builder
 WORKDIR /opt/rancher-scaler
 
-RUN apk add --no-cache openssh
-
 # RUN apk add --no-cache -t build-dependencies git make gcc g++ python libtool autoconf automake \
 #   && cd $(npm root -g)/npm \
 #   && npm config set unsafe-perm true \
@@ -18,6 +16,9 @@ COPY tsconfig.json /opt/rancher-scaler/tsconfig.json
 
 FROM node:12.16.1-alpine
 WORKDIR /opt/rancher-scaler
+
+# SSH required for BOOTSTRAP actions
+RUN apk add --no-cache openssh
 
 # TODO: prune non production modules, this requires us to properly build ts
 

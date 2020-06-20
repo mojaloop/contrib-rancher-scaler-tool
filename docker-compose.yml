@@ -2,6 +2,7 @@ version: "3.7"
 
 services:
   rancher-scale:
+    # Comment out image: to build and run the local rancher-scale
     image: mojaloop/rancher-scaler:latest
     # build:
     #   context: .
@@ -9,10 +10,11 @@ services:
     volumes:
        - ./config/:/opt/rancher-scaler/config/
     environment:
-      # Can be VERIFY, SCALE
-      - METHOD=VERIFY
+      # Can be VERIFY, SCALE, BOOTSTRAP
+      - METHOD=BOOTSTRAP
       # Can be UP or DOWN: required when METHOD=scale
       - SCALE=DOWN
       - PATH_TO_CONFIG=/opt/rancher-scaler/config/rancher-scaler.config.js
     env_file:
       - .env
+    command: "tail -f /dev/null"
