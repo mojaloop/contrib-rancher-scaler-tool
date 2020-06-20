@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const Logger = require('@mojaloop/central-services-logger')
+
 /**
  * @function wrapWithRetries
  * @description - Call the given function with a number of retries.
@@ -5,12 +8,13 @@
  * @param {number} retries - Number of times to retry before returning an error if the func fails
  * @param {number} waitTimeMs - Ms time to wait before trying again
  */
-async function wrapWithRetries (func: any, retries: number, waitTimeMs: number): Promise<any> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function wrapWithRetries (func: () => any, retries: number, waitTimeMs: number): Promise<any> {
   try {
     const result = await func()
     return Promise.resolve(result)
   } catch (err) {
-    console.log(`wrapWithRetries failure: ${err.message}`)
+    Logger.debug(`wrapWithRetries failure: ${err.message}`)
     if (retries > 0) {
       // let retry wait job again
       return new Promise((resolve) => {
@@ -18,7 +22,7 @@ async function wrapWithRetries (func: any, retries: number, waitTimeMs: number):
       })
     }
 
-    console.error('wrapWithRetries Out of retries')
+    Logger.info('wrapWithRetries Out of retries')
     return Promise.reject(err)
   }
 }

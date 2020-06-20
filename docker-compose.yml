@@ -17,4 +17,4 @@ services:
       - PATH_TO_CONFIG=/opt/rancher-scaler/config/rancher-scaler.config.js
     env_file:
       - .env
-    command: "tail -f /dev/null"
+    # command: "tail -f /dev/null"
