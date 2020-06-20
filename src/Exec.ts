@@ -26,10 +26,10 @@ export class Exec {
     const directory = await this.unzipper.Open.file(zipPath);
     // const files = await Promise.all(directory.files.map(async (file: any) => await this._writeFile(file, outputPath)))
     const files: Array<string> = []
-    await directory.files.reduce((acc: Promise<void>, file: any) => {
-      return acc
-        .then(() => this._writeFile(file, outputPath))
-        .then(fileName => files.push(fileName))
+    await directory.files.reduce(async (acc: Promise<void>, file: any) => {
+      await acc;
+      const fileName = await this._writeFile(file, outputPath);
+      return files.push(fileName);
     }, Promise.resolve([]))
 
     this.logger.debug('Exec.unzip - unzipped the following files: ', files)
