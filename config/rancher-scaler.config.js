@@ -14,7 +14,8 @@ const config = {
       bootstrapActions: [
         // note: only 1 action is currently supported
         { 
-          actionId: 'RUN_STARTUP_SCRIPT',
+          // Only this action type is supported
+          actionType: 'RUN_STARTUP_SCRIPT',
           script: 'echo "HELLO WORLD"'
         }
       ]

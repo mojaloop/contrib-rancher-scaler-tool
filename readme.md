@@ -1,6 +1,6 @@
 # Rancher Scaler
 
-Work in progress repo for scheduling our kube clusters to save 💲💲💲
+[Work in Progress] Rancher Tooling for scaling up and down kubernetes clusters to save 💲💲💲
 
 ## Prerequisites:
 
@@ -8,6 +8,7 @@ Work in progress repo for scheduling our kube clusters to save 💲💲💲
 - An `.env.local` for running with npm, or `.env.docker` for running with docker-compose (see [Running Locally](#Running-Locally) for more information)
 - `kubectl` access (this doesn't need to run on the same cluster that does the scaling)
 - A valid `rancher-scaler.config.js` file (see [The Config File](#The-Config-File))
+- `kubectx` and `kubetail`
 
 ## Configuring the CronJobs
 
@@ -26,9 +27,12 @@ kubectl create -f ./rancher-scaler-cron-down.yaml
 kubectl get cronjob rancher-scaler-cron-up
 kubectl get jobs --watch
 
-# get logs
-pods=$(kubectl get po | grep rancher-scaler-cron-up | awk '{print $1}')
-kubectl logs $pods
+# # get logs
+# pods=$(kubectl get po | grep rancher-scaler-cron-up | awk '{print $1}')
+# kubectl logs $pods
+
+# tail logs with `kubetail`
+kubetail rancher-scaler
 ```
 
 ## Running Locally:
@@ -36,13 +40,11 @@ kubectl logs $pods
 ### `npm` runner
 
 ```bash
-touch .env.local
-# `.env.local` should take the format:
-#
-# export RANCHER_BASE_URL=
-# export CATTLE_ACCESS_KEY=
-# export CATTLE_SECRET_KEY=
-#
+# copy the env var template
+cp example.env.local .env.local
+
+# Edit the template and fill out the values
+vim .env.local
 source .env.local
 
 # Scale down the node pools in ./config/rancher-scaler.config.js
@@ -159,7 +161,7 @@ const config = {
 module.exports = config
 ```
 
-## Testing out formatting nvme:
+## Testing out shell scripts
 
 ```bash
 # run a pod
@@ -185,11 +187,17 @@ curl -u "${CATTLE_ACCESS_KEY}:${CATTLE_SECRET_KEY}" --location --request GET "${
 kubectl delete -f ./rancher-scaler-job-tmp.yaml
 
 
-
-
 ```
 
-## Questions/TODO
+## TODO
 
+1. Run script in remote nodes
 1. How can we make sure that the job will _always_ be scheduled? Maybe we need an affinity so it ends up on the masters?
 1. How can we specify the `rancher-scaler.config.js` at runtime?
+1. Add nice logging in with `@mojaloop/central-services-logging` library
+1. Slack notification to alert when:
+  - scale down is about to happen
+  - scale up succeeded
+  - bootstrap steps failed
+1. Unit Tests
+1. Better cli interface (right now it's all ENV vars)

@@ -7,7 +7,7 @@
     "start": "ts-node ./src/index.ts",
     "scale:up": "METHOD=SCALE SCALE=UP ts-node ./src/index.ts",
     "scale:down": "METHOD=SCALE SCALE=DOWN ts-node ./src/index.ts",
-    "bs": "npm rum bootstrap",
+    "bs": "npm run bootstrap",
     "bootstrap": "METHOD=BOOTSTRAP ts-node ./src/index.ts",
     "verify": "METHOD=VERIFY ts-node ./src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
