@@ -167,14 +167,17 @@ module.exports = config
 
 ## TODO
 
-1. How can we make sure that the job will _always_ be scheduled? Maybe we need an affinity so it ends up on the masters?
+1. How can we make sure that the job will run only on the master node?
+1. Make `_bootstrap_nvme.sh` idempotent so it won't mess existing nodes up, or won't cause false errors
+1. Set up cloudwatch post scale script
+1. Add tags to node templates
+1. Deploy live on one of our clusters (dev1? Prod?)
+
+## Backlog
+
 1. How can we specify the `rancher-scaler.config.js` at runtime?
   I guess volume mounts would be the way to do this.
 1. Unit Tests
 1. Better cli interface (right now it's all ENV vars)
-1. Add tests to ci/cd pipeline
 1. Properly compile ts in `docker build` (we are currently using `ts-node`)
-1. Deploy live on one of our clusters (dev1? Prod?)
-1. Add tags to node templates
-1. Set up cloudwatch post scale script
-1. Verify checksum of `_bootstrap_nvme.sh`
+1. Add tests to ci/cd pipeline
