@@ -37,7 +37,7 @@ const config = {
             hookType: 'RUN_STARTUP_SCRIPT',
             script: `echo "Downloading and running bootstrap script"; 
                   wget https://raw.githubusercontent.com/mojaloop/rancher-scaler/master/config/_boostrap_nvme.sh?token=AAM3EDDHLDU5QIEMED6HYD2665NM4 -O /tmp/_bootstrap_nvme.sh; 
-                  #todo: check the checksum of file!
+                  echo "9ab2dac12a80da6f419cb6964f50b3cf6497a3d9f39e5f79044a45cf22ff7608 /tmp/_bootstrap_nvme.sh" | sha256sum --check;
                   sudo sh /tmp/_bootstrap_nvme.sh`
           },
         ],
