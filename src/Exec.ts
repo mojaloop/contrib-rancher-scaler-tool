@@ -43,7 +43,7 @@ export class Exec {
 
   public async runInSsh(keypath: string, username: string, host: string, script: string) {
     // ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
-    const chmodCommand = `chmod 644 ${keypath}`
+    const chmodCommand = `chmod 600 ${keypath}`
     const keyscanCommand = `mkdir -p ~/.ssh/ && ssh-keyscan -H ${host} >> ~/.ssh/known_hosts`
     const sshCommand = `ssh -i ${keypath} ${username}@${host} "${script}"`
 
@@ -51,7 +51,7 @@ export class Exec {
       this.logger.debug('Exec.runInSsh - changing file permissions')
       this.logger.debug(`Exec.runInSsh - running: ${chmodCommand}`)
       this.execSync(chmodCommand)
-      
+
       this.logger.debug('Exec.runInSsh - adding hosts to ~/.ssh/known_hosts')
       this.logger.debug(`Exec.runInSsh - running: ${keyscanCommand}`)
       this.execSync(keyscanCommand)
