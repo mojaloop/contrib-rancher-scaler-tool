@@ -10,7 +10,7 @@ const config = {
     ],
     preScaleDown: [
       { hookType: 'SLACK_NOTIFICATION', contents: '[Rancher-Scaler] Scaling down `1` node pool in `1 minute`' },
-      // { hookType: 'SLEEP', timeMs: 1000 * 60 * 1 }
+      { hookType: 'SLEEP', timeMs: 1000 * 60 * 1 }
     ],
     postScaleDown: [
       { hookType: 'SLACK_NOTIFICATION', contents: '[Rancher-Scaler] Scaled down succesfully! 🎉🎉🎉' }
