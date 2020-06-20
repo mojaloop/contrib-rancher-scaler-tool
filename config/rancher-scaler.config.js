@@ -41,7 +41,7 @@ const config = {
         //   },
         // ],
         onFailure: [
-          { hookType: 'SLACK_NOTIFICATION', contents: '-    [Rancher-Scaler] Failed to scale `c-vsm2w:np-mg5wr`' }
+          { hookType: 'SLACK_NOTIFICATION', contents: '-    [Rancher-Scaler] Failed to scale `c-vsm2w:np-mg5wr` @Lewis Daly !!!' }
         ]
       }
     }
