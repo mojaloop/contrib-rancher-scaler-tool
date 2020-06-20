@@ -1,10 +1,10 @@
-type EnvConfig = {
+interface EnvConfig {
   rancherBaseUrl: string;
   cattleAccessKey: string;
   cattleSecretKey: string;
-  scale: 'UP' | 'DOWN',
+  scale: 'UP' | 'DOWN';
   pathToConfig: string;
-  method: 'VERIFY' | 'SCALE' | 'BOOTSTRAP'
+  method: 'VERIFY' | 'SCALE' | 'BOOTSTRAP';
 }
 
 export default EnvConfig

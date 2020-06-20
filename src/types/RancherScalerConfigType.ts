@@ -1,8 +1,8 @@
 import NodeType from './NodeType'
 
-type RancherScalerConfigType = {
+interface RancherScalerConfigType {
   // The list of nodes that should be scaled
-  nodes: Array<NodeType>
+  nodes: NodeType[];
 }
 
 export default RancherScalerConfigType
