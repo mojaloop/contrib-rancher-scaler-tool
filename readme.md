@@ -20,7 +20,7 @@ kubectl create secret generic rancher-scaler-secrets \
   --from-literal="rancher_base_url=${RANCHER_BASE_URL}"\
   --from-literal="slack_webhook_url=${SLACK_WEBHOOK_URL}"
 
-# create the cronjob
+# create the cronjobs
 kubectl create -f ./rancher-scaler-cron-up.yaml
 kubectl create -f ./rancher-scaler-cron-down.yaml
 
@@ -97,7 +97,7 @@ kubectl create secret generic rancher-scaler-secrets \
   --from-literal="slack_webhook_url=${SLACK_WEBHOOK_URL}"
 
 # create the one time job
-kubectl create -f ./rancher-scaler-job-tmp.yaml
+kubectl create -f ./rancher-scaler-job-down.yaml
 
 kubetail rancher-scaler-tmp
 
@@ -168,9 +168,10 @@ module.exports = config
 ## TODO
 
 1. How can we make sure that the job will run only on the master node?
+  - toleration/affinity/nodeSelector?
 1. Make `_bootstrap_nvme.sh` idempotent so it won't mess existing nodes up, or won't cause false errors
 1. Set up cloudwatch post scale script
-1. Add tags to node templates
+1. Add `mojaloop/cost_center` tags to node templates in Rancher
 1. Deploy live on one of our clusters (dev1? Prod?)
 
 ## Backlog

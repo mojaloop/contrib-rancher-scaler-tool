@@ -67,6 +67,7 @@ async function main() {
   //TODO: validate the config
   let slack: Messager = new NoMessager(Logger); //Default to NoMessager
   if (slackWebhookUrl) {
+    Logger.debug(`index.ts - setting up slack with SLACK_WEBHOOK_URL:${slackWebhookUrl}`)
     const incomingWebhookClient = new IncomingWebhook(slackWebhookUrl);
     slack = makeSlack(Logger, incomingWebhookClient)
   }

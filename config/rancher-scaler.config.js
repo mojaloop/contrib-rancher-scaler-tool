@@ -10,7 +10,7 @@ const config = {
     ],
     preScaleDown: [
       { hookType: 'SLACK_NOTIFICATION', contents: '[Rancher-Scaler] Scaling down `1` node pool in `1 minute`' },
-      { hookType: 'SLEEP', timeMs: 1000 * 60 * 1 }
+      // { hookType: 'SLEEP', timeMs: 1000 * 60 * 1 }
     ],
     postScaleDown: [
       { hookType: 'SLACK_NOTIFICATION', contents: '[Rancher-Scaler] Scaled down succesfully! 🎉🎉🎉' }
@@ -32,6 +32,7 @@ const config = {
           { hookType: 'SLACK_NOTIFICATION', contents: ' ↳ Scaling `c-vsm2w:np-mg5wr` to `2` nodes' }
         ],
         // Example config for running a shell script on each of the nodes after startup
+        // TODO: remove the token once we have made this repo public
         postScaleUp: [
           {
             hookType: 'RUN_STARTUP_SCRIPT',
@@ -46,7 +47,7 @@ const config = {
           { hookType: 'SLACK_NOTIFICATION', contents: ' ↳ Scaling `c-vsm2w:np-mg5wr` to `1` node' }
         ],
         onFailure: [
-          { hookType: 'SLACK_NOTIFICATION', contents: '•••Failed to scale `c-vsm2w:np-mg5wr` "@Lewis Daly" !!!' }
+          { hookType: 'SLACK_NOTIFICATION', contents: '   Failed to scale `c-vsm2w:np-mg5wr` "@Lewis Daly" !!!' }
         ]
       }
     }
