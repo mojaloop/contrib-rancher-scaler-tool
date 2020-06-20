@@ -93,11 +93,12 @@ export class RancherBootstrapper {
 
     const runnerErrors: any = []
 
-    await Promise.all(
-      nodes
-        .map(async node => this._runBootstrapForNode(node, action).catch(error => runnerErrors.push(error)))
-    )
-
+    await nodes.reduce(async (acc: Promise<void>, node: RancherNode) => {
+      return acc
+        .then(() => this._runBootstrapForNode(node, action))
+        .catch(error => runnerErrors.push(error))
+    }, Promise.resolve())
+    
     if (runnerErrors.length > 0) {
       this.logger.error(`RancherBootstrapper._runBootstrapForNodePool, failed with ${runnerErrors.length} errors.`)
       throw new Error(`_runBootstrapForNodePool failed with errors: \n${runnerErrors.join('\n')}`)

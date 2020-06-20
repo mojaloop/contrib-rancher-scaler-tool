@@ -151,7 +151,7 @@ export class RancherRequests {
           .on('finish', () => resolve(configPath))
       })
     } catch (err) {
-      this.logger.error(`RancherRequests.getNodesForNodePool() Error - ${err.message}`)
+      this.logger.error(`RancherRequests.downloadConfigForNode() Error - ${err.message}`)
       throw err;
     }
   }
