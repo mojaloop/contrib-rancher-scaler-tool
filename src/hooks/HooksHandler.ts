@@ -56,7 +56,7 @@ export class HooksHandler {
         if (!nodePoolId) {
           throw new Error(`RUN_STARTUP_SCRIPT action cannot be global, requires a nodePoolId.`)
         }
-        return this.bootstrapper._runBootstrapForNodePool(nodePoolId, hook)
+        return this.bootstrapper.runScriptForNodePool(nodePoolId, hook)
       }
     }
   }
