@@ -4,10 +4,12 @@ import { RancherRequests } from './RancherRequests';
 
 export class RancherScaler {
   rancherRequests: RancherRequests;
+  logger: any;
   nodes: Array<NodeType>;
 
-  constructor(rancherRequests: RancherRequests, config: RancherScalerConfigType) {
+  constructor(rancherRequests: RancherRequests, logger: any, config: RancherScalerConfigType) {
     this.rancherRequests = rancherRequests;
+    this.logger = logger;
     this.nodes = config.nodes
   }
 
@@ -20,7 +22,7 @@ export class RancherScaler {
     const errors: any = []
 
     await this.nodes.reduce(async (acc: Promise<void>, curr: NodeType) => {
-      console.log(`RancherScaler.scaleUp - Scaling node: ${curr.nodePoolId} to ${curr.maxQuantity}`)
+      this.logger.info(`RancherScaler.scaleUp - Scaling node: ${curr.nodePoolId} to ${curr.maxQuantity}`)
       const config = { quantity: curr.maxQuantity, nodeTemplateId: curr.nodeTemplateId };
       return acc
         .then(() => this.rancherRequests.putNodePoolQuantity(curr.nodePoolId, config))
@@ -30,7 +32,7 @@ export class RancherScaler {
     }, Promise.resolve())
 
     if (errors.length > 0) {
-      console.warn(`RancherScaler.scaleUp - finished running with errors: \n${errors.map((e: any) => `${e}\n`)}`)
+      this.logger.error(`RancherScaler.scaleUp - finished running with errors: \n${errors.map((e: any) => `${e}\n`)}`)
     }
   }
 
@@ -44,7 +46,7 @@ export class RancherScaler {
     const errors: any = []
 
     await this.nodes.reduce(async (acc: Promise<void>, curr: NodeType) => {
-      console.log(`RancherScaler.scaleDown - Scaling node: ${curr.nodePoolId} to ${curr.minQuantity}`)
+      this.logger.info(`RancherScaler.scaleDown - Scaling node: ${curr.nodePoolId} to ${curr.minQuantity}`)
       const config = { quantity: curr.minQuantity, nodeTemplateId: curr.nodeTemplateId };
       return acc
         .then(() => this.rancherRequests.putNodePoolQuantity(curr.nodePoolId, config))
@@ -54,15 +56,15 @@ export class RancherScaler {
     }, Promise.resolve())
 
     if (errors.length > 0) {
-      console.warn(`RancherScaler.scaleDown - finished running with errors: \n${errors.map((e: any) => `${e}\n`)}`)
+      this.logger.error(`RancherScaler.scaleDown - finished running with errors: \n${errors.map((e: any) => `${e}\n`)}`)
     }
   }
 }
 
 
 /* Dependency Injection */
-const makeRancherScaler = (rancherRequests: RancherRequests, config: RancherScalerConfigType): RancherScaler =>  {
-  const rancherScaler = new RancherScaler(rancherRequests, config)
+const makeRancherScaler = (rancherRequests: RancherRequests, logger: any, config: RancherScalerConfigType): RancherScaler =>  {
+  const rancherScaler = new RancherScaler(rancherRequests, logger, config)
 
   return rancherScaler;
 }

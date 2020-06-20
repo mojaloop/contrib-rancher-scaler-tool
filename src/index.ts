@@ -12,7 +12,6 @@ import makeRancherBootstrapper from './RancherBootstrapper';
 import wrapWithRetries from './lib/WrapWithRetries';
 import makeExec from './Exec';
 
-
 async function main() {
   const {
     rancherBaseUrl,
@@ -49,7 +48,7 @@ async function main() {
       return;
     }
     case 'SCALE': {
-      const scaler = makeRancherScaler(rancherRequests, config);
+      const scaler = makeRancherScaler(rancherRequests, Logger, config);
 
       //Scale up or down
       Logger.info(`    scale: ${scale}`)

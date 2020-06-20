@@ -35,7 +35,7 @@ describe('Exec', () => {
       const result = await exec.runInSsh(keypath, username, host!, script)
       
       // Assert
-      console.log(result)
+      Logger.info(result)
     })
   })
 })

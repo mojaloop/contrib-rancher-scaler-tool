@@ -65,8 +65,6 @@ export class RancherRequests {
       url: `/nodePools/${nodePoolId}`,
     }
 
-    // console.log('config', requestConfig)
-
     try {
       const response = await this.requests(requestConfig)
       // const url = `${this.rancherBaseUrl}/nodePools/${nodePoolId}`
@@ -107,7 +105,7 @@ export class RancherRequests {
       
       return response.data;
     } catch (err) {
-      console.log("RancherRequests.putNodePoolQuantity() Error", err)
+      this.logger.error(`RancherRequests.putNodePoolQuantity() Error - ${err.message}`)
       throw err;
     }
   }
@@ -122,11 +120,10 @@ export class RancherRequests {
 
     try {
       const response = await this.requests.get<GetNodesForNodePoolResponse>(url, this.baseRequestConfig)
-      // console.log('getNodesForNodePool, response.data', response.data.data)
 
       return response.data;
     } catch (err) {
-      console.log("RancherRequests.getNodesForNodePool() Error", err.message)
+      this.logger.error(`RancherRequests.getNodesForNodePool() Error - ${err.message}`)
       throw err;
     }
   }
@@ -154,7 +151,7 @@ export class RancherRequests {
           .on('finish', () => resolve(configPath))
       })
     } catch (err) {
-      console.log("RancherRequests.getNodesForNodePool() Error", err.message)
+      this.logger.error(`RancherRequests.getNodesForNodePool() Error - ${err.message}`)
       throw err;
     }
   }
