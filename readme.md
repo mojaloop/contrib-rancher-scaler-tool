@@ -91,17 +91,12 @@ kubectl create secret generic rancher-scaler-secrets \
   --from-literal="rancher_base_url=${RANCHER_BASE_URL}"
 
 # create the one time job
-kubectl create -f ./rancher-scaler-job-down.yaml
+kubectl create -f ./rancher-scaler-job-tmp.yaml
 
-# get the status and logs
-kubectl get job rancher-scaler-job-down
-kubectl get po | grep rancher-scaler-job-down | awk '{print $1}'
-pods=$(kubectl get po | grep rancher-scaler-job-down | awk '{print $1}')
-kubectl logs $pods
-
+kubetail rancher-scaler-tmp
 
 # cleanup the job
-kubectl delete -f ./rancher-scaler-job-down.yaml
+kubectl delete -f ./rancher-scaler-job-tmp.yaml
 ```
 
 ## Publishing a new Version

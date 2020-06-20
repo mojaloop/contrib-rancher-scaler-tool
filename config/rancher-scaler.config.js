@@ -17,7 +17,9 @@ const config = {
           // Only this action type is supported
           actionType: 'RUN_STARTUP_SCRIPT',
           // TODO: to run the script, this could be something like `curl url_of_file | sh`
-          script: 'echo "HELLO WORLD"; wget https://google.com/ -O /tmp/hello; cat /tmp/hello'
+          script: `echo "HELLO WORLD"; 
+                  wget https://google.com/ -O /tmp/hello; 
+                  cat /tmp/hello`
         }
       ]
     }

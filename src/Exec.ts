@@ -1,7 +1,5 @@
-
-
 export class Exec {
-  // TODO: make these _not_ any
+  // TODO: make these strictly typed
   private fs: any;
   private unzipper: any;
   private execSync: any;
@@ -19,7 +17,7 @@ export class Exec {
       this.fs.mkdirSync(outputPath)
     } catch (err) {
       if (err.message.indexOf('EEXIST') > -1) {
-        console.log(`mkdirSync ignoring as folder exists`)
+        this.logger.debug(`mkdirSync ignoring as folder exists`)
       } else {
         throw err;
       }
@@ -27,7 +25,7 @@ export class Exec {
 
     const directory = await this.unzipper.Open.file(zipPath);
     const files = await Promise.all(directory.files.map((file: any) => this._writeFile(file, outputPath)))
-    console.log('Exec.unzip - unzipped the following files: ', files)
+    this.logger.debug('Exec.unzip - unzipped the following files: ', files)
 
     return;
   }
@@ -45,7 +43,7 @@ export class Exec {
 
   public async runInSsh(keypath: string, username: string, host: string, script: string) {
     // ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
-    const keyscanCommand = `ssh-keyscan -H ${host} >> ~/.ssh/known_hosts`
+    const keyscanCommand = `mkdir -p ~/.ssh/ && ssh-keyscan -H ${host} >> ~/.ssh/known_hosts`
     const command = `ssh -i ${keypath} ${username}@${host} "${script}"`
 
     try {
