@@ -88,11 +88,12 @@ export class RancherBootstrapper {
    */
   public async _runBootstrapForNodePool(nodePoolId: string, action: BootstrapHookType) {
     this.logger.debug(`RancherBootstrapper._runBootstrapForNodePool - ${nodePoolId}`)
-    //TODO: be able to configure this dynamically
     const { data: nodes } = await this.rancherRequests.getNodesForNodePool(nodePoolId);
 
     const runnerErrors: any = []
 
+    // For each node, run the bootstrap script
+    // could be done in parallel, but that makes it harder to debug
     await nodes.reduce(async (acc: Promise<void>, node: RancherNode) => {
       return acc
         .then(() => this._runBootstrapForNode(node, action))
@@ -110,24 +111,22 @@ export class RancherBootstrapper {
    * @description Run the bootstrap steps
    */
   public async _runBootstrapForNode(node: RancherNode, action: BootstrapHookType) {
-    // TODO: make a tmp folder
     // TODO: refactor into Exec.makeTempDir
-    // const basePath = fs.mkdtempSync(path.join(os.tmpdir(), 'rb-'))
     const basePath = fs.mkdtempSync(path.join('/tmp/', 'rb-'))
     this.logger.debug(`RancherBootstrapper._runBootstrapForNode : ${basePath}`)
 
     try {
-      //Download the keys
+      // Download the keys
       const keyZipPath = `${basePath}/keys.zip`
       await this.rancherRequests.downloadConfigForNode(node.id, keyZipPath)
       
-      // //unzip the keys
+      // unzip the keys
       const keyDirPath = `${basePath}/keys`
       await this.exec.unzip(keyZipPath, keyDirPath)
       
-      // // //ssh into instance and run command
+      // ssh into instance and run command
       const keyPath = `${basePath}/keys/id_rsa`
-      // // For now this just takes the first thing in our actions
+      // For now this just takes the first thing in our actions
       await this.exec.runInSsh(keyPath, node.sshUser, node.nodeName, action.script)
     } catch (err) {
       this.logger.error(`RancherBootstrapper._runBootstrapForNode, ${node.id}, failed with error: ${err}`)
