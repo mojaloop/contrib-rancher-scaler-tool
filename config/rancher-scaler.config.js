@@ -3,17 +3,17 @@ const config = {
   //At least `global: {}` is required
   global: {
     preScaleUp: [
-      { hookType: 'SLACK_NOTIFICATION', contents: 'Scaling up' }
+      { hookType: 'SLACK_NOTIFICATION', contents: '[Rancher-Scaler] Scaling up _n_ node pools' }
     ],
     postScaleUp: [
-      { hookType: 'SLACK_NOTIFICATION', contents: 'Scaled up succesfully' }
+      { hookType: 'SLACK_NOTIFICATION', contents: '[Rancher-Scaler] Scaled up succesfully' }
     ],
     preScaleDown: [
-      { hookType: 'SLACK_NOTIFICATION', contents: 'Scaling down 1 node pool in 2 minutes' },
+      { hookType: 'SLACK_NOTIFICATION', contents: '[Rancher-Scaler] Scaling down `1` node pool in `2 minutes`' },
       { hookType: 'SLEEP', timeMs: 1000 * 60 * 2 }
     ],
     onFailure: [
-      { hookType: 'SLACK_NOTIFICATION', contents: 'Rancher-scaler failed to scale' }
+      { hookType: 'SLACK_NOTIFICATION', contents: '[Rancher-Scaler] Failed to scale' }
     ]
   },
   nodes: [

@@ -20,7 +20,8 @@ function getEnvConfig(): EnvConfig {
     CATTLE_ACCESS_KEY,
     CATTLE_SECRET_KEY,
     METHOD,
-    PATH_TO_CONFIG
+    PATH_TO_CONFIG,
+    SLACK_WEBHOOK_URL: slackWebhookUrl,
   } = process.env;
   let { SCALE } = process.env;
 
@@ -83,6 +84,7 @@ function getEnvConfig(): EnvConfig {
     scale,
     method,
     pathToConfig,
+    slackWebhookUrl,
   };
 }
 

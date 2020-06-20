@@ -25,6 +25,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@mojaloop/central-services-logger": "10.4.0",
+    "@slack/webhook": "^5.0.3",
     "axios": "^0.19.2",
     "unzipper": "^0.10.11"
   },

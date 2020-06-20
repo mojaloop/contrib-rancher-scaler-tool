@@ -7,7 +7,7 @@ export type BootstrapHookType = {
 
 export type SlackNotificationHookType = {
   hookType: ActionEnum.SLACK_NOTIFICATION,
-  conents: string,
+  contents: string,
 }
 
 export type SleepHookType = {

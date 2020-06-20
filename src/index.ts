@@ -2,6 +2,7 @@ import * as fs from 'fs'
 import * as unzipper from 'unzipper'
 import axios from 'axios'
 import { execSync } from 'child_process'
+import { IncomingWebhook } from '@slack/webhook'
 
 import Logger from '@mojaloop/central-services-logger'
 
@@ -14,6 +15,7 @@ import wrapWithRetries from './lib/WrapWithRetries';
 import makeExec from './Exec';
 import makeHooksHandler, { HooksHandler } from './hooks/HooksHandler'
 import AnyHookType from './types/HookTypes'
+import makeSlack, { NoMessager, Messager } from './lib/Slack'
 
 async function runGlobals(hooks: Array<AnyHookType>, hooksHandler: HooksHandler, scale: 'UP' | 'DOWN', config: RancherScalerConfigType) {
   try {
@@ -55,6 +57,7 @@ async function main() {
     scale,
     method,
     pathToConfig,
+    slackWebhookUrl,
   } = getEnvConfig()
 
   const config: RancherScalerConfigType = require(pathToConfig)
@@ -64,10 +67,15 @@ async function main() {
   }
 
   //TODO: validate the config
+  let slack: Messager = new NoMessager(Logger); //Default to NoMessager
+  if (slackWebhookUrl) {
+    const incomingWebhookClient = new IncomingWebhook(slackWebhookUrl);
+    slack = makeSlack(Logger, incomingWebhookClient)
+  }
   const rancherRequests = makeRancherRequests(fs, axios, Logger, cattleAccessKey, cattleSecretKey, rancherBaseUrl);
   const exec = makeExec(fs, unzipper, execSync, Logger)
   const bootstrapper = makeRancherBootstrapper(rancherRequests, config, wrapWithRetries, exec, Logger);
-  const hooksHandler = makeHooksHandler(Logger, {sendMessage: () => console.log('sending slack message!')}, bootstrapper)
+  const hooksHandler = makeHooksHandler(Logger, slack, bootstrapper)
 
   Logger.info(`Running method: ${method}`)
   switch (method) {

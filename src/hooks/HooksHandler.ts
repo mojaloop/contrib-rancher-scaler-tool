@@ -2,15 +2,16 @@ import AnyHookType from "../types/HookTypes";
 import LoggerType from '../types/LoggerType';
 import { ActionEnum } from '../types/ActionEnum';
 import { RancherBootstrapper } from '../RancherBootstrapper';
+import { Slack, Messager } from 'lib/Slack';
 
 
 // For now, just support global hooks...
 export class HooksHandler {
   logger: LoggerType;
-  slackHandler: any;
+  slackHandler: Messager;
   bootstrapper: RancherBootstrapper;
 
-  constructor(logger: LoggerType, slackHandler: any, bootstrapper: RancherBootstrapper) {
+  constructor(logger: LoggerType, slackHandler: Messager, bootstrapper: RancherBootstrapper) {
     this.logger = logger;
     this.slackHandler = slackHandler;
     this.bootstrapper = bootstrapper;
@@ -49,7 +50,7 @@ export class HooksHandler {
       }
       case ActionEnum.SLACK_NOTIFICATION: {
         // todo: implement
-        return this.slackHandler.sendMessage()
+        return this.slackHandler.sendMessage(hook.contents)
       }
       case ActionEnum.RUN_STARTUP_SCRIPT: {
         if (!nodePoolId) {
@@ -62,7 +63,7 @@ export class HooksHandler {
 }
 
 /* Dependency injection */
-const makeHooksHandler = (logger: LoggerType, slackHandler: any, bootstrapper: RancherBootstrapper) => {
+const makeHooksHandler = (logger: LoggerType, slackHandler: Messager, bootstrapper: RancherBootstrapper) => {
   const hooksHandler = new HooksHandler(logger, slackHandler, bootstrapper);
 
   return hooksHandler;
