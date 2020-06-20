@@ -49,11 +49,15 @@ vim .env
 # Souce the .env file to your local environment
 set -a; source .env ;set +a
 
+# Verify your rancher env vars are correct
+npm run verify
+
 # Scale down the node pools in ./config/rancher-scaler.config.js
 npm run scale:down
 
 # Scale up the node pools in ./config/rancher-scaler.config.js
 npm run scale:up
+
 
 #Scale up, then run boostrap
 npm run scale:up && npm run bootstrap
@@ -191,7 +195,7 @@ kubectl delete -f ./rancher-scaler-job-tmp.yaml
 1. Run script in remote nodes
 1. How can we make sure that the job will _always_ be scheduled? Maybe we need an affinity so it ends up on the masters?
 1. How can we specify the `rancher-scaler.config.js` at runtime?
-1. Add nice logging in with `@mojaloop/central-services-logging` library
+  I guess volume mounts would be the way to do this.
 1. Slack notification to alert when:
     - scale down is about to happen
     - scale up succeeded

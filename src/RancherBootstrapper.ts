@@ -2,12 +2,15 @@
 import fs from 'fs'
 import path from 'path'
 
+
 import { RancherNode } from './types/RancherRequestsTypes';
 import { RancherRequests } from './RancherRequests';
 import RancherScalerConfigType from './types/RancherScalerConfigType';
 import NodeType from './types/NodeType';
 import { Exec } from 'Exec';
 import BootstapActionType from 'types/BootstrapActionType';
+import LoggerType from './types/LoggerType';
+
 
 /**
  * @class RancherBootstrapper
@@ -18,14 +21,14 @@ export class RancherBootstrapper {
   nodes: Array<NodeType>;
   wrapWithRetries: (func: any, retries: number, waitTimeMs: number) => Promise<any>
   exec: Exec;
-  logger: any;
+  logger: LoggerType;
 
   constructor(
     rancherRequests: RancherRequests, 
     config: RancherScalerConfigType, 
     wrapWithRetries: (func: any, retries: number, waitTimeMs: number) => Promise<any>,
     exec: Exec,
-    logger: any
+    logger: LoggerType
   ) {
     this.rancherRequests = rancherRequests;
     this.nodes = config.nodes
@@ -133,7 +136,18 @@ export class RancherBootstrapper {
     await this.exec.unzip(keyZipPath, keyDirPath)
 
     // // //ssh into instance and run command
-    const keyPath = `${basePath}/keys/key.pem`
+    // TODO: I'm not sure which one...
+    /*
+      ca.pem
+      cert.pem
+      id_rsa
+      id_rsa.pub
+      key.pem - NO
+      server-key.pem
+      server.pem
+    */
+    // const keyPath = `${basePath}/keys/key.pem`
+    const keyPath = `${basePath}/keys/server-key.pem`
     // // For now this just takes the first thing in our actions
     await this.exec.runInSsh(keyPath, node.sshUser, node.nodeName, actions[0].script)
 
@@ -149,7 +163,7 @@ const makeRancherBootstrapper = (
   config: RancherScalerConfigType, 
   wrapWithRetries: (func: any, retries: number, waitTimeMs: number) => Promise<any>,
   exec: Exec,
-  logger: any,
+  logger: LoggerType,
 ): RancherBootstrapper => {
   const rancherBootstrapper = new RancherBootstrapper(rancherRequests, config, wrapWithRetries, exec, logger)
 

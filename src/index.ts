@@ -2,7 +2,8 @@ import * as fs from 'fs'
 import * as unzipper from 'unzipper'
 import axios from 'axios'
 import { execSync } from 'child_process'
-const Logger = require('@mojaloop/central-services-logger')
+
+import Logger from '@mojaloop/central-services-logger'
 
 import makeRancherScaler from './RancherScaler'
 import makeRancherRequests from './RancherRequests'
@@ -35,7 +36,7 @@ async function main() {
     case 'VERIFY': {
       // Verify that the config works by calling `getNodePool`
       const result = await rancherRequests.getNodePool(config.nodes[0].nodePoolId)
-      Logger.info('getNodePool reply', result)
+      Logger.info(`VERIFY: getNodePool reply: ${JSON.stringify(result)}`)
       return;
     }
     // TODO: change to BOOTSTRAP
