@@ -43,15 +43,21 @@ export class Exec {
 
   public async runInSsh(keypath: string, username: string, host: string, script: string) {
     // ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
+    const chmodCommand = `chmod 644 ${keypath}`
     const keyscanCommand = `mkdir -p ~/.ssh/ && ssh-keyscan -H ${host} >> ~/.ssh/known_hosts`
-    const command = `ssh -i ${keypath} ${username}@${host} "${script}"`
+    const sshCommand = `ssh -i ${keypath} ${username}@${host} "${script}"`
 
     try {
+      this.logger.debug('Exec.runInSsh - changing file permissions')
+      this.logger.debug(`Exec.runInSsh - running: ${chmodCommand}`)
+      this.execSync(chmodCommand)
+      
       this.logger.debug('Exec.runInSsh - adding hosts to ~/.ssh/known_hosts')
       this.logger.debug(`Exec.runInSsh - running: ${keyscanCommand}`)
       this.execSync(keyscanCommand)
-      this.logger.info(`Exec.runInSsh - running: ${command}`)
-      const result = this.execSync(command)
+
+      this.logger.info(`Exec.runInSsh - running: ${sshCommand}`)
+      const result = this.execSync(sshCommand)
       return result.toString()
     } catch (err) {
       // This is thrown on any non-zero exit code... nice!

@@ -4,9 +4,6 @@ const Logger = require('@mojaloop/central-services-logger')
 
 import { RancherRequests } from './RancherRequests';
 
-// const cattleAccessKey
-// cattleSecretKey
-
 const {
   RANCHER_BASE_URL: rancherBaseUrl,
   CATTLE_ACCESS_KEY: cattleAccessKey,
