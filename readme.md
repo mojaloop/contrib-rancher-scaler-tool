@@ -4,7 +4,7 @@
 
 ## Prerequisites:
 
-- Rancher API Access, and an access token (see [rancher api](#rancher-api) below)
+- Rancher API Access, and an access token (see [rancher api](#rancher-api-examples) below)
 - An `.env` file, following the format outlined in `example.env` (see [Running Locally](#Running-Locally) for more information)
 - `kubectl` access (this doesn't need to run on the same cluster that does the scaling)
 - A valid `rancher-scaler.config.js` file (see [The Config File](#The-Config-File))
@@ -111,7 +111,7 @@ CircleCI manages this, by publishing a `mojaloop/rancher-scaler:latest` image to
 
 > Note: we are using the `latest` tag for now, but we may want to change this in the future
 
-## Rancher API
+## Rancher API Examples
 
 1. create a new access token in Rancher with global scope (it needs to talk to the root rancher cluster)
 
@@ -142,6 +142,7 @@ in `./config/rancher-scaler.config.js`, we have the following:
 
 > Note: We use a .js file, as this allows for commenting 
 
+[ todo: Update this with the latest hooks!]
 `rancher-scaler.config.js`
 ```js
 const config = {
@@ -176,3 +177,4 @@ module.exports = config
 1. Deploy live on one of our clusters (dev1? Prod?)
 1. Add tags to node templates
 1. Set up cloudwatch post scale script
+1. Verify checksum of `_bootstrap_nvme.sh`

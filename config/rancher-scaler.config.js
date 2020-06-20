@@ -19,27 +19,28 @@ const config = {
       { hookType: 'SLACK_NOTIFICATION', contents: '[Rancher-Scaler] Failed to scale' }
     ]
   },
+  // Individual nodePools to scale
   nodes: [
     {
       nodePoolId: 'c-vsm2w:np-mg5wr',
       nodeTemplateId: 'cattle-global-nt:nt-user-s7l26-nt-2s4x5',
       minQuantity: 1,
       maxQuantity: 2,
+      // Hooks to run before/after scale events for each node pool
       hooks: {
         preScaleUp: [
           { hookType: 'SLACK_NOTIFICATION', contents: ' ↳ Scaling `c-vsm2w:np-mg5wr` to `2` nodes' }
         ],
-        // Example config for running a shell script on all of the nodes
-        // postScaleUp: [
-        // {
-        //   // Only this action type is supported
-        //   hookType: 'RUN_STARTUP_SCRIPT',
-        //   // TODO: to run the script, this could be something like `curl url_of_file | sh`
-        //   script: `echo "HELLO WORLD"; 
-        //         wget https://google.com/ -O /tmp/hello; 
-        //         cat /tmp/hello`
-        // },
-        // ],
+        // Example config for running a shell script on each of the nodes after startup
+        postScaleUp: [
+          {
+            hookType: 'RUN_STARTUP_SCRIPT',
+            script: `echo "Downloading and running bootstrap script"; 
+                  wget https://raw.githubusercontent.com/mojaloop/rancher-scaler/master/config/_boostrap_nvme.sh?token=AAM3EDDHLDU5QIEMED6HYD2665NM4 -O /tmp/_bootstrap_nvme.sh; 
+                  #todo: check the checksum of file!
+                  sudo sh /tmp/_bootstrap_nvme.sh`
+          },
+        ],
         preScaleDown: [
           { hookType: 'SLACK_NOTIFICATION', contents: ' ↳ Scaling `c-vsm2w:np-mg5wr` to `1` node' }
         ],
