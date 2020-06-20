@@ -1,14 +1,17 @@
 
 
 export class Exec {
+  // TODO: make these _not_ any
   private fs: any;
   private unzipper: any;
   private execSync: any;
+  private logger: any;
 
-  constructor(fs: any, unzipper: any, execSync: any) {
+  constructor(fs: any, unzipper: any, execSync: any, logger: any) {
     this.fs = fs;
     this.unzipper = unzipper;
     this.execSync = execSync;
+    this.logger = logger;
   }
 
   public async unzip(zipPath: string, outputPath: string): Promise<void> {
@@ -41,16 +44,28 @@ export class Exec {
   }
 
   public async runInSsh(keypath: string, username: string, host: string, script: string) {
-    const command = `ssh -i ${keypath}  ${username}@${host} "${script}"`
-    this.execSync(command)
-    //TODO: error handling?
-  }
+    // ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
+    const keyscanCommand = `ssh-keyscan -H ${host} >> ~/.ssh/known_hosts`
+    const command = `ssh -i ${keypath} ${username}@${host} "${script}"`
 
+    try {
+      this.logger.debug('Exec.runInSsh - adding hosts to ~/.ssh/known_hosts')
+      this.logger.debug(`Exec.runInSsh - running: ${keyscanCommand}`)
+      this.execSync(keyscanCommand)
+      this.logger.info(`Exec.runInSsh - running: ${command}`)
+      const result = this.execSync(command)
+      return result.toString()
+    } catch (err) {
+      // This is thrown on any non-zero exit code... nice!
+      this.logger.error(`Exec.runInSsh - ${err}`)
+      throw err;
+    }
+  }
 }
 
 /* Dependency Injection */
-const makeExec = (fs: any, unzipper: any, execSync: any): Exec => {
-  const exec = new Exec(fs, unzipper, execSync);
+const makeExec = (fs: any, unzipper: any, execSync: any, logger: any): Exec => {
+  const exec = new Exec(fs, unzipper, execSync, logger);
 
   return exec
 }

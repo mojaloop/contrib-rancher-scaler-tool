@@ -109,7 +109,7 @@ export class RancherBootstrapper {
 
   /**
    * @function _runBootstrapForNode
-   * @description Run the 
+   * @description Run the bootstrap steps
    */
   public async _runBootstrapForNode(node: RancherNode, actions: Array<BootstapActionType>) {
     if (actions.length > 1) {

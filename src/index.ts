@@ -42,7 +42,7 @@ async function main() {
     // TODO: change to BOOTSTRAP
     case 'BOOTSTRAP': {
       //TODO: implement
-      const exec = makeExec(fs, unzipper, execSync)
+      const exec = makeExec(fs, unzipper, execSync, Logger)
       const bootstrapper = makeRancherBootstrapper(rancherRequests, config, wrapWithRetries, exec);
       await bootstrapper.runBootstrapper()
 

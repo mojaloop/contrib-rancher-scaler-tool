@@ -205,4 +205,3 @@ kubectl delete -f ./rancher-scaler-job-tmp.yaml
 1. Better cli interface (right now it's all ENV vars)
 1. Add tests to ci/cd pipeline
 1. Properly compile ts in `docker build` (we are currently using `ts-node`)
-1. Fix linting (Lewis is too lazy to do this atm...)

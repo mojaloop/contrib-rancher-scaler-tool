@@ -7,9 +7,11 @@ const Logger = require('@mojaloop/central-services-logger')
  * @param {fn} func - Async function to be called with retries. This func must throw an error when it fails
  * @param {number} retries - Number of times to retry before returning an error if the func fails
  * @param {number} waitTimeMs - Ms time to wait before trying again
+ * @param {number} waitTimeScale - Optional - Number to scale wait time by each iteration (e.g. a `waitTimeScale` of 2 will
+ *   double the wait time each iteration)
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function wrapWithRetries (func: () => any, retries: number, waitTimeMs: number): Promise<any> {
+async function wrapWithRetries (func: () => any, retries: number, waitTimeMs: number, waitTimeScale: number = 1): Promise<any> {
   try {
     const result = await func()
     return Promise.resolve(result)
@@ -18,7 +20,7 @@ async function wrapWithRetries (func: () => any, retries: number, waitTimeMs: nu
     if (retries > 0) {
       // let retry wait job again
       return new Promise((resolve) => {
-        setTimeout(() => resolve(wrapWithRetries(func, retries - 1, waitTimeMs)), waitTimeMs)
+        setTimeout(() => resolve(wrapWithRetries(func, retries - 1, waitTimeMs, waitTimeScale)), waitTimeMs)
       })
     }
 
