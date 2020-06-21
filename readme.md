@@ -176,6 +176,7 @@ module.exports = config
 
 ## Backlog
 
+1. Sometimes scale down gets triggered twice?
 1. How can we specify the `rancher-scaler.config.js` at runtime?
   I guess volume mounts would be the way to do this.
 1. Unit Tests

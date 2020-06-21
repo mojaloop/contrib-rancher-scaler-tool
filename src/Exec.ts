@@ -1,9 +1,11 @@
+import LoggerType from 'types/LoggerType';
+
 export class Exec {
   // TODO: make these strictly typed
   private fs: any;
   private unzipper: any;
   private execSync: any;
-  private logger: any;
+  private logger: LoggerType;
 
   constructor(fs: any, unzipper: any, execSync: any, logger: any) {
     this.fs = fs;
@@ -32,7 +34,7 @@ export class Exec {
       return files.push(fileName);
     }, Promise.resolve([]))
 
-    this.logger.debug('Exec.unzip - unzipped the following files: ', files)
+    this.logger.debug(`Exec.unzip - unzipped the following files:\n${JSON.stringify(files)}`)
 
     return;
   }
@@ -77,7 +79,7 @@ export class Exec {
 }
 
 /* Dependency Injection */
-const makeExec = (fs: any, unzipper: any, execSync: any, logger: any): Exec => {
+const makeExec = (fs: any, unzipper: any, execSync: any, logger: LoggerType): Exec => {
   const exec = new Exec(fs, unzipper, execSync, logger);
 
   return exec
