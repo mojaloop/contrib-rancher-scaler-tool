@@ -39,14 +39,15 @@ export class Exec {
 
   //TODO: fix this to return the filename...
   public async _writeFile(file: any, outputPath: string): Promise<string> {
+    const fullPath = `${outputPath}/${file.path.split('/').pop()}`;
     return new Promise((resolve, reject) => {
-      const fullPath = `${outputPath}/${file.path.split('/').pop()}`;
       file
         .stream()
         .pipe(this.fs.createWriteStream(fullPath))
         .on('error', reject)
-        .on('finish', () => resolve(fullPath))
-    });
+        .on('finish',resolve)
+    })
+    .then(() => fullPath)
   }
 
   public async runInSsh(keypath: string, username: string, host: string, script: string) {
