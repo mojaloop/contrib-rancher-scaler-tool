@@ -1,7 +1,7 @@
 import NodeType from '../types/NodeType';
 import RancherScalerConfigType from '../types/RancherScalerConfigType';
 import { RancherRequests } from '../lib/RancherRequests';
-import { HooksHandler } from '../hooks/HooksHandler'
+import { HooksHandler } from './HooksHandler'
 
 export class RancherScaler {
   rancherRequests: RancherRequests;

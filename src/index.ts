@@ -12,7 +12,7 @@ import getEnvConfig, { Method } from './lib/EnvConfig';
 import makeRancherBootstrapper from './domain/RancherBootstrapper';
 import wrapWithRetries from './lib/WrapWithRetries';
 import makeExec from './lib/Exec';
-import makeHooksHandler, { HooksHandler } from './hooks/HooksHandler'
+import makeHooksHandler, { HooksHandler } from './domain/HooksHandler'
 import AnyHookType from './types/HookTypes'
 import makeSlack, { NoMessager, Messager } from './lib/Slack'
 import makeScalerConfig from './lib/ScalerConfig'

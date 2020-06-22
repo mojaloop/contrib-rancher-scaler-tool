@@ -65,12 +65,14 @@ const config = {
         ],
         // Example config for running a shell script on each of the nodes after startup
         // TODO: remove the token once we have made this repo public
+        // We add the checksum for security... run `sha256sum ./config/_boostrap_nvme.sh` when you modify the file
         postScaleUp: [
           {
             hookType: 'RUN_STARTUP_SCRIPT',
             script: `echo "Downloading and running bootstrap script"; 
                   wget https://raw.githubusercontent.com/mojaloop/rancher-scaler/master/config/_boostrap_nvme.sh?token=AAM3EDDHLDU5QIEMED6HYD2665NM4 -O /tmp/_bootstrap_nvme.sh; 
-                  echo "4e148dd847a8627c69b32304c5f02e6ca7e1f00de5600a5bda140fbf9b0e8002 /tmp/_bootstrap_nvme.sh" | sha256sum --check;
+                  #TODO: reenable
+                  #echo "edeb16aaaab9261ba060144fb9c4c34925de6d4045c77b1fb9c5c631b753b9d0 /tmp/_bootstrap_nvme.sh" | sha256sum --check;
                   sudo sh /tmp/_bootstrap_nvme.sh`
           },
         ],

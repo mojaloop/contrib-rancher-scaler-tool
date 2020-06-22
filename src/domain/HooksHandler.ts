@@ -1,7 +1,7 @@
 import AnyHookType from "../types/HookTypes";
 import LoggerType from '../types/LoggerType';
 import { ActionEnum } from '../types/ActionEnum';
-import { RancherBootstrapper } from '../domain/RancherBootstrapper';
+import { RancherBootstrapper } from './RancherBootstrapper';
 import { Messager } from '../lib/Slack';
 
 

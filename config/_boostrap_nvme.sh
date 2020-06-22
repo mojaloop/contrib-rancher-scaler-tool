@@ -25,7 +25,7 @@ echo "****** OS - Stopping Docker"
 
 ## Format nvme storage
 echo "****** NVME - Formating storage"
-mkfs.ext4 /dev/nvme0n1
+mkfs.ext4 /dev/nvme0n1 -F
 
 ## Mount nvme
 echo "****** NVME - Mounting storage"

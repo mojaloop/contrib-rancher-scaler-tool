@@ -52,7 +52,7 @@ export class Exec {
     .then(() => fullPath)
   }
 
-  public async runInSsh(keypath: string, username: string, host: string, script: string) {
+  public async runInSsh(keypath: string, username: string, host: string, script: string): Promise<string> {
     // ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
     const chmodCommand = `chmod 600 ${keypath}`
     const keyscanCommand = `mkdir -p ~/.ssh/ && ssh-keyscan -H ${host} >> ~/.ssh/known_hosts`
@@ -61,11 +61,14 @@ export class Exec {
     try {
       this.logger.debug('Exec.runInSsh - changing file permissions')
       this.logger.debug(`Exec.runInSsh - running: ${chmodCommand}`)
-      this.execSync(chmodCommand)
+      const chmodBuffer = this.execSync(chmodCommand)
+      this.logger.debug(`Exec.runInSsh output: ${chmodBuffer.toString()}`)
 
       this.logger.debug('Exec.runInSsh - adding hosts to ~/.ssh/known_hosts')
       this.logger.debug(`Exec.runInSsh - running: ${keyscanCommand}`)
-      this.execSync(keyscanCommand)
+      const keyscanBuffer = this.execSync(keyscanCommand)
+      this.logger.debug(`Exec.runInSsh output: ${keyscanBuffer.toString()}`)
+
 
       this.logger.info(`Exec.runInSsh - running: ${sshCommand}`)
       const result = this.execSync(sshCommand)

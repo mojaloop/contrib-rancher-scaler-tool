@@ -182,7 +182,6 @@ module.exports = config
 1. How can we make sure that the job will run only on the master node?
     - toleration/affinity/nodeSelector?
     - otherwise we can _never_ scale down to 0 in each node pool
-1. Make `_bootstrap_nvme.sh` idempotent so it won't mess existing nodes up, or won't cause false errors
 1. Set up cloudwatch post scale script  
     - need to add another script that setup the AWS cloudwatch agent. ref: https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/download-cloudwatch-agent-commandline.html
     - configure the AWS cloudwatch dashboards to show the instances

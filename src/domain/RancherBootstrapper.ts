@@ -125,7 +125,8 @@ export class RancherBootstrapper {
       // ssh into instance and run command
       const keyPath = `${basePath}/keys/id_rsa`
       // For now this just takes the first thing in our actions
-      await this.exec.runInSsh(keyPath, node.sshUser, node.nodeName, action.script)
+      const sshOutput = await this.exec.runInSsh(keyPath, node.sshUser, node.nodeName, action.script)
+      this.logger.debug(`RancherBootstrapper._runBootstrapForNode, sshOutput: ${sshOutput}`)
     } catch (err) {
       this.logger.error(`RancherBootstrapper._runBootstrapForNode, ${node.id}, failed with error: ${err}`)
       throw err;
