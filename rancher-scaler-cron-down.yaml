@@ -5,6 +5,9 @@ metadata:
 spec:
   # once an hour, at minute 31 of the hour
   schedule: "31 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 5
+  failedJobsHistoryLimit: 10
   jobTemplate:
     spec:
       # Timeout after 10 minutes

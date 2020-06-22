@@ -179,6 +179,7 @@ module.exports = config
 
 ## TODO
 
+1. We are only downloading keys for one node?
 1. How can we make sure that the job will run only on the master node?
   - toleration/affinity/nodeSelector?
 1. Make `_bootstrap_nvme.sh` idempotent so it won't mess existing nodes up, or won't cause false errors
@@ -188,7 +189,6 @@ module.exports = config
 
 ## Backlog
 
-1. Sometimes scale down gets triggered twice?
 1. How can we specify the `rancher-scaler.config.js` at runtime?
   I guess volume mounts would be the way to do this.
 1. Unit Tests

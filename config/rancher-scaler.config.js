@@ -10,7 +10,8 @@ const config = {
     ],
     preScaleDown: [
       { hookType: 'SLACK_NOTIFICATION', contents: '[Rancher-Scaler] Scaling down `1` node pool in `1 minute`\nRun `kubectl patch cronjobs rancher-scaler-cron-down -p \'{ "spec": { "suspend": true } }\'` to stop this.' },
-      { hookType: 'SLEEP', timeMs: 1000 * 60 * 1 }
+      // Sleep to allow user intervention - Note: kubernetes will timeout the job after 10 minutes
+      // { hookType: 'SLEEP', timeMs: 1000 * 60 * 1 }
     ],
     postScaleDown: [
       { hookType: 'SLACK_NOTIFICATION', contents: '[Rancher-Scaler] Scaled down succesfully! 🎉🎉🎉' }
