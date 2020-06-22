@@ -191,8 +191,6 @@ module.exports = config
 ## Backlog
 
 1. Make slack notifications more pretty
-1. Better validation of the `rancher-scaler.config.js` file
-    - maybe we can use joi
 1. How can we specify the `rancher-scaler.config.js` at runtime?
     - I guess volume mounts would be the way to do this.
 1. Unit Tests
