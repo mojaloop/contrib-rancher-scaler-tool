@@ -150,14 +150,16 @@ curl -u "${CATTLE_ACCESS_KEY}:${CATTLE_SECRET_KEY}" \
 
 ## The Config File
 
-in `./config/rancher-scaler.config.js`, we have the following:
+In `./config/rancher-scaler.config.js`, we define a config file to control the scaling behaviour, as well as pre/post scaling hooks:
 
 > Note: We use a .js file, as this allows for commenting 
 
-[ todo: Update this with the latest hooks!]
+### Example: A basic config file
 `rancher-scaler.config.js`
 ```js
 const config = {
+  // global hooks: at least {} is required
+  globals: {}
   //A list of node pools that should be scaled up and down
   nodes: [
     {
@@ -170,7 +172,48 @@ const config = {
       // When SCALE=UP, how many instances should be running?
       maxQuantity: 2,
     }
-    // TODO: Add bootstrap actions here
+  ]
+}
+
+module.exports = config
+```
+
+### Example: A config file with pre and post scale hooks
+`rancher-scaler.config.js`
+```js
+const config = {
+  // global hook config, to be run before/after all scale events
+  global: {
+    preScaleUp: [
+      { hookType: 'SLACK_NOTIFICATION', contents: 'Scaling up `1` node pools', color: 'warn' }
+    ],
+    postScaleUp: [
+      { hookType: 'SLACK_NOTIFICATION', contents: 'Scaled up succesfully! 🎉🎉🎉', color: 'good' }
+    ],
+    preScaleDown: [
+      { hookType: 'SLACK_NOTIFICATION', contents: 'Scaling down `1` node pool in `1 minute`\n\nRun `kubectl patch cronjobs rancher-scaler-cron-down -p \'{ "spec": { "suspend": true } }\'` to stop this.', color: 'warn'},
+      // Sleep to allow user intervention - Note: kubernetes will timeout the job after 10 minutes
+      { hookType: 'SLEEP', timeMs: 1000 * 60 * 1 }
+    ],
+    postScaleDown: [
+      { hookType: 'SLACK_NOTIFICATION', contents: 'Scaled down succesfully! 🎉🎉🎉', color: 'good' }
+    ],
+    onFailure: [
+      { hookType: 'SLACK_NOTIFICATION', contents: 'Failed to scale', color: 'danger' }
+    ]
+  },
+  //A list of node pools that should be scaled up and down
+  nodes: [
+    {
+      // The ID of the node pool - you can find this in the 
+      nodePoolId: 'c-vsm2w:np-mg5wr',
+      // The nodeTemplateId of the node pool, also found in the api
+      nodeTemplateId: 'cattle-global-nt:nt-user-s7l26-nt-2s4x5',
+      // When SCALE=DOWN, how many instances should be running?
+      minQuantity: 1,
+      // When SCALE=UP, how many instances should be running?
+      maxQuantity: 2,
+    }
   ]
 }
 
