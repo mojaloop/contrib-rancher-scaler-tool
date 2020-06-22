@@ -18,7 +18,7 @@ export class HooksHandler {
   }
 
   // TODO: separate between global and local hooks?
-  
+
   /**
    * @function runHooks
    * @description Run the given hooks
@@ -52,7 +52,7 @@ export class HooksHandler {
       }
       case ActionEnum.SLACK_NOTIFICATION: {
         // todo: implement
-        return this.slackHandler.sendMessage(hook.contents)
+        return this.slackHandler.sendMessage(hook.contents, hook.color)
       }
       case ActionEnum.RUN_STARTUP_SCRIPT: {
         if (!nodePoolId) {

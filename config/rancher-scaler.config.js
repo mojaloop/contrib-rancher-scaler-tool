@@ -3,21 +3,21 @@ const config = {
   // At least `global: {}` is required
   global: {
     preScaleUp: [
-      { hookType: 'SLACK_NOTIFICATION', contents: '[Rancher-Scaler] Scaling up `1` node pools' }
+      { hookType: 'SLACK_NOTIFICATION', contents: 'Scaling up `1` node pools', color: 'warn' }
     ],
     postScaleUp: [
-      { hookType: 'SLACK_NOTIFICATION', contents: '[Rancher-Scaler] Scaled up succesfully! 🎉🎉🎉' }
+      { hookType: 'SLACK_NOTIFICATION', contents: 'Scaled up succesfully! 🎉🎉🎉', color: 'good' }
     ],
     preScaleDown: [
-      { hookType: 'SLACK_NOTIFICATION', contents: '[Rancher-Scaler] Scaling down `1` node pool in `1 minute`\nRun `kubectl patch cronjobs rancher-scaler-cron-down -p \'{ "spec": { "suspend": true } }\'` to stop this.' },
+      { hookType: 'SLACK_NOTIFICATION', contents: 'Scaling down `1` node pool in `1 minute`\n\nRun `kubectl patch cronjobs rancher-scaler-cron-down -p \'{ "spec": { "suspend": true } }\'` to stop this.', color: 'warn'},
       // Sleep to allow user intervention - Note: kubernetes will timeout the job after 10 minutes
       // { hookType: 'SLEEP', timeMs: 1000 * 60 * 1 }
     ],
     postScaleDown: [
-      { hookType: 'SLACK_NOTIFICATION', contents: '[Rancher-Scaler] Scaled down succesfully! 🎉🎉🎉' }
+      { hookType: 'SLACK_NOTIFICATION', contents: 'Scaled down succesfully! 🎉🎉🎉', color: 'good' }
     ],
     onFailure: [
-      { hookType: 'SLACK_NOTIFICATION', contents: '[Rancher-Scaler] Failed to scale' }
+      { hookType: 'SLACK_NOTIFICATION', contents: 'Failed to scale', color: 'bad' }
     ]
   },
   // Individual nodePools to scale

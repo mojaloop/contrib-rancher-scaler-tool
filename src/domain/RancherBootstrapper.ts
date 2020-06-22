@@ -44,7 +44,7 @@ export class RancherBootstrapper {
     this.logger.debug(`RancherBootstrapper.runScriptForNodePool - running bootstrapper for node pool ${nodePoolId}, ${JSON.stringify(action)}`)
 
     // TODO: fix this hack - for some reason immediately after creating a new node, transitioning is false
-    // a better option would be to get the expected node count, but that's also a pain
+    // a better option would be to pass in the expected node count, but that's also a pain
     // Wait for 25 seconds for node pool to at least show `transitioning`
     await sleep(1000 * 25)
 

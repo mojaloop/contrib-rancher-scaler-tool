@@ -6,6 +6,7 @@ const hookTypeSchema = Joi.object({
   script: Joi.string().optional(),
   contents: Joi.string().optional(),
   timeMs: Joi.number().optional(),
+  color: Joi.string().optional(),
 }).required()
 
 const nodeTypeSchema = Joi.object({

@@ -1,9 +1,11 @@
 import LoggerType from '../types/LoggerType';
-import { IncomingWebhook } from '@slack/webhook'
+import { IncomingWebhook, IncomingWebhookSendArguments } from '@slack/webhook'
 
 
 export abstract class Messager {
   public abstract async sendMessage(text: string): Promise<void>;
+  public abstract async sendMessage(text: string, color?: string): Promise<void>;
+  public abstract async sendMessage(complexMessage: any): Promise<void>;
 }
 
 export class NoMessager implements Messager {
@@ -32,11 +34,30 @@ export class Slack implements Messager {
    * @description Send a slack message
    * @param text 
    */
-  public async sendMessage(text: string): Promise<void> {
-    // TODO: format message
-    const config = {
-      text,
+  public async sendMessage(text: string): Promise<void>
+  public async sendMessage(text: string, color?: string): Promise<void>
+  public async sendMessage(text: any, color?: string): Promise<void> {
+    let config: IncomingWebhookSendArguments = {};
+    if (typeof text === 'string') {
+      config = {
+        text,
+      }
     }
+
+    if (color) {
+      config = {
+        attachments: [
+          {
+            color,
+            title: 'Rancher-Scaler',
+            text,
+          }
+        ]
+      }
+    }
+
+    this.logger.debug(`Slack.sendMessage with config: ${JSON.stringify(config)}`)
+
     await this.incomingWebhookClient.send(config)
   }
 }
