@@ -1,4 +1,14 @@
-import EnvConfig from './types/EnvConfig';
+export interface EnvConfig {
+  rancherBaseUrl: string;
+  cattleAccessKey: string;
+  cattleSecretKey: string;
+  scale: 'UP' | 'DOWN';
+  pathToConfig: string;
+  method: Method
+  // Optional
+  slackWebhookUrl?: string;
+}
+
 
 export enum Method {
   SCALE='SCALE',
@@ -72,7 +82,7 @@ function getEnvConfig(): EnvConfig {
 
   let pathToConfig
   if (!PATH_TO_CONFIG) {
-    pathToConfig = '../config/rancher-scaler.config.js';
+    pathToConfig = '../../config/rancher-scaler.config.js';
   } else {
     pathToConfig = PATH_TO_CONFIG
   }

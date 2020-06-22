@@ -3,19 +3,20 @@ import * as unzipper from 'unzipper'
 import axios from 'axios'
 import { execSync } from 'child_process'
 import { IncomingWebhook } from '@slack/webhook'
-
 import Logger from '@mojaloop/central-services-logger'
 
 import makeRancherScaler, { RancherScaler } from './domain/RancherScaler'
 import makeRancherRequests from './lib/RancherRequests'
 import RancherScalerConfigType from './types/RancherScalerConfigType';
-import getEnvConfig, { Method } from './config';
+import getEnvConfig, { Method } from './lib/EnvConfig';
 import makeRancherBootstrapper from './domain/RancherBootstrapper';
 import wrapWithRetries from './lib/WrapWithRetries';
 import makeExec from './lib/Exec';
 import makeHooksHandler, { HooksHandler } from './hooks/HooksHandler'
 import AnyHookType from './types/HookTypes'
 import makeSlack, { NoMessager, Messager } from './lib/Slack'
+import makeScalerConfig from './lib/ScalerConfig'
+import configValidator from 'lib/ConfigValidator'
 
 async function runGlobals(hooks: Array<AnyHookType>, hooksHandler: HooksHandler, scale: 'UP' | 'DOWN', config: RancherScalerConfigType) {
   try {
@@ -56,22 +57,19 @@ async function main() {
     method,
     pathToConfig,
     slackWebhookUrl,
-  } = getEnvConfig()
+  } = getEnvConfig()  
 
-  const config: RancherScalerConfigType = require(pathToConfig)
-
-  if (!config) {
-    throw new Error(`no config found at path: ${pathToConfig}`)
-  }
-
-  //TODO: validate the config
   /* Init all dependencies */
+  const scalerConfig = makeScalerConfig(configValidator);
+  const config = scalerConfig.getConfig(pathToConfig)
+
   let slack: Messager = new NoMessager(Logger); //Default to NoMessager
   if (slackWebhookUrl) {
     Logger.debug(`index.ts - setting up slack with SLACK_WEBHOOK_URL:${slackWebhookUrl}`)
     const incomingWebhookClient = new IncomingWebhook(slackWebhookUrl);
     slack = makeSlack(Logger, incomingWebhookClient)
   }
+  
   const rancherRequests = makeRancherRequests(fs, axios, Logger, cattleAccessKey, cattleSecretKey, rancherBaseUrl);
   const exec = makeExec(fs, unzipper, execSync, Logger)
   const bootstrapper = makeRancherBootstrapper(rancherRequests, config, wrapWithRetries, exec, Logger);

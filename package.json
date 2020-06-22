@@ -24,12 +24,14 @@
   "author": "Lewis Daly",
   "license": "Apache-2.0",
   "dependencies": {
+    "@hapi/joi": "^17.1.1",
     "@mojaloop/central-services-logger": "10.4.0",
     "@slack/webhook": "^5.0.3",
     "axios": "^0.19.2",
     "unzipper": "^0.10.11"
   },
   "devDependencies": {
+    "@types/hapi__joi": "^17.1.2",
     "@types/jest": "25.2.2",
     "@types/unzipper": "^0.10.3",
     "@typescript-eslint/eslint-plugin": "3.3.0",
