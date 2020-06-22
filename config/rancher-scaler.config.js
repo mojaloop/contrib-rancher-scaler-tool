@@ -3,7 +3,7 @@ const config = {
   // At least `global: {}` is required
   global: {
     preScaleUp: [
-      { hookType: 'SLACK_NsOTIFICATION', contents: '[Rancher-Scaler] Scaling up `1` node pools' }
+      { hookType: 'SLACK_NOTIFICATION', contents: '[Rancher-Scaler] Scaling up `1` node pools' }
     ],
     postScaleUp: [
       { hookType: 'SLACK_NOTIFICATION', contents: '[Rancher-Scaler] Scaled up succesfully! 🎉🎉🎉' }

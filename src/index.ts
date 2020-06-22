@@ -16,7 +16,7 @@ import makeHooksHandler, { HooksHandler } from './hooks/HooksHandler'
 import AnyHookType from './types/HookTypes'
 import makeSlack, { NoMessager, Messager } from './lib/Slack'
 import makeScalerConfig from './lib/ScalerConfig'
-import configValidator from 'lib/ConfigValidator'
+import configValidator from './lib/ConfigValidator'
 
 async function runGlobals(hooks: Array<AnyHookType>, hooksHandler: HooksHandler, scale: 'UP' | 'DOWN', config: RancherScalerConfigType) {
   try {
@@ -83,7 +83,6 @@ async function main() {
       Logger.info(`VERIFY: getNodePool reply: ${JSON.stringify(result)}`)
       return;
     }
-    // TODO: change to BOOTSTRAP
     case 'BOOTSTRAP': {
       throw new Error('no longer supported, use hooks instead...')
     }
@@ -102,4 +101,14 @@ async function main() {
   }
 }
 
-main()
+
+(async () => {
+  try {
+    await main()
+    process.exit(0)
+  } catch (err) {
+    Logger.error(`rancher-scaler failed with error: ${err}`)
+    console.error(err)
+    process.exit(1)
+  }
+})();
