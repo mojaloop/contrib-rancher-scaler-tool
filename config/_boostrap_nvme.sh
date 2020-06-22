@@ -3,6 +3,12 @@
 set -e
 set -u
 
+LOCKFILE=/root/has_boostrap_run
+if test -f "${LOCKFILE}"; then
+  echo "${LOCKFILE} exists. Not running _bootstrap_nvme again"
+  exit 0
+fi
+
 echo "****** Rancher - Script to re-configure i3.xx AWS Machines to mount attached NVME storage!\n"
 
 ## Update OS
@@ -44,7 +50,13 @@ mkdir -p /var/lib/kubelet
 echo '/mnt/nvme/kubelet  /var/lib/kubelet   none   defaults,bind 0 0' >> /etc/fstab
 mount /mnt/nvme/kubelet
 
+# TODO: install cloudwatch agent
+
+# make sure this script is idempotent:
+touch ${LOCKFILE}
+
 
 ## Rebooting system
 echo "****** OS - Rebooting system..."
-reboot
+# TODO: renable once we fix pod scheduling issues
+# reboot
