@@ -181,6 +181,7 @@ module.exports = config
 
 1. We are only downloading keys for one node?
   - for some reason the bootstrapper isn't waiting properly...
+    - I think transitioning is no for a very brief time... maybe we can add a short sleep to this?
 1. How can we make sure that the job will run only on the master node?
   - toleration/affinity/nodeSelector?
   - otherwise we can _never_ scale down to 0 in each node pool

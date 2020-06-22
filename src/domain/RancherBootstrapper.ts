@@ -10,6 +10,7 @@ import NodeType from '../types/NodeType';
 import { Exec } from 'lib/Exec';
 import { BootstrapHookType } from '../types/HookTypes';
 import LoggerType from '../types/LoggerType';
+import sleep from 'lib/Sleep';
 
 
 /**
@@ -44,6 +45,11 @@ export class RancherBootstrapper {
   public async runScriptForNodePool(nodePoolId: string, action: BootstrapHookType) {
     this.logger.debug(`RancherBootstrapper.runScriptForNodePool - running bootstrapper for node pool ${nodePoolId}, ${JSON.stringify(action)}`)
 
+    // TODO: fix this hack - for some reason immediately after creating a new node, transitioning is false
+    // a better option would be to get the expected node count, but that's also a pain
+    // Wait for 25 seconds for node pool to at least show `transitioning`
+    sleep(1000 * 25)
+
     //wait for nodePoolId's nodes to be ready
     await this.wrapWithRetries(() => this._isNodePoolReady(nodePoolId), 15, 1000 * 30)
 
@@ -61,6 +67,13 @@ export class RancherBootstrapper {
 
     const result = await this.rancherRequests.getNodesForNodePool(nodePoolId);
     console.log('isNodePoolReady result', result)
+    const nodeCount = result.data.length;
+
+    // TODO: implement some expectedNodeCount...
+    // if (nodeCount !== expectedNodeCount) {
+    //   throw new Error(`Found ${nodeCount} nodes, expected ${expectedNodeCount}.`)
+    // }
+
     const nodeTransitioningCount = result.data.filter(node => node.transitioning === 'yes').length
 
     if (nodeTransitioningCount > 0) {
