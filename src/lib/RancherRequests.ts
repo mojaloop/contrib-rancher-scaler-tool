@@ -117,6 +117,7 @@ export class RancherRequests {
   public async getNodesForNodePool(nodePoolId: string): Promise<GetNodesForNodePoolResponse> {
     /* .../v3/nodes/?nodePoolId=c-vsm2w%3Anp-mg5wr */
     const url = `${this.rancherBaseUrl}/nodes/?nodePoolId=${nodePoolId}`
+    this.logger.debug(`getNodesForNodePool calling url: ${url}`)
 
     try {
       const response = await this.requests.get<GetNodesForNodePoolResponse>(url, this.baseRequestConfig)

@@ -46,7 +46,7 @@ export class RancherBootstrapper {
     // TODO: fix this hack - for some reason immediately after creating a new node, transitioning is false
     // a better option would be to get the expected node count, but that's also a pain
     // Wait for 25 seconds for node pool to at least show `transitioning`
-    sleep(1000 * 25)
+    await sleep(1000 * 25)
 
     //wait for nodePoolId's nodes to be ready
     await this.wrapWithRetries(() => this._isNodePoolReady(nodePoolId), 15, 1000 * 30)
@@ -64,7 +64,6 @@ export class RancherBootstrapper {
     this.logger.debug(`RancherBootstrapper._isNodePoolReady - ${nodePoolId}`)
 
     const result = await this.rancherRequests.getNodesForNodePool(nodePoolId);
-    console.log('isNodePoolReady result', result)
     const nodeCount = result.data.length;
 
     // TODO: implement some expectedNodeCount...
