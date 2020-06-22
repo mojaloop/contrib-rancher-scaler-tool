@@ -24,6 +24,7 @@ export class RancherScaler {
   public async scaleUp() {
     const errors: any = []
 
+    // Note: this serializes scaling for easy debugging, but we may want to run in paralell in the future
     await this.nodes.reduce(async (acc: Promise<void>, node: NodeType) => {
       return acc
         .then(() => this._scaleNodePoolUp(node))
@@ -50,6 +51,7 @@ export class RancherScaler {
   public async scaleDown() {
     const errors: any = []
 
+    // Note: this serializes scaling for easy debugging, but we may want to run in paralell in the future
     await this.nodes.reduce(async (acc: Promise<void>, node: NodeType) => {
       return acc
         .then(() => this._scaleNodePoolDown(node))

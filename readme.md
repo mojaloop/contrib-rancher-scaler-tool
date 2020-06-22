@@ -189,9 +189,12 @@ module.exports = config
 
 ## Backlog
 
+1. Better validation of the `rancher-scaler.config.js` file
+    - maybe we can use joi
 1. How can we specify the `rancher-scaler.config.js` at runtime?
-  I guess volume mounts would be the way to do this.
+    - I guess volume mounts would be the way to do this.
 1. Unit Tests
 1. Better cli interface (right now it's all ENV vars)
 1. Properly compile ts in `docker build` (we are currently using `ts-node`)
 1. Add tests to ci/cd pipeline
+1. Add optional parallel scaling option

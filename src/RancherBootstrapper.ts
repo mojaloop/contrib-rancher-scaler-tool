@@ -42,20 +42,7 @@ export class RancherBootstrapper {
    * @description Run the bootstrapper for a given node pool
    */
   public async runScriptForNodePool(nodePoolId: string, action: BootstrapHookType) {
-    this.logger.debug(`RancherBootstrapper.runScriptForNodePool - running bootstrapper for node pool ${nodePoolId}, ${action}`)
-
-    //wait for nodePoolId's nodes to be ready
-    await this.wrapWithRetries(() => this._isNodePoolReady(nodePoolId), 15, 1000 * 30)
-
-    await this._runBootstrapForNodePool(nodePoolId, action)
-  }
-
-  /**
-   * @function _runBootstrapperForNodePool
-   * @description Run the bootstrapper for a given node pool
-   */
-  public async _runBootstrapperForNodePool(nodePoolId: string, action: BootstrapHookType) {
-    this.logger.debug(`RancherBootstrapper._runBootstrapperForNodePool - running bootstrapper for node pool ${nodePoolId}, ${action}`)
+    this.logger.debug(`RancherBootstrapper.runScriptForNodePool - running bootstrapper for node pool ${nodePoolId}, ${JSON.stringify(action)}`)
 
     //wait for nodePoolId's nodes to be ready
     await this.wrapWithRetries(() => this._isNodePoolReady(nodePoolId), 15, 1000 * 30)
@@ -73,6 +60,7 @@ export class RancherBootstrapper {
     this.logger.debug(`RancherBootstrapper._isNodePoolReady - ${nodePoolId}`)
 
     const result = await this.rancherRequests.getNodesForNodePool(nodePoolId);
+    console.log('isNodePoolReady result', result)
     const nodeTransitioningCount = result.data.filter(node => node.transitioning === 'yes').length
 
     if (nodeTransitioningCount > 0) {

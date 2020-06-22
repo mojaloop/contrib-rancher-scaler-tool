@@ -8,7 +8,7 @@ spec:
       containers:
         - name: rancher-scaler-tmp
           image: mojaloop/rancher-scaler:latest
-          command: ["sh", "-c", "npm run scale:down"]
+          command: ["sh", "-c", "npm run scale:up"]
           # command: ["sh", "-c", "tail -f /dev/null"]
           env:
             - name: CATTLE_ACCESS_KEY
