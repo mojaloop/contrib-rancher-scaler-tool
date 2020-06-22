@@ -17,6 +17,8 @@ export class HooksHandler {
     this.bootstrapper = bootstrapper;
   }
 
+  // TODO: separate between global and local hooks?
+  
   /**
    * @function runHooks
    * @description Run the given hooks
