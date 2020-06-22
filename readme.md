@@ -105,6 +105,18 @@ kubetail rancher-scaler-tmp
 kubectl delete -f ./rancher-scaler-job-tmp.yaml
 ```
 
+## Suspending CronJobs
+
+```bash
+kubectl get cronjobs
+# NAME                       SCHEDULE     SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+# rancher-scaler-cron-down   31 * * * *   False     0        20m             37h
+# rancher-scaler-cron-up     1 * * * *    False     0        50m             37h
+
+kubectl patch cronjobs rancher-scaler-cron-down -p '{"spec" : {"suspend" : true }}'
+kubectl patch cronjobs rancher-scaler-cron-up -p '{"spec" : {"suspend" : true }}'
+```
+
 ## Publishing a new Version
 
 CircleCI manages this, by publishing a `mojaloop/rancher-scaler:latest` image to docker hub on _every_ push to master.
