@@ -3,13 +3,13 @@ import fs from 'fs'
 import path from 'path'
 
 
-import { RancherNode } from './types/RancherRequestsTypes';
-import { RancherRequests } from './RancherRequests';
-import RancherScalerConfigType from './types/RancherScalerConfigType';
-import NodeType from './types/NodeType';
-import { Exec } from 'Exec';
-import { BootstrapHookType } from 'types/HookTypes';
-import LoggerType from './types/LoggerType';
+import { RancherNode } from '../types/RancherRequestsTypes';
+import { RancherRequests } from '../lib/RancherRequests';
+import RancherScalerConfigType from '../types/RancherScalerConfigType';
+import NodeType from '../types/NodeType';
+import { Exec } from 'lib/Exec';
+import { BootstrapHookType } from '../types/HookTypes';
+import LoggerType from '../types/LoggerType';
 
 
 /**

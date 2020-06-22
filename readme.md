@@ -180,11 +180,13 @@ module.exports = config
 ## TODO
 
 1. We are only downloading keys for one node?
+  - for some reason the bootstrapper isn't waiting properly...
 1. How can we make sure that the job will run only on the master node?
   - toleration/affinity/nodeSelector?
+  - otherwise we can _never_ scale down to 0 in each node pool
 1. Make `_bootstrap_nvme.sh` idempotent so it won't mess existing nodes up, or won't cause false errors
 1. Set up cloudwatch post scale script
-1. Add `mojaloop/cost_center` tags to node templates in Rancher
+1. Add `mojaloop/cost_center` tags to existing node templates in Rancher
 1. Deploy live on one of our clusters (dev1? Prod?)
 
 ## Backlog

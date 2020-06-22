@@ -1,5 +1,5 @@
 import { AxiosStatic, AxiosRequestConfig } from 'axios';
-import { GetNodesForNodePoolResponse } from './types/RancherRequestsTypes';
+import { GetNodesForNodePoolResponse } from '../types/RancherRequestsTypes';
 
 
 /**

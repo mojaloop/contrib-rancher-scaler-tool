@@ -1,8 +1,8 @@
 import AnyHookType from "../types/HookTypes";
 import LoggerType from '../types/LoggerType';
 import { ActionEnum } from '../types/ActionEnum';
-import { RancherBootstrapper } from '../RancherBootstrapper';
-import { Slack, Messager } from 'lib/Slack';
+import { RancherBootstrapper } from '../domain/RancherBootstrapper';
+import { Messager } from '../lib/Slack';
 
 
 // For now, just support global hooks...

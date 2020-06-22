@@ -6,13 +6,13 @@ import { IncomingWebhook } from '@slack/webhook'
 
 import Logger from '@mojaloop/central-services-logger'
 
-import makeRancherScaler, { RancherScaler } from './RancherScaler'
-import makeRancherRequests from './RancherRequests'
+import makeRancherScaler, { RancherScaler } from './domain/RancherScaler'
+import makeRancherRequests from './lib/RancherRequests'
 import RancherScalerConfigType from './types/RancherScalerConfigType';
 import getEnvConfig, { Method } from './config';
-import makeRancherBootstrapper from './RancherBootstrapper';
+import makeRancherBootstrapper from './domain/RancherBootstrapper';
 import wrapWithRetries from './lib/WrapWithRetries';
-import makeExec from './Exec';
+import makeExec from './lib/Exec';
 import makeHooksHandler, { HooksHandler } from './hooks/HooksHandler'
 import AnyHookType from './types/HookTypes'
 import makeSlack, { NoMessager, Messager } from './lib/Slack'
