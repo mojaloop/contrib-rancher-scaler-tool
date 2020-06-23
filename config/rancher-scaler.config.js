@@ -31,7 +31,7 @@ const config = {
       // Hooks to run before/after scale events for each node pool
       hooks: {
         preScaleUp: [
-          { hookType: 'SLACK_NOTIFICATION', contents: '  ↳ Scaling `c-vsm2w:np-cgntb` to `2` nodes' }
+          { hookType: 'SLACK_NOTIFICATION', contents: '  ↳ Scaling `c-vsm2w:np-cgntb` to `0` nodes' }
         ],
         // Example config for running a shell script on each of the nodes after startup
         // TODO: remove the token once we have made this repo public
@@ -47,7 +47,7 @@ const config = {
           },
         ],
         preScaleDown: [
-          { hookType: 'SLACK_NOTIFICATION', contents: '  ↳ Scaling `c-vsm2w:np-cgntb` to `1` node' }
+          { hookType: 'SLACK_NOTIFICATION', contents: '  ↳ Scaling `c-vsm2w:np-cgntb` to `0` nodes' }
         ],
         onFailure: [
           { hookType: 'SLACK_NOTIFICATION', contents: '   Failed to scale `c-vsm2w:np-cgntb` "@Lewis Daly" !!!' }
