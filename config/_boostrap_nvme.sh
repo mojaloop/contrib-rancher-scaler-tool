@@ -22,7 +22,7 @@ apt-get -y install linux-aws linux-headers-aws linux-image-aws
 echo "***** Installing CloudWatch Agent"
 sudo wget https://s3.amazonaws.com/amazoncloudwatch-agent/debian/amd64/latest/amazon-cloudwatch-agent.deb
 sudo dpkg -i -E ~/amazon-cloudwatch-agent.deb
-
+# /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
 
 
 # TODO: testing only - remove later
