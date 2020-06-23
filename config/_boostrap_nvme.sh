@@ -19,7 +19,13 @@ apt-get -y update
 echo "****** OS - Installing AWS OS extensions"
 apt-get -y install linux-aws linux-headers-aws linux-image-aws
 
-# TODO: testing only - remove
+echo "***** Installing CloudWatch Agent"
+sudo wget https://s3.amazonaws.com/amazoncloudwatch-agent/debian/amd64/latest/amazon-cloudwatch-agent.deb
+sudo dpkg -i -E ~/amazon-cloudwatch-agent.deb
+
+
+
+# TODO: testing only - remove later
 touch ${LOCKFILE}
 exit 0
 
