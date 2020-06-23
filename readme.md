@@ -248,7 +248,7 @@ module.exports = config
 
 ```
 ssh -i ~/Downloads/worker5/id_rsa ubuntu@35.178.89.50 'echo "Downloading and running bootstrap script"; 
-                  wget https://raw.githubusercontent.com/mojaloop/rancher-scaler/master/config/_boostrap_nvme.sh?token=AAM3EDDHLDU5QIEMED6HYD2665NM4 -O /tmp/_bootstrap_nvme.sh; 
+                  wget https://raw.githubusercontent.com/mojaloop/rancher-scaler/master/config/_boostrap_nvme.sh?token=AAM3EDHBMSVJADMWLCSXALS67KU4O -O /tmp/_bootstrap_nvme.sh; _bootstrap_nvme.sh; 
                   #TODO: reenable checksum
                   #echo "edeb16aaaab9261ba060144fb9c4c34925de6d4045c77b1fb9c5c631b753b9d0 /tmp/_bootstrap_nvme.sh" | sha256sum --check;
                   sudo sh /tmp/_bootstrap_nvme.sh'
