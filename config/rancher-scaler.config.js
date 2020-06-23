@@ -26,8 +26,8 @@ const config = {
     {
       nodePoolId: 'c-vsm2w:np-cgntb',
       nodeTemplateId: 'cattle-global-nt:nt-user-s7l26-nt-qsnss', //i3.xlarge
-      minQuantity: 1,
-      maxQuantity: 2,
+      minQuantity: 0,
+      maxQuantity: 0,
       // Hooks to run before/after scale events for each node pool
       hooks: {
         preScaleUp: [
