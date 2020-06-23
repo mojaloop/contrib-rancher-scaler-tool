@@ -20,14 +20,26 @@ echo "****** OS - Installing AWS OS extensions"
 apt-get -y install linux-aws linux-headers-aws linux-image-aws
 
 echo "***** Installing CloudWatch Agent"
-sudo wget https://s3.amazonaws.com/amazoncloudwatch-agent/debian/amd64/latest/amazon-cloudwatch-agent.deb
-sudo dpkg -i -E ~/amazon-cloudwatch-agent.deb
+wget https://s3.amazonaws.com/amazoncloudwatch-agent/debian/amd64/latest/amazon-cloudwatch-agent.deb
+dpkg -i -E ~/amazon-cloudwatch-agent.deb
 # /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
 
+echo "***** Configuring CloudWatch Agent"
+wget -O amazon-cloudwatch-agent.json https://raw.githubusercontent.com/mojaloop/rancher-scaler/master/config/amazon-cloudwatch-agent.json?token=AAM3EDGYP5VRMQJMODEJBU267KPM4
+mv amazon-cloudwatch-agent.json /opt/aws/amazon-cloudwatch-agent/etc/
+echo '/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
+  -a start \
+  -m ec2 \
+  -s -c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json' > _start_cloudwatch.sh
+mv _start_cloudwatch.sh /etc/init.d/
+chmod 755 /etc/init.d/_start_cloudwatch.sh
 
-# TODO: testing only - remove later
-touch ${LOCKFILE}
-exit 0
+# Run now to verify
+/etc/init.d/_start_cloudwatch.sh
+
+# # TODO: testing only - remove later
+# touch ${LOCKFILE}
+# exit 0
 
 ## Stop Docker
 echo "****** OS - Stopping Docker"
@@ -60,11 +72,8 @@ mkdir -p /var/lib/kubelet
 echo '/mnt/nvme/kubelet  /var/lib/kubelet   none   defaults,bind 0 0' >> /etc/fstab
 mount /mnt/nvme/kubelet
 
-# TODO: install cloudwatch agent
-
 # make sure this script is idempotent:
 touch ${LOCKFILE}
-
 
 ## Rebooting system
 echo "****** OS - Rebooting system..."

@@ -4,7 +4,7 @@
     "logfile": "/opt/aws/amazon-cloudwatch-agent/logs/amazon-cloudwatch-agent.log"
   },
   "metrics": {
-    "namespace": "MyCustomNamespace",
+    "namespace": "CWAgent",
     "metrics_collected": {
       "cpu": {
         "resources": [
