@@ -14,6 +14,19 @@ spec:
       activeDeadlineSeconds: 600
       template:
         spec:
+          nodeSelector:
+            node-role.kubernetes.io/controlplane: "true"
+          tolerations:
+            # tolerate: node-role.kubernetes.io/controlplane=true:NoSchedule
+            - effect: NoSchedule
+              key: node-role.kubernetes.io/controlplane
+              value: "true"
+              operator: Equal
+            # tolerate: node-role.kubernetes.io/etcd=true:NoExecute
+            - effect: NoExecute
+              key: node-role.kubernetes.io/etcd
+              value: "true"
+              operator: Equal
           containers:
             - name: rancher-scaler-cron-down
               image: mojaloop/rancher-scaler:latest
@@ -38,5 +51,5 @@ spec:
                     secretKeyRef:
                       name: rancher-scaler-secrets
                       key: slack_webhook_url
-            
+
           restartPolicy: OnFailure
