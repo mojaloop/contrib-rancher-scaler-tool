@@ -61,7 +61,7 @@ const config = {
     {
       nodePoolId: 'c-vsm2w:np-brmwc',
       nodeTemplateId: 'cattle-global-nt:nt-v2mzg', // t3.small nodes (much cheaper)
-      minQuantity: 0,
+      minQuantity: 1,
       maxQuantity: 2,
       // Hooks to run before/after scale events for each node pool
       hooks: {
@@ -69,7 +69,7 @@ const config = {
           { hookType: 'SLACK_NOTIFICATION', contents: '  ↳ Scaling `c-vsm2w:np-brmwc` to `2` nodes' }
         ],
         preScaleDown: [
-          { hookType: 'SLACK_NOTIFICATION', contents: '  ↳ Scaling `c-vsm2w:np-brmwc` to `0` node' }
+          { hookType: 'SLACK_NOTIFICATION', contents: '  ↳ Scaling `c-vsm2w:np-brmwc` to `1` node' }
         ],
         onFailure: [
           { hookType: 'SLACK_NOTIFICATION', contents: '   Failed to scale `c-vsm2w:np-brmwc` "@Lewis Daly" !!!', color: 'danger' }
