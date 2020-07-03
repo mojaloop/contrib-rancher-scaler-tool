@@ -3,18 +3,18 @@ const config = {
   // At least `global: {}` is required
   global: {
     preScaleUp: [
-      { hookType: 'SLACK_NOTIFICATION', contents: 'Scaling up `2` node pools', color: 'warn' }
+      { hookType: 'SLACK_NOTIFICATION', contents: 'Scaling up `1` node pools', color: 'warn' }
     ],
     postScaleUp: [
       { hookType: 'SLACK_NOTIFICATION', contents: 'Scaled up succesfully! 🎉🎉🎉', color: 'good' }
     ],
     preScaleDown: [
-      { hookType: 'SLACK_NOTIFICATION', contents: 'Scaling down `2` node pool in `1 minute`\n\nRun:\n```kubectl patch cronjobs rancher-scaler-cron-down -p \'{ "spec": { "suspend": true } }\'```\n\n to stop this.', color: 'warn'},
+      { hookType: 'SLACK_NOTIFICATION', contents: 'Scaling down `1` node pool in `10 minutes`\n\nRun:\n```kubectl patch cronjobs rancher-scaler-cron-down -p \'{ "spec": { "suspend": true } }\'```\n\n to stop this.', color: 'warn'},
       // Sleep to allow user intervention - Note: kubernetes will timeout the job after 10 minutes
       // { hookType: 'SLEEP', timeMs: 1000 * 60 * 1 }
     ],
     postScaleDown: [
-      { hookType: 'SLACK_NOTIFICATION', contents: 'Scaled down `2` node pools! 🎉🎉🎉', color: 'good' }
+      { hookType: 'SLACK_NOTIFICATION', contents: 'Scaled down `1` node pools! 🎉🎉🎉', color: 'good' }
     ],
     onFailure: [
       { hookType: 'SLACK_NOTIFICATION', contents: 'Failed to scale', color: 'danger' }
@@ -66,10 +66,10 @@ const config = {
       // Hooks to run before/after scale events for each node pool
       hooks: {
         preScaleUp: [
-          { hookType: 'SLACK_NOTIFICATION', contents: '  ↳ Scaling `c-vsm2w:np-brmwc` to `3` nodes' }
+          { hookType: 'SLACK_NOTIFICATION', contents: '  ↳ Scaling `c-vsm2w:np-brmwc` to `2` nodes' }
         ],
         preScaleDown: [
-          { hookType: 'SLACK_NOTIFICATION', contents: '  ↳ Scaling `c-vsm2w:np-brmwc` to `1` node' }
+          { hookType: 'SLACK_NOTIFICATION', contents: '  ↳ Scaling `c-vsm2w:np-brmwc` to `0` node' }
         ],
         onFailure: [
           { hookType: 'SLACK_NOTIFICATION', contents: '   Failed to scale `c-vsm2w:np-brmwc` "@Lewis Daly" !!!', color: 'danger' }
