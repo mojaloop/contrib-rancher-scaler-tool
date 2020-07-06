@@ -32,19 +32,19 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: rancher-scaler-secrets
-                  key: cattle_secret_key
+                  key: CATTLE_SECRET_KEY
             - name: LOG_LEVEL
               value: debug
             - name: RANCHER_BASE_URL
               valueFrom:
                 secretKeyRef:
                   name: rancher-scaler-secrets
-                  key: rancher_base_url
+                  key: RANCHER_BASE_URL
             - name: SLACK_WEBHOOK_URL
               valueFrom:
                 secretKeyRef:
                   name: rancher-scaler-secrets
-                  key: slack_webhook_url
+                  key: SLACK_WEBHOOK_URL
       restartPolicy: Never
 
 
