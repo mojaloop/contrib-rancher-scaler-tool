@@ -102,7 +102,7 @@ const config = {
 module.exports = config
 ```
 
-### Example: A config file with pre and post scale hooks
+### Example: A config file with global pre and post scale hooks
 `rancher-scaler.config.js`
 ```js
 const config = {
@@ -148,8 +148,8 @@ module.exports = config
 
 In building out the slack notifications, we provide some very simple template strings to allow you write nice slack notifications:
 
-| name | value | context 
-|---|---|---|---|
+| name | value | context |
+| --- | --- | --- |
 | `{{totalNodePools}}` | The total number of node pools being scaled | Global |
 | `{{minQuantity}}` | The node count being scaled **down** to | node pool |
 | `{{maxQuantity}}` | The node count being scaled **up** to | node pool |
@@ -158,7 +158,6 @@ In building out the slack notifications, we provide some very simple template st
 
 ## TODO
 
-1. Add `mojaloop/cost_center` tags to existing node templates in Rancher
 1. Deploy live on one of our clusters (dev1? Prod?)
 
 ## Backlog
@@ -167,7 +166,6 @@ In building out the slack notifications, we provide some very simple template st
 1. Properly compile ts in `docker build` (we are currently using `ts-node`)
 1. Add tests to ci/cd pipeline
 1. Add optional parallel scaling option
-
 
 
 ## Handy Snippets
