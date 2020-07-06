@@ -41,5 +41,5 @@ chmod 755 /etc/init.d/_start_cloudwatch.sh
 debug "[DEBUG] running /etc/init.d/_start_cloudwatch.sh"
 /etc/init.d/_start_cloudwatch.sh
 
-make sure this script is idempotent:
+#make sure this script is idempotent:
 touch ${LOCKFILE}

@@ -23,8 +23,8 @@ export class RancherBootstrapper {
   logger: LoggerType;
 
   constructor(
-    rancherRequests: RancherRequests, 
-    config: RancherScalerConfigType, 
+    rancherRequests: RancherRequests,
+    config: RancherScalerConfigType,
     wrapWithRetries: (func: any, retries: number, waitTimeMs: number) => Promise<any>,
     exec: Exec,
     logger: LoggerType
@@ -97,7 +97,7 @@ export class RancherBootstrapper {
         .then(() => this._runBootstrapForNode(node, action))
         .catch(error => runnerErrors.push(error))
     }, Promise.resolve())
-    
+
     if (runnerErrors.length > 0) {
       this.logger.error(`RancherBootstrapper._runBootstrapForNodePool, failed with ${runnerErrors.length} errors.`)
       throw new Error(`_runBootstrapForNodePool failed with errors: \n${runnerErrors.join('\n')}`)
@@ -117,15 +117,22 @@ export class RancherBootstrapper {
       // Download the keys
       const keyZipPath = `${basePath}/keys.zip`
       await this.rancherRequests.downloadConfigForNode(node.id, keyZipPath)
-      
+
       // unzip the keys
       const keyDirPath = `${basePath}/keys`
       await this.exec.unzip(keyZipPath, keyDirPath)
-      
-      // ssh into instance and run command
+
+      // Setup ssh session (chmod key file, add hostname to known_hosts)
       const keyPath = `${basePath}/keys/id_rsa`
+      await this.exec.setupSsh(keyPath, node.sshUser, node.nodeName, action.script)
+
+      // ssh into instance and run command
       const sshOutput = await this.exec.runInSsh(keyPath, node.sshUser, node.nodeName, action.script)
       this.logger.debug(`RancherBootstrapper._runBootstrapForNode, sshOutput: ${sshOutput}`)
+
+      if (action.rebootOnEnd) {
+        await this.exec.runInSsh(keyPath, node.sshUser, node.nodeName, 'sudo reboot')
+      }
     } catch (err) {
       this.logger.error(`RancherBootstrapper._runBootstrapForNode, ${node.id}, failed with error: ${err}`)
       throw err;
@@ -135,8 +142,8 @@ export class RancherBootstrapper {
 
 /* Dependency Injection */
 const makeRancherBootstrapper = (
-  rancherRequests: RancherRequests, 
-  config: RancherScalerConfigType, 
+  rancherRequests: RancherRequests,
+  config: RancherScalerConfigType,
   wrapWithRetries: (func: any, retries: number, waitTimeMs: number) => Promise<any>,
   exec: Exec,
   logger: LoggerType,

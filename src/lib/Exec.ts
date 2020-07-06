@@ -52,24 +52,35 @@ export class Exec {
     .then(() => fullPath)
   }
 
-  public async runInSsh(keypath: string, username: string, host: string, script: string): Promise<string> {
+  public async setupSsh(keypath: string, username: string, host: string, script: string): Promise<string> {
     // ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
     const chmodCommand = `chmod 600 ${keypath}`
     const keyscanCommand = `mkdir -p ~/.ssh/ && ssh-keyscan -H ${host} >> ~/.ssh/known_hosts`
+
+    try {
+      this.logger.debug('Exec.setupSsh - changing file permissions')
+      this.logger.debug(`Exec.setupSsh - running: ${chmodCommand}`)
+      const chmodBuffer = this.execSync(chmodCommand)
+      this.logger.debug(`Exec.setupSsh output: ${chmodBuffer.toString()}`)
+
+      this.logger.debug('Exec.setupSsh - adding hosts to ~/.ssh/known_hosts')
+      this.logger.debug(`Exec.setupSsh - running: ${keyscanCommand}`)
+      const keyscanBuffer = this.execSync(keyscanCommand)
+      this.logger.debug(`Exec.setupSsh output: ${keyscanBuffer.toString()}`)
+
+      return keyscanBuffer.toString();
+    }
+    catch (err) {
+      // This is thrown on any non-zero exit code... nice!
+      this.logger.error(`Exec.setupSsh - ${err}`)
+      throw new Error('Exec.setupSsh failed.')
+    }
+  }
+
+  public async runInSsh(keypath: string, username: string, host: string, script: string): Promise<string> {
     const sshCommand = `ssh -i ${keypath} ${username}@${host} "${script}"`
 
     try {
-      this.logger.debug('Exec.runInSsh - changing file permissions')
-      this.logger.debug(`Exec.runInSsh - running: ${chmodCommand}`)
-      const chmodBuffer = this.execSync(chmodCommand)
-      this.logger.debug(`Exec.runInSsh output: ${chmodBuffer.toString()}`)
-
-      this.logger.debug('Exec.runInSsh - adding hosts to ~/.ssh/known_hosts')
-      this.logger.debug(`Exec.runInSsh - running: ${keyscanCommand}`)
-      const keyscanBuffer = this.execSync(keyscanCommand)
-      this.logger.debug(`Exec.runInSsh output: ${keyscanBuffer.toString()}`)
-
-
       this.logger.info(`Exec.runInSsh - running: ${sshCommand}`)
       const result = this.execSync(sshCommand)
       return result.toString()

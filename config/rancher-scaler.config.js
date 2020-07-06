@@ -39,6 +39,7 @@ const config = {
         postScaleUp: [
           {
             hookType: 'RUN_STARTUP_SCRIPT',
+            rebootOnEnd: true,
             script: `echo "Downloading and running bootstrap script";
                   wget -q https://github.com/mojaloop/rancher-scaler/raw/master/config/_install_cloudwatch.sh -O /tmp/_install_cloudwatch.sh;
                   wget -q https://github.com/mojaloop/rancher-scaler/raw/master/config/_boostrap_nvme.sh -O /tmp/_bootstrap_nvme.sh;
@@ -54,7 +55,7 @@ const config = {
           { hookType: 'SLACK_NOTIFICATION', contents: '  ↳ Scaling `{{nodePoolId}}` to `{{minQuantity}}` node' }
         ],
         onFailure: [
-          { hookType: 'SLACK_NOTIFICATION', contents: '   Failed to scale `{{nodePoolId}}` "@Lewis Daly" !!!', color: 'danger' }
+          { hookType: 'SLACK_NOTIFICATION', contents: 'Failed to scale `{{nodePoolId}}`' }
         ]
       }
     },
@@ -72,7 +73,7 @@ const config = {
           { hookType: 'SLACK_NOTIFICATION', contents: '  ↳ Scaling `{{nodePoolId}}` to `{{minQuantity}}` node' }
         ],
         onFailure: [
-          { hookType: 'SLACK_NOTIFICATION', contents: '   Failed to scale `{{nodePoolId}}` "@Lewis Daly" !!!', color: 'danger' }
+          { hookType: 'SLACK_NOTIFICATION', contents: '   Failed to scale. "@Lewis Daly" !!!', color: 'danger' }
         ]
       }
     }

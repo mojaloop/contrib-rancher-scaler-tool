@@ -2,7 +2,8 @@ import { ActionEnum } from './ActionEnum'
 
 export type BootstrapHookType = {
   hookType: ActionEnum.RUN_STARTUP_SCRIPT,
-  script: string
+  script: string,
+  rebootOnEnd?: boolean,
 }
 
 export type SlackNotificationHookType = {

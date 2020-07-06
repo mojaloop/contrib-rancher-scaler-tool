@@ -61,9 +61,9 @@ echo '/mnt/nvme/kubelet  /var/lib/kubelet   none   defaults,bind 0 0' >> /etc/fs
 mount /mnt/nvme/kubelet
 
 # make sure this script is idempotent:
-touch ${LOCKFILE}
+# touch ${LOCKFILE}
 
 ## Rebooting system
-echo "****** OS - Rebooting system..."
+# echo "****** OS - Rebooting system..."
 # TODO: renable once we fix pod scheduling issues
-reboot
+# reboot
