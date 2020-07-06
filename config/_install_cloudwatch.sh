@@ -19,14 +19,18 @@ echo "***** Configuring CloudWatch Agent"
 # TODO: remove template once repo is public
 wget -q -O amazon-cloudwatch-agent.json https://raw.githubusercontent.com/mojaloop/rancher-scaler/master/config/amazon-cloudwatch-agent.json?token=AAM3EDD6655E67DBSRYE6Z27BPEWS
 mv amazon-cloudwatch-agent.json /opt/aws/amazon-cloudwatch-agent/etc/
+echo "[DEBUG] creating cloudwatch script"
 echo '/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
   -a start \
   -m ec2 \
   -s -c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json' > _start_cloudwatch.sh
+echo "[DEBUG] mv to /etc/init.d/"
 mv _start_cloudwatch.sh /etc/init.d/
+echo "[DEBUG] chmod 755"
 chmod 755 /etc/init.d/_start_cloudwatch.sh
 
 # Run now to verify
+echo "[DEBUG] running /etc/init.d/_start_cloudwatch.sh"
 /etc/init.d/_start_cloudwatch.sh
 
 # make sure this script is idempotent:
