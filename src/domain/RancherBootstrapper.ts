@@ -131,7 +131,7 @@ export class RancherBootstrapper {
       this.logger.debug(`RancherBootstrapper._runBootstrapForNode, sshOutput: ${sshOutput}`)
 
       if (action.rebootOnEnd) {
-        await this.exec.runInSsh(keyPath, node.sshUser, node.nodeName, 'sudo reboot')
+        await this.exec.runInSsh(keyPath, node.sshUser, node.nodeName, 'sudo shutdown -r now || true')
           .catch(err => this.logger.debug('RancherBootstrapper._runBootstrapForNode failing silently for reboot'))
       }
     } catch (err) {
