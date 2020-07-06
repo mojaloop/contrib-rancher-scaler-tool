@@ -3,18 +3,18 @@ const config = {
   // At least `global: {}` is required
   global: {
     preScaleUp: [
-      { hookType: 'SLACK_NOTIFICATION', contents: 'Scaling up `2` node pools', color: 'warn' }
+      { hookType: 'SLACK_NOTIFICATION', contents: 'Scaling up `{{totalNodePools}}` node pools', color: 'warn' }
     ],
     postScaleUp: [
       { hookType: 'SLACK_NOTIFICATION', contents: 'Scaled up succesfully! 🎉🎉🎉', color: 'good' }
     ],
     preScaleDown: [
-      { hookType: 'SLACK_NOTIFICATION', contents: 'Scaling down `2` node pool in `10 minutes`\n\nRun:\n```kubectl patch cronjobs rancher-scaler-cron-down -p \'{ "spec": { "suspend": true } }\'```\n\n to stop this.', color: 'warn'},
+      { hookType: 'SLACK_NOTIFICATION', contents: 'Scaling down `{{totalNodePools}}` node pool in `10 minutes`\n\nRun:\n```kubectl patch cronjobs rancher-scaler-cron-down -p \'{ "spec": { "suspend": true } }\'```\n\n to stop this.', color: 'warn'},
       // Sleep to allow user intervention - Note: kubernetes will timeout the job after 10 minutes
       // { hookType: 'SLEEP', timeMs: 1000 * 60 * 1 }
     ],
     postScaleDown: [
-      { hookType: 'SLACK_NOTIFICATION', contents: 'Scaled down `2` node pools! 🎉🎉🎉', color: 'good' }
+      { hookType: 'SLACK_NOTIFICATION', contents: 'Scaled down `{{totalNodePools}}` node pools! 🎉🎉🎉', color: 'good' }
     ],
     onFailure: [
       { hookType: 'SLACK_NOTIFICATION', contents: 'Failed to scale', color: 'danger' }
@@ -31,7 +31,7 @@ const config = {
       // Hooks to run before/after scale events for each node pool
       hooks: {
         preScaleUp: [
-          { hookType: 'SLACK_NOTIFICATION', contents: '  ↳ Scaling `c-vsm2w:np-cgntb` to `2` nodes' }
+          { hookType: 'SLACK_NOTIFICATION', contents: '  ↳ Scaling `{{nodePoolId}}` to `{{maxQuantity}}` nodes' }
         ],
         // Example config for running a shell script on each of the nodes after startup
         // TODO: remove the token once we have made this repo public
@@ -51,7 +51,7 @@ const config = {
           },
         ],
         preScaleDown: [
-          { hookType: 'SLACK_NOTIFICATION', contents: '  ↳ Scaling `c-vsm2w:np-cgntb` to `0` nodes' }
+          { hookType: 'SLACK_NOTIFICATION', contents: '  ↳ Scaling `{{nodePoolId}}` to `{{minQuantity}}` node' }
         ],
         onFailure: [
           { hookType: 'SLACK_NOTIFICATION', contents: '   Failed to scale `c-vsm2w:np-cgntb` "@Lewis Daly" !!!' }
@@ -66,15 +66,13 @@ const config = {
       // Hooks to run before/after scale events for each node pool
       hooks: {
         preScaleUp: [
-          // TODO: replace with template strings
-          // { hookType: 'SLACK_NOTIFICATION', contents: '  ↳ Scaling `__nodePoolId__` to `__maxQuantity__` nodes' }
-          { hookType: 'SLACK_NOTIFICATION', contents: '  ↳ Scaling `c-vsm2w:np-brmwc` to `2` nodes' }
+          { hookType: 'SLACK_NOTIFICATION', contents: '  ↳ Scaling `{{nodePoolId}}` to `{{maxQuantity}}` nodes' }
         ],
         preScaleDown: [
-          { hookType: 'SLACK_NOTIFICATION', contents: '  ↳ Scaling `c-vsm2w:np-brmwc` to `0` node' }
+          { hookType: 'SLACK_NOTIFICATION', contents: '  ↳ Scaling `{{nodePoolId}}` to `{{minQuantity}}` node' }
         ],
         onFailure: [
-          { hookType: 'SLACK_NOTIFICATION', contents: '   Failed to scale `c-vsm2w:np-brmwc` "@Lewis Daly" !!!', color: 'danger' }
+          { hookType: 'SLACK_NOTIFICATION', contents: '   Failed to scale `{{nodePoolId}}` "@Lewis Daly" !!!', color: 'danger' }
         ]
       }
     }

@@ -22,7 +22,7 @@ export class HooksHandler {
   /**
    * @function runHooks
    * @description Run the given hooks
-   * @param hooks 
+   * @param hooks
    */
   public async runHooks(hooks: Array<AnyHookType>, nodePoolId?: string): Promise<void> {
     this.logger.debug(`HooksHandler.runHooks - running ${hooks.length} hooks`);
@@ -52,7 +52,7 @@ export class HooksHandler {
       }
       case ActionEnum.SLACK_NOTIFICATION: {
         // todo: implement
-        return this.slackHandler.sendMessage(hook.contents, hook.color)
+        return this.slackHandler.sendMessage(hook.contents, hook.color, nodePoolId)
       }
       case ActionEnum.RUN_STARTUP_SCRIPT: {
         if (!nodePoolId) {

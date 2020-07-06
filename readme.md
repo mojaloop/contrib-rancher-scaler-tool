@@ -32,9 +32,6 @@ npm run scale:down
 
 # Scale up the node pools in ./config/rancher-scaler.config.js
 npm run scale:up
-
-#Scale up, then run boostrap
-npm run scale:up && npm run bootstrap
 ```
 
 ## Installing with Helm
@@ -141,6 +138,18 @@ const config = {
 
 module.exports = config
 ```
+
+### Slack Notification Templates
+
+In building out the slack notifications, we provide some very simple template strings to allow you write nice slack notifications:
+
+| name | value | context 
+|---|---|---|---|
+| `{{totalNodePools}}` | The total number of node pools being scaled | Global |
+| `{{minQuantity}}` | The node count being scaled **down** to | node pool |
+| `{{maxQuantity}}` | The node count being scaled **up** to | node pool |
+| `{{nodePoolId}}`  | The id of the node pool | node pool |
+
 
 ## TODO
 

@@ -17,6 +17,7 @@ import AnyHookType from './types/HookTypes'
 import makeSlack, { NoMessager, Messager } from './lib/Slack'
 import makeScalerConfig from './lib/ScalerConfig'
 import configValidator from './lib/ConfigValidator'
+import makeTemplater, { Templater } from './lib/Templater'
 
 async function runGlobals(hooks: Array<AnyHookType>, hooksHandler: HooksHandler, scale: 'UP' | 'DOWN', config: RancherScalerConfigType) {
   try {
@@ -57,19 +58,22 @@ async function main() {
     method,
     pathToConfig,
     slackWebhookUrl,
-  } = getEnvConfig()  
+  } = getEnvConfig()
 
   /* Init all dependencies */
   const scalerConfig = makeScalerConfig(configValidator);
   const config = scalerConfig.getConfig(pathToConfig)
 
+
   let slack: Messager = new NoMessager(Logger); //Default to NoMessager
   if (slackWebhookUrl) {
     Logger.debug(`index.ts - setting up slack with SLACK_WEBHOOK_URL:${slackWebhookUrl}`)
     const incomingWebhookClient = new IncomingWebhook(slackWebhookUrl);
-    slack = makeSlack(Logger, incomingWebhookClient)
+    const templaterConfig = Templater.transformConfigToTemplateConfig(config)
+    const templater = makeTemplater(Logger, templaterConfig)
+    slack = makeSlack(Logger, incomingWebhookClient, templater)
   }
-  
+
   const rancherRequests = makeRancherRequests(fs, axios, Logger, cattleAccessKey, cattleSecretKey, rancherBaseUrl);
   const exec = makeExec(fs, unzipper, execSync, Logger)
   const bootstrapper = makeRancherBootstrapper(rancherRequests, config, wrapWithRetries, exec, Logger);

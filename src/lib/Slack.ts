@@ -1,11 +1,12 @@
 import LoggerType from '../types/LoggerType';
 import { IncomingWebhook, IncomingWebhookSendArguments } from '@slack/webhook'
+import { Templater } from './Templater';
 
 
 export abstract class Messager {
-  public abstract async sendMessage(text: string): Promise<void>;
-  public abstract async sendMessage(text: string, color?: string): Promise<void>;
-  public abstract async sendMessage(complexMessage: any): Promise<void>;
+  public abstract async sendMessage(text: string, nodePoolId?: string): Promise<void>;
+  public abstract async sendMessage(text: string, color?: string, nodePoolId?: string): Promise<void>;
+  public abstract async sendMessage(complexMessage: any, nodePoolId?: string): Promise<void>;
 }
 
 export class NoMessager implements Messager {
@@ -23,24 +24,26 @@ export class NoMessager implements Messager {
 export class Slack implements Messager {
   private logger: LoggerType;
   private incomingWebhookClient: IncomingWebhook;
+  private templater: Templater
 
-  constructor(logger: LoggerType, incomingWebhookClient: IncomingWebhook) {
+  constructor(logger: LoggerType, incomingWebhookClient: IncomingWebhook, templater: Templater) {
     this.logger = logger;
     this.incomingWebhookClient = incomingWebhookClient
+    this.templater = templater;
   }
 
   /**
    * @function sendMessage
    * @description Send a slack message
-   * @param text 
+   * @param text
    */
-  public async sendMessage(text: string): Promise<void>
-  public async sendMessage(text: string, color?: string): Promise<void>
-  public async sendMessage(text: any, color?: string): Promise<void> {
+  public async sendMessage(text: string, nodePoolId?: string): Promise<void>
+  public async sendMessage(text: string, color?: string, nodePoolId?: string): Promise<void>
+  public async sendMessage(text: any, color?: string, nodePoolId?: string): Promise<void> {
     let config: IncomingWebhookSendArguments = {};
     if (typeof text === 'string') {
       config = {
-        text,
+        text: this.templater.replace(text, nodePoolId),
       }
     }
 
@@ -50,7 +53,7 @@ export class Slack implements Messager {
           {
             color,
             title: 'Rancher-Scaler',
-            text,
+            text: this.templater.replace(text, nodePoolId),
           }
         ]
       }
@@ -63,8 +66,8 @@ export class Slack implements Messager {
 }
 
 /* DependencyInjection */
-const makeSlack = (logger: LoggerType, incomingWebhookClient: IncomingWebhook): Slack => {
-  const slack = new Slack(logger, incomingWebhookClient)
+const makeSlack = (logger: LoggerType, incomingWebhookClient: IncomingWebhook, templater: Templater): Slack => {
+  const slack = new Slack(logger, incomingWebhookClient, templater)
 
   return slack
 }
