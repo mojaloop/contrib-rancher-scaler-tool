@@ -1,6 +1,6 @@
 # Rancher Scaler
 
-Rancher Tooling for automatically scaling up and down Rancher node pools to save 💲💲💲
+Rancher Tooling for automatically scaling up and down Rancher node pools to save 💵💵💵.
 
 ## Prerequisites:
 

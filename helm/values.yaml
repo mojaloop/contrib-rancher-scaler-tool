@@ -14,7 +14,7 @@ scaleDown:
 
 scaleUp:
   enabled: true
-  # once an hour, 31 minutes past
+  # once an hour, 31 minutes past the hour
   schedule: "31 * * * *"
   # Timeout after 30 minutes
   jobTimeout: 1800
