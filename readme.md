@@ -10,6 +10,16 @@
 - A valid `rancher-scaler.config.js` file (see [The Config File](#The-Config-File))
 - `kubectx` and `kubetail`
 
+## Installing with Helm
+
+
+
+## Debugging Helm Charts
+
+```bash
+helm install --debug --dry-run goodly-guppy ./helm
+```
+
 ## Configuring the CronJobs
 
 ```bash

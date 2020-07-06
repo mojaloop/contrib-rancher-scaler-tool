@@ -1,17 +1,16 @@
+{{- if .Values.scaleDown.enabled -}}
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: rancher-scaler-cron-down
 spec:
-  # once an hour, at minute 31 of the hour
-  schedule: "31 * * * *"
+  schedule: {{ .Values.scaleDown.schedule }}
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 5
   failedJobsHistoryLimit: 10
   jobTemplate:
     spec:
-      # Timeout after 30 minutes
-      activeDeadlineSeconds: 1800
+      activeDeadlineSeconds: {{ .Values.scaleDown.jobTimeout }}
       template:
         spec:
           nodeSelector:
@@ -29,18 +28,18 @@ spec:
               operator: Equal
           containers:
             - name: rancher-scaler-cron-down
-              image: mojaloop/rancher-scaler:latest
-              command: ["sh", "-c", "npm run scale:down"]
+              image: {{ .Values.scaleDown.image }}
+              command: {{ .Values.scaleDown.command }}
               env:
                 - name: CATTLE_ACCESS_KEY
-                  value: token-czddw
+                  value: {{ .Values.scaleDown.cattleAccessKey }}
                 - name: CATTLE_SECRET_KEY
                   valueFrom:
                     secretKeyRef:
                       name: rancher-scaler-secrets
                       key: cattle_secret_key
                 - name: LOG_LEVEL
-                  value: debug
+                  value: {{ .Values.scaleDown.logLevel }}
                 - name: RANCHER_BASE_URL
                   valueFrom:
                     secretKeyRef:
@@ -53,3 +52,4 @@ spec:
                       key: slack_webhook_url
 
           restartPolicy: OnFailure
+{{- end }}

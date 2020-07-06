@@ -10,8 +10,8 @@ spec:
   failedJobsHistoryLimit: 10
   jobTemplate:
     spec:
-      # Timeout after 10 minutes
-      activeDeadlineSeconds: 600
+      # Timeout after 30 minutes
+      activeDeadlineSeconds: 1800
       template:
         spec:
           # nodeSelector:

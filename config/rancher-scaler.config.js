@@ -26,7 +26,7 @@ const config = {
     {
       nodePoolId: 'c-vsm2w:np-cgntb',
       nodeTemplateId: 'cattle-global-nt:nt-user-s7l26-nt-qsnss', //i3.xlarge
-      minQuantity: 1,
+      minQuantity: 0,
       maxQuantity: 2,
       // Hooks to run before/after scale events for each node pool
       hooks: {
@@ -51,7 +51,7 @@ const config = {
           },
         ],
         preScaleDown: [
-          { hookType: 'SLACK_NOTIFICATION', contents: '  ↳ Scaling `c-vsm2w:np-cgntb` to `1` nodes' }
+          { hookType: 'SLACK_NOTIFICATION', contents: '  ↳ Scaling `c-vsm2w:np-cgntb` to `0` nodes' }
         ],
         onFailure: [
           { hookType: 'SLACK_NOTIFICATION', contents: '   Failed to scale `c-vsm2w:np-cgntb` "@Lewis Daly" !!!' }
@@ -61,15 +61,17 @@ const config = {
     {
       nodePoolId: 'c-vsm2w:np-brmwc',
       nodeTemplateId: 'cattle-global-nt:nt-v2mzg', // t3.small nodes (much cheaper)
-      minQuantity: 1,
+      minQuantity: 0,
       maxQuantity: 2,
       // Hooks to run before/after scale events for each node pool
       hooks: {
         preScaleUp: [
+          // TODO: replace with template strings
+          // { hookType: 'SLACK_NOTIFICATION', contents: '  ↳ Scaling `__nodePoolId__` to `__maxQuantity__` nodes' }
           { hookType: 'SLACK_NOTIFICATION', contents: '  ↳ Scaling `c-vsm2w:np-brmwc` to `2` nodes' }
         ],
         preScaleDown: [
-          { hookType: 'SLACK_NOTIFICATION', contents: '  ↳ Scaling `c-vsm2w:np-brmwc` to `1` node' }
+          { hookType: 'SLACK_NOTIFICATION', contents: '  ↳ Scaling `c-vsm2w:np-brmwc` to `0` node' }
         ],
         onFailure: [
           { hookType: 'SLACK_NOTIFICATION', contents: '   Failed to scale `c-vsm2w:np-brmwc` "@Lewis Daly" !!!', color: 'danger' }
