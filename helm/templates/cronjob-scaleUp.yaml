@@ -29,7 +29,9 @@ spec:
           containers:
             - name: rancher-scaler-cron-down
               image: {{ .Values.scaleUp.image }}
-              command: {{ .Values.scaleUp.command }}
+              # TODO: fix yaml templates here?
+              # command: {{ .Values.scaleUp.command }}
+              command: ["sh", "-c", "npm run scale:up"]
               env:
                 - name: CATTLE_ACCESS_KEY
                   value: {{ .Values.scaleUp.cattleAccessKey }}

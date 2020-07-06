@@ -49,6 +49,8 @@ kubectl create secret generic rancher-scaler-secrets --from-env-file=.env
 helm install rancher-scaler ./helm
 ```
 
+Take a look at the [`values.yaml`](./helm/values.yaml) for configuration options.
+
 ### `docker-compose` runner:
 > This is useful as it mimics the way that K8s will run the job: inside a docker container
 
