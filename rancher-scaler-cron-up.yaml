@@ -14,19 +14,19 @@ spec:
       activeDeadlineSeconds: 1800
       template:
         spec:
-          # nodeSelector:
-          #   node-role.kubernetes.io/controlplane: "true"
-          # tolerations:
-          #   # tolerate: node-role.kubernetes.io/controlplane=true:NoSchedule
-          #   - effect: NoSchedule
-          #     key: node-role.kubernetes.io/controlplane
-          #     value: "true"
-          #     operator: Equal
-          #   # tolerate: node-role.kubernetes.io/etcd=true:NoExecute
-          #   - effect: NoExecute
-          #     key: node-role.kubernetes.io/etcd
-          #     value: "true"
-          #     operator: Equal
+          nodeSelector:
+            node-role.kubernetes.io/controlplane: "true"
+          tolerations:
+            # tolerate: node-role.kubernetes.io/controlplane=true:NoSchedule
+            - effect: NoSchedule
+              key: node-role.kubernetes.io/controlplane
+              value: "true"
+              operator: Equal
+            # tolerate: node-role.kubernetes.io/etcd=true:NoExecute
+            - effect: NoExecute
+              key: node-role.kubernetes.io/etcd
+              value: "true"
+              operator: Equal
           containers:
             - name: rancher-scaler-cron-up
               image: mojaloop/rancher-scaler:latest

@@ -197,7 +197,7 @@ kubectl get jobs --watch
 kubectl create secret generic rancher-scaler-secrets --from-env-file=.env
 
 # create the one time job
-kubectl create -f ./rancher-scaler-job-down.yaml
+kubectl create -f ./rancher-scaler-job-tmp.yaml
 
 kubetail rancher-scaler-tmp
 

@@ -40,7 +40,7 @@ const config = {
           {
             hookType: 'RUN_STARTUP_SCRIPT',
             script: `echo "Downloading and running bootstrap script";
-                  wget -q https://raw.githubusercontent.com/mojaloop/rancher-scaler/master/config/_install_cloudwatch.sh?token=AAM3EDEQCV4GPPAW4DMLMX27BPEU4 -O /tmp/_install_cloudwatch.sh;
+                  wget -q https://github.com/mojaloop/rancher-scaler/raw/master/config/_install_cloudwatch.sh -O /tmp/_install_cloudwatch.sh;
                   wget -q https://raw.githubusercontent.com/mojaloop/rancher-scaler/master/config/_boostrap_nvme.sh?token=AAM3EDGS6B6MENVUNSO23LS7BPEVM -O /tmp/_bootstrap_nvme.sh;
                   #TODO: reenable checksum
                   #echo "edeb16aaaab9261ba060144fb9c4c34925de6d4045c77b1fb9c5c631b753b9d0 /tmp/_install_cloudwatch.sh" | sha256sum --check;
@@ -54,7 +54,7 @@ const config = {
           { hookType: 'SLACK_NOTIFICATION', contents: '  ↳ Scaling `{{nodePoolId}}` to `{{minQuantity}}` node' }
         ],
         onFailure: [
-          { hookType: 'SLACK_NOTIFICATION', contents: '   Failed to scale `c-vsm2w:np-cgntb` "@Lewis Daly" !!!' }
+          { hookType: 'SLACK_NOTIFICATION', contents: '   Failed to scale `{{nodePoolId}}` "@Lewis Daly" !!!', color: 'danger' }
         ]
       }
     },
