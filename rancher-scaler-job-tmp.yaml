@@ -6,24 +6,25 @@ spec:
   template:
     # TODO: can we just use a node selector?
     spec:
-      nodeSelector:
-        node-role.kubernetes.io/controlplane: "true"
-      tolerations:
-        # tolerate: node-role.kubernetes.io/controlplane=true:NoSchedule
-        - effect: NoSchedule
-          key: node-role.kubernetes.io/controlplane
-          value: "true"
-          operator: Equal
-        # tolerate: node-role.kubernetes.io/etcd=true:NoExecute
-        - effect: NoExecute
-          key: node-role.kubernetes.io/etcd
-          value: "true"
-          operator: Equal
+      # nodeSelector:
+      #   node-role.kubernetes.io/controlplane: "true"
+      # tolerations:
+      #   # tolerate: node-role.kubernetes.io/controlplane=true:NoSchedule
+      #   - effect: NoSchedule
+      #     key: node-role.kubernetes.io/controlplane
+      #     value: "true"
+      #     operator: Equal
+      #   # tolerate: node-role.kubernetes.io/etcd=true:NoExecute
+      #   - effect: NoExecute
+      #     key: node-role.kubernetes.io/etcd
+      #     value: "true"
+      #     operator: Equal
       containers:
         - name: rancher-scaler-tmp
           image: mojaloop/rancher-scaler:latest
           # command: ["sh", "-c", "npm run scale:up && tail -f /dev/null"]
-          command: ["sh", "-c", "tail -f /dev/null"]
+          command: ["sh", "-c", "npm run scale:up"]
+          # command: ["sh", "-c", "tail -f /dev/null"]
           env:
             - name: CATTLE_ACCESS_KEY
               value: token-czddw
