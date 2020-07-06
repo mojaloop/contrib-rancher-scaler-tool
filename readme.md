@@ -1,4 +1,9 @@
 # Rancher Scaler
+[![Git Commit](https://img.shields.io/github/last-commit/mojaloop/rancher-scaler.svg?style=flat)](https://github.com/mojaloop/rancher-scaler/commits/master)
+[![Git Releases](https://img.shields.io/github/release/mojaloop/rancher-scaler.svg?style=flat)](https://github.com/mojaloop/rancher-scaler/releases)
+[![Docker pulls](https://img.shields.io/docker/pulls/mojaloop/rancher-scaler.svg?style=flat)](https://hub.docker.com/r/mojaloop/rancher-scaler)
+[![CircleCI](https://circleci.com/gh/mojaloop/rancher-scaler.svg?style=svg)](https://app.circleci.com/pipelines/github/mojaloop/rancher-scaler)
+
 
 Rancher Tooling for automatically scaling up and down Rancher node pools to save 💵💵💵.
 
