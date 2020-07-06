@@ -130,9 +130,11 @@ export class RancherBootstrapper {
       const sshOutput = await this.exec.runInSsh(keyPath, node.sshUser, node.nodeName, action.script)
       this.logger.debug(`RancherBootstrapper._runBootstrapForNode, sshOutput: ${sshOutput}`)
 
+      // Reboot the instance if we have configured it
+      // This script fails by default, so we catch the error to fail silently
       if (action.rebootOnEnd) {
         await this.exec.runInSsh(keyPath, node.sshUser, node.nodeName, 'sudo shutdown -r now || true')
-          .catch(err => this.logger.debug('RancherBootstrapper._runBootstrapForNode failing silently for reboot'))
+          .catch(_ => this.logger.debug('RancherBootstrapper._runBootstrapForNode failing silently for reboot'))
       }
     } catch (err) {
       this.logger.error(`RancherBootstrapper._runBootstrapForNode, ${node.id}, failed with error: ${err}`)
