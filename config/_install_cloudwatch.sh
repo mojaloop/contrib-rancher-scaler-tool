@@ -11,13 +11,13 @@ fi
 
 
 echo "***** Installing CloudWatch Agent"
-wget https://s3.amazonaws.com/amazoncloudwatch-agent/debian/amd64/latest/amazon-cloudwatch-agent.deb
+wget -q https://s3.amazonaws.com/amazoncloudwatch-agent/debian/amd64/latest/amazon-cloudwatch-agent.deb
 dpkg -i -E ~/amazon-cloudwatch-agent.deb
 
 echo "***** Configuring CloudWatch Agent"
 # Config file is at: /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
 # TODO: remove template once repo is public
-wget -O amazon-cloudwatch-agent.json https://raw.githubusercontent.com/mojaloop/rancher-scaler/master/config/amazon-cloudwatch-agent.json?token=AAM3EDD6655E67DBSRYE6Z27BPEWS
+wget -q -O amazon-cloudwatch-agent.json https://raw.githubusercontent.com/mojaloop/rancher-scaler/master/config/amazon-cloudwatch-agent.json?token=AAM3EDD6655E67DBSRYE6Z27BPEWS
 mv amazon-cloudwatch-agent.json /opt/aws/amazon-cloudwatch-agent/etc/
 echo '/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
   -a start \
