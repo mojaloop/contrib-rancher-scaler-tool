@@ -19,11 +19,6 @@ apt-get -y update
 echo "****** OS - Installing AWS OS extensions"
 apt-get -y install linux-aws linux-headers-aws linux-image-aws
 
-
-# # TODO: testing only - remove later
-# touch ${LOCKFILE}
-# exit 0
-
 ## Stop Docker
 echo "****** OS - Stopping Docker"
 /etc/init.d/docker stop
