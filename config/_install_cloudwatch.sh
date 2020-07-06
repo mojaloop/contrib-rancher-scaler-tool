@@ -11,6 +11,7 @@ fi
 
 
 echo "***** Installing CloudWatch Agent"
+echo 'test Installing CloudWatch Agent' >/dev/stderr
 # wget -q https://s3.amazonaws.com/amazoncloudwatch-agent/debian/amd64/latest/amazon-cloudwatch-agent.deb
 # dpkg -i -E ~/amazon-cloudwatch-agent.deb
 

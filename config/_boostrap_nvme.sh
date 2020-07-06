@@ -10,6 +10,8 @@ if test -f "${LOCKFILE}"; then
 fi
 
 echo "****** Rancher - Script to re-configure i3.xx AWS Machines to mount attached NVME storage!\n"
+echo 'test ****** Rancher - Script to re-configure i3.xx AWS Machines to mount attached NVME storage' >/dev/stderr
+
 
 ## Update OS
 echo "****** OS - Updating"
