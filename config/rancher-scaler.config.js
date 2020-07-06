@@ -47,7 +47,6 @@ const config = {
                   #echo "edeb16aaaab9261ba060144fb9c4c34925de6d4045c77b1fb9c5c631b753b9d0 /tmp/_install_cloudwatch.sh" | sha256sum --check;
                   #echo "edeb16aaaab9261ba060144fb9c4c34925de6d4045c77b1fb9c5c631b753b9d0 /tmp/_bootstrap_nvme.sh" | sha256sum --check;
                   sudo bash /tmp/_install_cloudwatch.sh;
-                  #this must be run last, as it does a reboot
                   sudo bash /tmp/_bootstrap_nvme.sh`
           },
         ],

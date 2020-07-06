@@ -42,7 +42,7 @@ export class Templater {
   }
 
   replace(input: string, nodePoolId?: string): string {
-    this.logger.debug(`Templater.replace - replacing input: ${input}`);
+    this.logger.debug(`Templater.replace - replacing input: ${input} (nodePoolId)${nodePoolId}`);
 
     const replacements: Array<{input: string, output: string | number }> = [
       { input: '{{totalNodePools}}', output: this.config.totalNodePools }

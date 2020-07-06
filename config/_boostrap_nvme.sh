@@ -60,9 +60,11 @@ mkdir -p /var/lib/kubelet
 echo '/mnt/nvme/kubelet  /var/lib/kubelet   none   defaults,bind 0 0' >> /etc/fstab
 mount /mnt/nvme/kubelet
 
+# TODO: reenable
 # make sure this script is idempotent:
 # touch ${LOCKFILE}
 
+# TODO: delete!
 ## Rebooting system
 # echo "****** OS - Rebooting system..."
 # TODO: renable once we fix pod scheduling issues

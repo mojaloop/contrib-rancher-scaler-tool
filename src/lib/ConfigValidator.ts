@@ -4,6 +4,7 @@ import RancherScalerConfigType from '../types/RancherScalerConfigType'
 const hookTypeSchema = Joi.object({
   hookType: Joi.string().valid('RUN_STARTUP_SCRIPT', 'SLACK_NOTIFICATION', 'SLEEP').required(),
   script: Joi.string().optional(),
+  rebootOnEnd: Joi.boolean().optional(),
   contents: Joi.string().optional(),
   timeMs: Joi.number().optional(),
   color: Joi.string().optional(),
