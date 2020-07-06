@@ -39,7 +39,7 @@ mkfs.ext4 /dev/nvme0n1 -F
 
 ## Mount nvme
 info "****** NVME - Mounting storage"
-info '/dev/nvme0n1  /mnt/nvme           ext4   defaults,discard 0 0' >> /etc/fstab
+echo '/dev/nvme0n1  /mnt/nvme           ext4   defaults,discard 0 0' >> /etc/fstab
 mkdir /mnt/nvme
 mount /mnt/nvme
 
@@ -48,7 +48,7 @@ info "****** Docker - Re-configurating directory and mounts..."
 mv /var/lib/docker /mnt/nvme/docker
 mkdir /var/lib/docker
 
-info '/mnt/nvme/docker  /var/lib/docker    none   defaults,bind 0 0' >> /etc/fstab
+echo '/mnt/nvme/docker  /var/lib/docker    none   defaults,bind 0 0' >> /etc/fstab
 mount /mnt/nvme/docker
 
 ## Move & Mount Kubelet
@@ -57,7 +57,7 @@ umount $(mount | grep kubelet | grep tmpfs | grep /var/lib | awk '{print $3}')
 mv /var/lib/kubelet /mnt/nvme/kubelet
 mkdir -p /var/lib/kubelet
 
-info '/mnt/nvme/kubelet  /var/lib/kubelet   none   defaults,bind 0 0' >> /etc/fstab
+echo '/mnt/nvme/kubelet  /var/lib/kubelet   none   defaults,bind 0 0' >> /etc/fstab
 mount /mnt/nvme/kubelet
 
 # make sure this script is idempotent:
