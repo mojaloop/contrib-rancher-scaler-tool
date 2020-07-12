@@ -6,6 +6,18 @@ export type BootstrapHookType = {
   rebootOnEnd?: boolean,
 }
 
+export type CloudwatchAddNodesType = {
+  hookType: ActionEnum.CLOUDWATCH_ADD_NODES,
+  dashboardName: string,
+  // TODO: anything else?
+}
+
+export type CloudwatchRemoveNodesType = {
+  hookType: ActionEnum.CLOUDWATCH_REMOVE_NODES,
+  dashboardName: string,
+  // TODO: anything else?
+}
+
 export type SlackNotificationHookType = {
   hookType: ActionEnum.SLACK_NOTIFICATION,
   contents: string,
@@ -17,8 +29,11 @@ export type SleepHookType = {
   timeMs: number,
 }
 
-
-type AnyHookType = BootstrapHookType | SlackNotificationHookType | SleepHookType
-
+type AnyHookType =
+  BootstrapHookType |
+  CloudwatchAddNodesType |
+  CloudwatchRemoveNodesType |
+  SlackNotificationHookType |
+  SleepHookType
 
 export default AnyHookType

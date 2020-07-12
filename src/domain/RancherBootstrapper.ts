@@ -16,11 +16,11 @@ import LoggerType from '../types/LoggerType';
  * @description RancherBootstrapper runs commands on nodes after a scaling event has completed
  */
 export class RancherBootstrapper {
-  rancherRequests: RancherRequests;
-  nodes: Array<NodeType>;
-  wrapWithRetries: (func: any, retries: number, waitTimeMs: number) => Promise<any>
-  exec: Exec;
-  logger: LoggerType;
+  private rancherRequests: RancherRequests;
+  private nodes: Array<NodeType>;
+  private wrapWithRetries: (func: any, retries: number, waitTimeMs: number) => Promise<any>
+  private exec: Exec;
+  private logger: LoggerType;
 
   constructor(
     rancherRequests: RancherRequests,

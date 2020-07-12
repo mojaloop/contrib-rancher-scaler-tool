@@ -47,14 +47,15 @@ export class HooksHandler {
     this.logger.debug(`HooksHandler._runHook - ${hook.hookType}`);
 
     switch (hook.hookType) {
-      case ActionEnum.SLEEP: {
-        return new Promise((resolve) => setTimeout(resolve, hook.timeMs))
-      }
-      case ActionEnum.SLACK_NOTIFICATION: {
-        // todo: implement
-        return this.slackHandler.sendMessage(hook.contents, hook.color, nodePoolId)
-      }
+      case ActionEnum.SLEEP: return new Promise((resolve) => setTimeout(resolve, hook.timeMs))
+      case ActionEnum.SLACK_NOTIFICATION: return this.slackHandler.sendMessage(hook.contents, hook.color, nodePoolId)
       case ActionEnum.RUN_STARTUP_SCRIPT: {
+        if (!nodePoolId) {
+          throw new Error(`RUN_STARTUP_SCRIPT action cannot be global, requires a nodePoolId.`)
+        }
+        return this.bootstrapper.runScriptForNodePool(nodePoolId, hook)
+      }
+      case ActionEnum.UPDATE_CLOUDWATCH_DASHBOARD: {
         if (!nodePoolId) {
           throw new Error(`RUN_STARTUP_SCRIPT action cannot be global, requires a nodePoolId.`)
         }

@@ -10,7 +10,7 @@ spec:
   failedJobsHistoryLimit: 10
   jobTemplate:
     spec:
-      # activeDeadlineSeconds: {{ .Values.scaleUp.jobTimeout }}
+      activeDeadlineSeconds: {{ .Values.scaleUp.jobTimeout }}
       template:
         spec:
           nodeSelector:
