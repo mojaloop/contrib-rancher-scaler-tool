@@ -1,11 +1,19 @@
 import Joi from '@hapi/joi'
 import RancherScalerConfigType from '../types/RancherScalerConfigType'
 
+// TODO: make these validate BASED ON the hookType
 const hookTypeSchema = Joi.object({
-  hookType: Joi.string().valid('RUN_STARTUP_SCRIPT', 'SLACK_NOTIFICATION', 'SLEEP').required(),
+  hookType: Joi.string().valid(
+    'CLOUDWATCH_ADD_NODES',
+    'CLOUDWATCH_REMOVE_NODES',
+    'RUN_STARTUP_SCRIPT',
+    'SLACK_NOTIFICATION',
+    'SLEEP'
+  ).required(),
   script: Joi.string().optional(),
-  rebootOnEnd: Joi.boolean().optional(),
   contents: Joi.string().optional(),
+  dashboardName: Joi.string().optional(),
+  rebootOnEnd: Joi.boolean().optional(),
   timeMs: Joi.number().optional(),
   color: Joi.string().optional(),
 }).required()

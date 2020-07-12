@@ -5,8 +5,8 @@ import NodeType from '../types/NodeType';
 import { Exec } from 'lib/Exec';
 import { CloudwatchAddNodesType, CloudwatchRemoveNodesType } from '../types/HookTypes';
 import LoggerType from '../types/LoggerType';
-import { ActionEnum } from 'types/ActionEnum';
-import { CloudwatchClient } from 'lib/CloudwatchClient';
+import { ActionEnum } from '../types/ActionEnum';
+import { CloudwatchClient, AbstractCloudwatchClient } from '../lib/CloudwatchClient';
 
 /**
  * @class CloudwatchUpdater
@@ -14,14 +14,14 @@ import { CloudwatchClient } from 'lib/CloudwatchClient';
  */
 export class CloudwatchUpdater {
   private rancherRequests: RancherRequests;
-  private cloudwatchClient: CloudwatchClient;
+  private cloudwatchClient: AbstractCloudwatchClient;
   private nodes: Array<NodeType>;
   // private wrapWithRetries: (func: any, retries: number, waitTimeMs: number) => Promise<any>
   private logger: LoggerType;
 
   constructor(
     rancherRequests: RancherRequests,
-    cloudwatchClient: CloudwatchClient,
+    cloudwatchClient: AbstractCloudwatchClient,
     config: RancherScalerConfigType,
     // wrapWithRetries: (func: any, retries: number, waitTimeMs: number) => Promise<any>,
     logger: LoggerType
@@ -43,7 +43,7 @@ export class CloudwatchUpdater {
     //TODO: depending on the event, add or remove nodes from the dashboard?
     //TODO: how will we remove them?
     switch (action.hookType) {
-      case ActionEnum.CLOUDWATCH_ADD_NODES:
+      case ActionEnum.CLOUDWATCH_ADD_NODES: return this._addNodesToDash(nodePoolId, action.dashboardName)
       case ActionEnum.CLOUDWATCH_REMOVE_NODES:
         this.logger.debug('doing stuff with nodes now!')
         return;
@@ -55,18 +55,23 @@ export class CloudwatchUpdater {
    * @description Add the nodes in a nodepool to the dashboard
    */
   public async _addNodesToDash(nodePoolId: string, dashboard: string) {
-    // Get the name of the nodes
+    // Get the names of the nodes
+    const nodes = await this.rancherRequests.getNodesForNodePool(nodePoolId)
+    // const instanceIds = nodes.data.map(n => n.)
+    const instanceIds = []
     // look up the template for the dashboard and parse into a dashboard
     // Call the cloudwatch api
     const dashboardJson = ""
 
-    await this.cloudwatchClient.updateDashboard(dashboard, dashboardJson)
+    // await this.cloudwatchClient.updateDashboard(dashboard, dashboardJson)
+    const result = await this.cloudwatchClient.getDashboard(dashboard)
+    console.log('result is', result)
   }
 }
 
 const makeCloudwatchUpdater = (
   rancherRequests: RancherRequests,
-  cloudwatchClient: CloudwatchClient,
+  cloudwatchClient: AbstractCloudwatchClient,
   config: RancherScalerConfigType,
   // wrapWithRetries: (func: any, retries: number, waitTimeMs: number) => Promise<any>,
   logger: LoggerType

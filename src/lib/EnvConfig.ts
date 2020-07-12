@@ -1,3 +1,4 @@
+import path from 'path'
 export interface EnvConfig {
   rancherBaseUrl: string;
   cattleAccessKey: string;
@@ -7,6 +8,9 @@ export interface EnvConfig {
   method: Method
   // Optional
   slackWebhookUrl?: string;
+  // awsAccessKeyId?: string;
+  // awsSecretAccessKey?: string;
+  awsRegion?: string;
 }
 
 
@@ -32,6 +36,9 @@ function getEnvConfig(): EnvConfig {
     METHOD,
     PATH_TO_CONFIG,
     SLACK_WEBHOOK_URL: slackWebhookUrl,
+    // AWS_ACCESS_KEY_ID: awsAccessKeyId,
+    // AWS_SECRET_ACCESS_KEY: awsSecretAccessKey,
+    AWS_REGION: awsRegion
   } = process.env;
   let { SCALE } = process.env;
 
@@ -80,12 +87,8 @@ function getEnvConfig(): EnvConfig {
     scale = SCALE
   }
 
-  let pathToConfig
-  if (!PATH_TO_CONFIG) {
-    pathToConfig = '../../config/rancher-scaler.config.js';
-  } else {
-    pathToConfig = PATH_TO_CONFIG
-  }
+  const configFile = PATH_TO_CONFIG || '/config/rancher-scaler.config.js'
+  const pathToConfig = path.resolve(__dirname, '../../', configFile);
 
   return {
     rancherBaseUrl: RANCHER_BASE_URL,
@@ -95,6 +98,9 @@ function getEnvConfig(): EnvConfig {
     method,
     pathToConfig,
     slackWebhookUrl,
+    awsRegion
+    // awsAccessKeyId,
+    // awsSecretAccessKey,
   };
 }
 

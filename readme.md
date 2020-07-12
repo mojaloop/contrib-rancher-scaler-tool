@@ -256,3 +256,15 @@ ssh -i ~/Downloads/worker5/id_rsa ubuntu@35.178.89.50 'echo "Downloading and run
                   #echo "edeb16aaaab9261ba060144fb9c4c34925de6d4045c77b1fb9c5c631b753b9d0 /tmp/_bootstrap_nvme.sh" | sha256sum --check;
                   sudo sh /tmp/_bootstrap_nvme.sh'
 ```
+
+
+
+### Working on Cloudwatch Dashboard updates:
+
+```bash
+
+export PATH_TO_CONFIG=./config/dashtest.config.js
+
+npm run scale:up
+
+```
