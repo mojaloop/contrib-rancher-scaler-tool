@@ -57,11 +57,22 @@ export class CloudwatchUpdater {
   public async _addNodesToDash(nodePoolId: string, dashboard: string) {
     // Get the names of the nodes
     const nodes = await this.rancherRequests.getNodesForNodePool(nodePoolId)
-    // const instanceIds = nodes.data.map(n => n.)
-    const instanceIds = []
+    const awsInstanceIds = nodes.data.map(n => n.providerId.split('/').pop())
+    console.log("awsInstanceIds are", awsInstanceIds)
     // TODO: look up the template for the dashboard and parse into a dashboard
     // Call the cloudwatch api
     const dashboardJson = require(`../../config/cloudwatch/template-${dashboard}.js`)
+
+
+    /*
+      [ "CWAgent", "cpu_usage_idle", "InstanceId", "i-0e11b2188d6e5dd4f", "ImageId", "ami-ff46a298", "cpu", "cpu3", "InstanceType", "i3.xlarge", { "visible": false } ],
+      [ ".", "cpu_usage_user", ".", "i-0e11b2188d6e5dd4f", ".", ".", ".", "cpu3", ".", "." ],
+      [ "...", "cpu2", ".", "." ],
+      [ "...", "cpu1", ".", "." ],
+      [ "...",  "cpu0",  ".",  "." ],
+      [".", "cpu_usage_system", ".", "i-0e11b2188d6e5dd4f", ".", ".", ".", ".", ".", "."],
+    */
+    // const cpuUsagePartial =
 
     const result = await this.cloudwatchClient.updateDashboard(dashboard, dashboardJson)
     // const result = await this.cloudwatchClient.getDashboard(dashboard)

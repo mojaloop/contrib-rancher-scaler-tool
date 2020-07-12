@@ -87,8 +87,9 @@ function getEnvConfig(): EnvConfig {
     scale = SCALE
   }
 
-  const configFile = PATH_TO_CONFIG || '/config/rancher-scaler.config.js'
+  const configFile = PATH_TO_CONFIG || './config/rancher-scaler.config.js'
   const pathToConfig = path.resolve(__dirname, '../../', configFile);
+  console.log('pathtoConfig', pathToConfig)
 
   return {
     rancherBaseUrl: RANCHER_BASE_URL,

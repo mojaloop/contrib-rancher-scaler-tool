@@ -26,11 +26,11 @@ export class RancherRequests {
   }
 
   constructor(
-    fs: any, 
-    requests: AxiosStatic, 
+    fs: any,
+    requests: AxiosStatic,
     logger: any,
-    cattleAccessKey: string, 
-    cattleSecretKey: string, 
+    cattleAccessKey: string,
+    cattleSecretKey: string,
     rancherBaseUrl: string
     ) {
     this.fs = fs;
@@ -56,7 +56,7 @@ export class RancherRequests {
   /**
    * @function getNodePool
    * @description gets the node pool
-   * @param nodePoolId 
+   * @param nodePoolId
    */
   public async getNodePool(nodePoolId: string) {
     const requestConfig: AxiosRequestConfig = {
@@ -79,7 +79,7 @@ export class RancherRequests {
   /**
    * @function getNodePool
    * @description gets the node pool
-   * @param nodePoolId 
+   * @param nodePoolId
    */
   public async putNodePoolQuantity(nodePoolId: string, config: { quantity: number, nodeTemplateId: string}) {
     /*
@@ -102,7 +102,7 @@ export class RancherRequests {
 
     try {
       const response = await this.requests(requestConfig)
-      
+
       return response.data;
     } catch (err) {
       this.logger.error(`RancherRequests.putNodePoolQuantity() Error - ${err.message}`)
@@ -112,7 +112,7 @@ export class RancherRequests {
 
   /**
    * @function getNodesForNodePool
-   * @param nodePoolId 
+   * @param nodePoolId
    */
   public async getNodesForNodePool(nodePoolId: string): Promise<GetNodesForNodePoolResponse> {
     /* .../v3/nodes/?nodePoolId=c-vsm2w%3Anp-mg5wr */
@@ -132,8 +132,8 @@ export class RancherRequests {
   /**
    * @function downloadConfigForNodes
    * @description Download the nodeconfig for a set of nodes
-   * @param nodePoolId 
-   * @param configPath 
+   * @param nodePoolId
+   * @param configPath
    */
   public async downloadConfigForNode(nodeId: string, configPath: string): Promise<any> {
     // curl -u "${CATTLE_ACCESS_KEY}:${CATTLE_SECRET_KEY}" --location --request GET "${BASE_URL}/v3/nodes/c-kbc2d:m-26tkk/nodeconfig" -o /tmp/keys
@@ -160,11 +160,11 @@ export class RancherRequests {
 
 /* Dependency Injection */
 const makeRancherRequests = (
-  fs: any, 
-  requests: AxiosStatic, 
+  fs: any,
+  requests: AxiosStatic,
   logger: any,
-  cattleAccessKey: string, 
-  cattleSecretKey: string, 
+  cattleAccessKey: string,
+  cattleSecretKey: string,
   rancherBaseUrl: string) => {
   const rancherRequests = new RancherRequests(fs, requests, logger, cattleAccessKey, cattleSecretKey, rancherBaseUrl);
 

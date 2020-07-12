@@ -14,6 +14,8 @@ export interface RancherNode {
   externalIpAddress: string;
   hostname: string;
   nodeName: string;
+  // EG: 'aws:///eu-west-2a/i-073df1ed66d910c2f'
+  providerId: string;
 
 }
 
