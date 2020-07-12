@@ -29,7 +29,7 @@ spec:
           containers:
             - name: rancher-scaler-cron-down
               image: {{ .Values.scaleDown.image }}
-              command: {{ .Values.scaleDown.command }}
+              command: ["sh", "-c", "npm run scale:up"]
               env:
                 - name: CATTLE_ACCESS_KEY
                   value: {{ .Values.scaleDown.cattleAccessKey }}

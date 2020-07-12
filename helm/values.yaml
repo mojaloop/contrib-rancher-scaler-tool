@@ -3,10 +3,11 @@ scaleDown:
   # once an hour, at the start of the hour
   schedule: "1 * * * *"
   # Timeout after 30 minutes
-  jobTimeout: 1800
+  # jobTimeout: 1800
+  jobTimeout: 3600
   # Docker container runtime
   image: mojaloop/rancher-scaler:latest
-  command: ["sh", "-c", "npm run scale:down"]
+  # command: ["sh", "-c", "npm run scale:down"]
 
   # Container variables
   logLevel: debug
@@ -17,11 +18,12 @@ scaleUp:
   # once an hour, 31 minutes past the hour
   schedule: "40 * * * *"
   # Timeout after 30 minutes
-  jobTimeout: 1800
+  # jobTimeout: 1800
+  jobTimeout: 3600
 
   # Docker container runtime
   image: mojaloop/rancher-scaler:latest
-  command: ["sh", "-c", "npm run scale:up"]
+  # command: ["sh", "-c", "npm run scale:up"]
 
   # Container variables
   logLevel: debug
