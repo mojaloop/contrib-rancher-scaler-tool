@@ -72,7 +72,8 @@ const config = {
           // { hookType: 'SLACK_NOTIFICATION', contents: '  ↳ Scaling `{{nodePoolId}}` to `{{minQuantity}}` node' }
         // ],
         postScaleUp: [
-          { hookType: 'CLOUDWATCH_ADD_NODES', dashboardName: 'k8s-tanuki-perf1-test1' }
+          // { hookType: 'CLOUDWATCH_ADD_NODES', dashboardName: 'k8s-tanuki-perf1-test1' }
+          { hookType: 'CLOUDWATCH_ADD_NODES', dashboardName: 'test-rancher-scaler' }
         ],
         // onFailure: [
           // { hookType: 'SLACK_NOTIFICATION', contents: '   Failed to scale. "@Lewis Daly" !!!', color: 'danger' }

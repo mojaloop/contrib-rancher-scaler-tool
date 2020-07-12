@@ -61,7 +61,7 @@ export class CloudwatchUpdater {
     const instanceIds = []
     // TODO: look up the template for the dashboard and parse into a dashboard
     // Call the cloudwatch api
-    const dashboardJson = require('../../config/cloudwatch/template-test-rancher-scaler.js')
+    const dashboardJson = require(`../../config/cloudwatch/template-${dashboard}.js`)
 
     const result = await this.cloudwatchClient.updateDashboard(dashboard, dashboardJson)
     // const result = await this.cloudwatchClient.getDashboard(dashboard)

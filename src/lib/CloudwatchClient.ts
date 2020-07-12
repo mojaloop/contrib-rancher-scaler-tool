@@ -5,7 +5,7 @@ import LoggerType from 'types/LoggerType';
 
 export abstract class AbstractCloudwatchClient {
   public abstract async getDashboard(name: string)
-  public abstract async updateDashboard(name: string, content: string)
+  public abstract async updateDashboard(name: string, content: any)
 }
 
 export class NoCloudwatchClient implements AbstractCloudwatchClient {
@@ -19,7 +19,7 @@ export class NoCloudwatchClient implements AbstractCloudwatchClient {
     this.logger.error(`CloudwatchClient.getDashboard called, but specifified NoCloudwatchClient. Doing nothing.`)
   }
 
-  public async updateDashboard(name: string, content: string) {
+  public async updateDashboard(name: string, content: any) {
     this.logger.error(`CloudwatchClient.updateDashboard called, but specifified NoCloudwatchClient. Doing nothing.`)
   }
 }
@@ -47,14 +47,14 @@ export class CloudwatchClient implements AbstractCloudwatchClient{
     return this.cloudwatchApi.getDashboard(params).promise()
   }
 
-  public async updateDashboard(name: string, content: string) {
+  public async updateDashboard(name: string, content: any) {
     this.logger.debug(`CloudwatchClient.updateDashboard with name: ${name}`)
 
     const params = {
-      DashboardBody: content,
+      DashboardBody: JSON.stringify(content),
       DashboardName: name
     }
-    await this.cloudwatchApi.putDashboard(params).promise()
+    return this.cloudwatchApi.putDashboard(params).promise()
   }
 }
 
