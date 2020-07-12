@@ -59,13 +59,14 @@ export class CloudwatchUpdater {
     const nodes = await this.rancherRequests.getNodesForNodePool(nodePoolId)
     // const instanceIds = nodes.data.map(n => n.)
     const instanceIds = []
-    // look up the template for the dashboard and parse into a dashboard
+    // TODO: look up the template for the dashboard and parse into a dashboard
     // Call the cloudwatch api
-    const dashboardJson = ""
+    const dashboardJson = require('../../config/cloudwatch/template-test-rancher-scaler.js')
 
-    // await this.cloudwatchClient.updateDashboard(dashboard, dashboardJson)
-    const result = await this.cloudwatchClient.getDashboard(dashboard)
+    const result = await this.cloudwatchClient.updateDashboard(dashboard, dashboardJson)
+    // const result = await this.cloudwatchClient.getDashboard(dashboard)
     console.log('result is', result)
+    // console.log(JSON.stringify(JSON.parse(result.DashboardBody), null, 2))
   }
 }
 
