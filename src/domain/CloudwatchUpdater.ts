@@ -46,6 +46,8 @@ export class CloudwatchUpdater {
       case ActionEnum.CLOUDWATCH_ADD_NODES: return this._addNodesToDash(nodePoolId, action.dashboardName)
       case ActionEnum.CLOUDWATCH_REMOVE_NODES:
         this.logger.debug('doing stuff with nodes now!')
+        // TODO: how do we remove nodes that no longer exist?
+        // I guess this should be a pre-scale event
         return;
     }
   }
@@ -55,9 +57,16 @@ export class CloudwatchUpdater {
    * @description Add the nodes in a nodepool to the dashboard
    */
   public async _addNodesToDash(nodePoolId: string, dashboard: string) {
+
+    //TODO: make RancherBootstrapper's wait for nodes to be ready generic and call here...
+
     // Get the names of the nodes
     const nodes = await this.rancherRequests.getNodesForNodePool(nodePoolId)
     const awsInstanceIds = nodes.data.map(n => n.providerId.split('/').pop())
+
+    // TODO: get more instance details using `ec2.describeInstances()`?
+    // Or can we call some cloudwatch functions to get the available metrics?
+    // And then filter the metrics based on the instanceIds?
     console.log("awsInstanceIds are", awsInstanceIds)
     // TODO: look up the template for the dashboard and parse into a dashboard
     // Call the cloudwatch api

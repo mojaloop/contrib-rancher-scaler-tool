@@ -9,12 +9,40 @@ const template =  {
       "height": 9,
       "properties": {
         "metrics": [
+          // ["CWAgent", "mem_used_percent", "InstanceId", "i-00d8587febc7d1726" ]
+          // the above doesn't work :(. Sadly we need the `ImageId` and `InstanceType` as well, which makes this a real pain, since we can't get this from
+          // The rancher api
+          ["CWAgent", "mem_used_percent", "InstanceId", "i-00d8587febc7d1726", "ImageId", "ami-ff46a298", "InstanceType", "i3.xlarge"]
           // [ "CWAgent", "cpu_usage_idle", "InstanceId", "i-0e11b2188d6e5dd4f", "ImageId", "ami-ff46a298", "cpu", "cpu3", "InstanceType", "i3.xlarge", { "visible": false } ],
-          [ "CWAgent", "cpu_usage_idle", "InstanceId", "i-0e11b2188d6e5dd4f", "cpu", "cpu3", { "visible": true } ],
-          // [ ".", "cpu_usage_user", ".", "i-0e11b2188d6e5dd4f", ".", ".", ".", "cpu3", ".", "." ],
-          // [ "...", "cpu2", ".", "." ],
-          // [ "...", "cpu1", ".", "." ],
-          // [ "...",  "cpu0",  ".",  "." ],
+          // ["CWAgent", "cpu_usage_user", "InstanceId", "i-0e11b2188d6e5dd4f", "cpu", "cpu0"],
+          // ["CWAgent", "cpu_usage_user", "InstanceId", "i-0e11b2188d6e5dd4f", "cpu", "cpu1"],
+          // ["CWAgent", "cpu_usage_user", "InstanceId", "i-0e11b2188d6e5dd4f", "cpu", "cpu2"],
+          // ["CWAgent", "cpu_usage_user", "InstanceId", "i-0e11b2188d6e5dd4f", "cpu", "cpu3"],
+          // ["CWAgent", "cpu_usage_system", "InstanceId", "i-0e11b2188d6e5dd4f", "cpu", "cpu0"],
+          // ["CWAgent", "cpu_usage_system", "InstanceId", "i-0e11b2188d6e5dd4f", "cpu", "cpu1"],
+          // ["CWAgent", "cpu_usage_system", "InstanceId", "i-0e11b2188d6e5dd4f", "cpu", "cpu2"],
+          // ["CWAgent", "cpu_usage_system", "InstanceId", "i-0e11b2188d6e5dd4f", "cpu", "cpu3"],
+
+          // ["CWAgent", "cpu_usage_user", "InstanceId", "i-0578a090a3c7680cc", "cpu", "cpu0"],
+          // ["CWAgent", "cpu_usage_user", "InstanceId", "i-0578a090a3c7680cc", "cpu", "cpu1"],
+          // ["CWAgent", "cpu_usage_user", "InstanceId", "i-0578a090a3c7680cc", "cpu", "cpu2"],
+          // ["CWAgent", "cpu_usage_user", "InstanceId", "i-0578a090a3c7680cc", "cpu", "cpu3"],
+          // ["CWAgent", "cpu_usage_system", "InstanceId", "i-0578a090a3c7680cc", "cpu", "cpu0"],
+          // ["CWAgent", "cpu_usage_system", "InstanceId", "i-0578a090a3c7680cc", "cpu", "cpu1"],
+          // ["CWAgent", "cpu_usage_system", "InstanceId", "i-0578a090a3c7680cc", "cpu", "cpu2"],
+          // ["CWAgent", "cpu_usage_system", "InstanceId", "i-0578a090a3c7680cc", "cpu", "cpu3"],
+
+          // ["CWAgent", "cpu_usage_user", "InstanceId", "i-0ad8e322959109fd2", "cpu", "cpu0"],
+          // ["CWAgent", "cpu_usage_user", "InstanceId", "i-0ad8e322959109fd2", "cpu", "cpu1"],
+          // ["CWAgent", "cpu_usage_user", "InstanceId", "i-0ad8e322959109fd2", "cpu", "cpu2"],
+          // ["CWAgent", "cpu_usage_user", "InstanceId", "i-0ad8e322959109fd2", "cpu", "cpu3"],
+          // ["CWAgent", "cpu_usage_system", "InstanceId", "i-0ad8e322959109fd2", "cpu", "cpu0"],
+          // ["CWAgent", "cpu_usage_system", "InstanceId", "i-0ad8e322959109fd2", "cpu", "cpu1"],
+          // ["CWAgent", "cpu_usage_system", "InstanceId", "i-0ad8e322959109fd2", "cpu", "cpu2"],
+          // ["CWAgent", "cpu_usage_system", "InstanceId", "i-0ad8e322959109fd2", "cpu", "cpu3"],
+          // [ "...", "cpu0", "." ],
+          // [ "...", "cpu1", "." ],
+          // [ "...", "cpu2", "." ],
           // [ "...",  "i-0578a090a3c7680cc",  ".",  ".",  ".",  ".",  ".",  "." ],
           // [ "...",  "cpu1",  ".",  "." ],
           // [ "...",  "cpu2",  ".",  "." ],

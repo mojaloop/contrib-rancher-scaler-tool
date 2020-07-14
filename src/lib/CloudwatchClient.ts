@@ -56,5 +56,6 @@ export class CloudwatchClient implements AbstractCloudwatchClient{
     }
     return this.cloudwatchApi.putDashboard(params).promise()
   }
+
 }
 
