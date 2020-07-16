@@ -17,6 +17,18 @@ Rancher Tooling for automatically scaling up and down Rancher node pools to save
 
 ## Running Locally:
 
+[ todo ]: update grafana with the memory usage stuff and submit a PR to the helm repo
+[ todo ]: add prerequisites for running with kube? from npm ? as a job and repeat?
+  npm run scale:up-local
+  npm run scale:up
+  [ todo ]: warning if you have bootstrap actions defined and you are running locally
+
+[ todo ]: figure out how to mount config files in dynamically
+  - can we just make a super long env variable?
+  - or is there another better way to mount it in?
+[ todo ]: check the cattle credentials? does miguel need to byo?
+[ TODO]: list of environment variables!
+
 ### `npm` runner
 
 ```bash
@@ -43,10 +55,12 @@ npm run scale:up
 
 ```bash
 # create the secrets from our `.env` file
+# [TODO] create values file and template the secret manually
 kubectl create secret generic rancher-scaler-secrets --from-env-file=.env
 
+# 
 # install the charts
-helm install rancher-scaler ./helm
+helm install rancher-scaler ./helm 
 ```
 
 Take a look at the [`values.yaml`](./helm/values.yaml) for configuration options.

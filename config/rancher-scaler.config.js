@@ -27,7 +27,7 @@ const config = {
       nodePoolId: 'c-vsm2w:np-cgntb',
       nodeTemplateId: 'cattle-global-nt:nt-user-s7l26-nt-qsnss', //i3.xlarge
       minQuantity: 0,
-      maxQuantity: 1,
+      maxQuantity: 11,
       // Hooks to run before/after scale events for each node pool
       hooks: {
         preScaleUp: [
@@ -58,6 +58,7 @@ const config = {
         ]
       }
     },
+    // i3.xlarge nodes (to verify the boostrapping)
     {
       nodePoolId: 'c-vsm2w:np-brmwc',
       nodeTemplateId: 'cattle-global-nt:nt-v2mzg', // t3.small nodes (much cheaper)
