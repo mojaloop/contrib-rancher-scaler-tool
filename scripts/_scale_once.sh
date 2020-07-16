@@ -3,10 +3,9 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 HELM_ONCE_DIR="${DIR}/../helm-once"
 ENV_FILE=${ENV_FILE:=${DIR}/../.env}
-# DRY_RUN_FLAG=${DRY_RUN_FLAG:="--dry-run"}
 set -a; source ${ENV_FILE} ;set +a
 
-echo "${PATH_TO_CONFIG}"
+echo "Using Config File: ${PATH_TO_CONFIG}"
 
 set -u
 set -e
@@ -14,6 +13,8 @@ set -e
 echo 'Cleaning up last Run'
 helm del rancher-scaler-once || '[WARN] Non fatal error running `helm del rancher-scaler-once`'
 
+echo "`helm install`ing job of ${1}"
+# Set these variables here so we don't have to maintain a values.yaml file containing secrets
 helm install \
   --set-file config.config_js="${PATH_TO_CONFIG}" \
   --set secret.CATTLE_SECRET_KEY=${CATTLE_SECRET_KEY} \

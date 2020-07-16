@@ -1,0 +1,50 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: rancher-scaler-tmp
+spec:
+  template:
+    # TODO: can we just use a node selector?
+    spec:
+      nodeSelector:
+        node-role.kubernetes.io/controlplane: "true"
+      tolerations:
+        # tolerate: node-role.kubernetes.io/controlplane=true:NoSchedule
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/controlplane
+          value: "true"
+          operator: Equal
+        # tolerate: node-role.kubernetes.io/etcd=true:NoExecute
+        - effect: NoExecute
+          key: node-role.kubernetes.io/etcd
+          value: "true"
+          operator: Equal
+      containers:
+        - name: rancher-scaler-tmp
+          image: mojaloop/rancher-scaler:latest
+          # command: ["sh", "-c", "npm run scale:up && tail -f /dev/null"]
+          command: ["sh", "-c", "npm run scale:up"]
+          # command: ["sh", "-c", "tail -f /dev/null"]
+          env:
+            - name: CATTLE_ACCESS_KEY
+              value: token-czddw
+            - name: CATTLE_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: rancher-scaler-secrets
+                  key: CATTLE_SECRET_KEY
+            - name: LOG_LEVEL
+              value: debug
+            - name: RANCHER_BASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: rancher-scaler-secrets
+                  key: RANCHER_BASE_URL
+            - name: SLACK_WEBHOOK_URL
+              valueFrom:
+                secretKeyRef:
+                  name: rancher-scaler-secrets
+                  key: SLACK_WEBHOOK_URL
+      restartPolicy: Never
+
+

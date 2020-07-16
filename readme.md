@@ -6,7 +6,27 @@
 
 Rancher Tooling for automatically scaling up and down Rancher node pools to save 💵💵💵.
 
-## Prerequisites:
+## Contents:
+<!-- vscode-markdown-toc -->
+* 1. [Prerequisites:](#Prerequisites:)
+	* 1.1. [Environment Variables](#EnvironmentVariables)
+* 2. [Running Rancher-Scaler:](#RunningRancher-Scaler:)
+	* 2.1. [Kubernetes 1-Off Runs](#Kubernetes1-OffRuns)
+	* 2.2. [Local `npm` runner](#Localnpmrunner)
+* 3. [Installing Cron-Based Scaling with Helm](#InstallingCron-BasedScalingwithHelm)
+* 4. [Publishing a new Version](#PublishinganewVersion)
+* 5. [The Config File](#TheConfigFile)
+* 6. [Handy Snippets](#HandySnippets)
+* 7. [Backlog](#Backlog)
+
+<!-- vscode-markdown-toc-config
+	numbering=true
+	autoSave=true
+	/vscode-markdown-toc-config -->
+<!-- /vscode-markdown-toc -->
+
+
+##  1. <a name='Prerequisites:'></a>Prerequisites:
 
 - Rancher API Access, and an access token (see [rancher api](#rancher-api-examples) below)
 - An `.env` file, following the format outlined in `example.env` (see [Running Locally](#Running-Locally) for more information)
@@ -14,9 +34,9 @@ Rancher Tooling for automatically scaling up and down Rancher node pools to save
 - `kubectx` and `kubetail`
 - A valid `rancher-scaler.config.js` file (see [The Config File](#The-Config-File))
 
-### Environment Variables
+###  1.1. <a name='EnvironmentVariables'></a>Environment Variables
 
-Rancher-Scaler requires the following environments
+Rancher-Scaler requires the following environment variables to be set.
 
 | Name | Description | Default | Required | Format |
 |---|---|---|---|---|
@@ -26,23 +46,41 @@ Rancher-Scaler requires the following environments
 | `SLACK_WEBHOOK_URL` | A Slack Webhook url. Required if using `SLACK_NOTIFICATION` pre/post scale hooks. | N/A    | No | `https://...` |
 | `LOG_LEVEL`         | The log level for the logging framework. Defaults to `info`                       | `info` | No | `error`, `info`, `debug` |
 | `PATH_TO_CONFIG`    | Path to the rancher-scaler config file. | `./config/rancher-scaler.config.json`            | No | `error`, `info`, `debug` |
+| `ENV_FILE`          | Path to the Env file. Used only by `npm run kube-*` commands. | `./config/rancher-scaler.config.json`            | No | `error`, `info`, `debug` |
 
-## Running Rancher-Scaler:
+####  1.1.1. <a name='The.envFile'></a>The .env File
+
+We use a .env file for keeping secrets. You can set up your own `.env` file by copying from the template like so:
+
+```bash
+# copy the env var template
+cp example.env .env
+
+# Edit the template and fill out the values
+vim .env
+
+```
+
+##  2. <a name='RunningRancher-Scaler:'></a>Running Rancher-Scaler:
 
 [ todo ]: update grafana with the memory usage stuff and submit a PR to the helm repo
 [ todo ]: check the cattle credentials? does miguel need to byo?
-[ TODO]: list of environment variables!
 
-### Kubernetes 1-Off Runs
+###  2.1. <a name='Kubernetes1-OffRuns'></a>Kubernetes 1-Off Runs
 
-This runner executes a 1 off job
+This runner executes a 1 off job to perform a scale up or scale down.
 
-#### Prerequisites
-- access to the `public-rancher` kubernetes cluster
-- 
+For each run, it deletes the old helm deployment, and `helm install`s a new job from `./helm-once`.
 
+####  2.1.1. <a name='Prerequisites'></a>Prerequisites
 
 ```bash
+# copy the env var template
+cp example.env .env
+
+# Edit the template and fill out the values
+vim .env
+
 # set the correct kube context
 kubectx public-rancher
 kubens rancher-scaler
@@ -57,8 +95,7 @@ npm run kube-scale:down
 npm run kube-scale:up
 ```
 
-
-### Local `npm` runner
+###  2.2. <a name='Localnpmrunner'></a>Local `npm` runner
 
 ```bash
 # copy the env var template
@@ -80,7 +117,7 @@ npm run local-scale:down
 npm run local-scale:up
 ```
 
-## Installing Cron-Based Scaling with Helm
+##  3. <a name='InstallingCron-BasedScalingwithHelm'></a>Installing Cron-Based Scaling with Helm
 
 ```bash
 # create the secrets from our `.env` file
@@ -93,7 +130,7 @@ helm install rancher-scaler ./helm-cron
 
 Take a look at the [`values.yaml`](./helm/values.yaml) for configuration options.
 
-### `docker-compose` runner:
+###  3.1. <a name='docker-composerunner:'></a>`docker-compose` runner:
 > This is useful as it mimics the way that K8s will run the job: inside a docker container
 
 ```bash
@@ -110,19 +147,19 @@ docker build -t mojaloop/rancher-scaler:local .
 docker-compose up
 ```
 
-## Publishing a new Version
+##  4. <a name='PublishinganewVersion'></a>Publishing a new Version
 
 CircleCI manages this, by publishing a `mojaloop/rancher-scaler:latest` image to docker hub on _every_ push to master.
 
 > Note: we are using the `latest` tag for now, but we may want to change this in the future
 
-## The Config File
+##  5. <a name='TheConfigFile'></a>The Config File
 
 In `./config/rancher-scaler.config.js`, we define a config file to control the scaling behaviour, as well as pre/post scaling hooks:
 
 > Note: We use a .js file, as this allows for commenting 
 
-### Example: A basic config file
+###  5.1. <a name='Example:Abasicconfigfile'></a>Example: A basic config file
 `rancher-scaler.config.js`
 ```js
 const config = {
@@ -146,7 +183,7 @@ const config = {
 module.exports = config
 ```
 
-### Example: A config file with global pre and post scale hooks
+###  5.2. <a name='Example:Aconfigfilewithglobalpreandpostscalehooks'></a>Example: A config file with global pre and post scale hooks
 `rancher-scaler.config.js`
 ```js
 const config = {
@@ -188,7 +225,7 @@ const config = {
 module.exports = config
 ```
 
-### Slack Notification Templates
+###  5.3. <a name='SlackNotificationTemplates'></a>Slack Notification Templates
 
 In building out the slack notifications, we provide some very simple template strings to allow you write nice slack notifications:
 
@@ -200,27 +237,16 @@ In building out the slack notifications, we provide some very simple template st
 | `{{nodePoolId}}`  | The id of the node pool | node pool |
 
 
-## TODO
 
-1. Deploy live on one of our clusters (dev1? Prod?)
+##  6. <a name='HandySnippets'></a>Handy Snippets
 
-## Backlog
-1. Unit Tests
-1. Better cli interface (right now it's all ENV vars)
-1. Properly compile ts in `docker build` (we are currently using `ts-node`)
-1. Add tests to ci/cd pipeline
-1. Add optional parallel scaling option
-
-
-## Handy Snippets
-
-### Debugging Helm Charts 
+###  6.1. <a name='DebuggingHelmCharts'></a>Debugging Helm Charts 
 
 ```bash
 helm install --debug --dry-run goodly-guppy ./helm
 ```
 
-### Installing without Helm
+###  6.2. <a name='InstallingwithoutHelm'></a>Installing without Helm
 
 ```bash
 # create the secrets from our `.env` file
@@ -235,7 +261,7 @@ kubectl get cronjob rancher-scaler-cron-up
 kubectl get jobs --watch
 ```
 
-### Create a One Time Job
+###  6.3. <a name='CreateaOneTimeJob'></a>Create a One Time Job
 
 > A one-time job, which is easier to debug than waiting around for a cronjob to run
 
@@ -252,7 +278,7 @@ kubetail rancher-scaler-tmp
 kubectl delete -f ./rancher-scaler-job-tmp.yaml
 ```
 
-### Suspending CronJobs
+###  6.4. <a name='SuspendingCronJobs'></a>Suspending CronJobs
 
 ```bash
 kubectl get cronjobs
@@ -264,7 +290,7 @@ kubectl patch cronjobs rancher-scaler-cron-down -p '{"spec" : {"suspend" : true 
 kubectl patch cronjobs rancher-scaler-cron-up -p '{"spec" : {"suspend" : true }}'
 ```
 
-### Rancher API Examples
+###  6.5. <a name='RancherAPIExamples'></a>Rancher API Examples
 
 1. create a new access token in Rancher with global scope (it needs to talk to the root rancher cluster)
 
@@ -289,7 +315,7 @@ curl -u "${CATTLE_ACCESS_KEY}:${CATTLE_SECRET_KEY}" \
 -d '{"quantity": 2, "nodeTemplateId": "cattle-global-nt:nt-user-s7l26-nt-2s4x5"}'
 ```
 
-### Verifying bootstrap:
+###  6.6. <a name='Verifyingbootstrap:'></a>Verifying bootstrap:
 
 ```
 ssh -i ~/Downloads/worker5/id_rsa ubuntu@35.178.89.50 'echo "Downloading and running bootstrap script"; 
@@ -301,7 +327,7 @@ ssh -i ~/Downloads/worker5/id_rsa ubuntu@35.178.89.50 'echo "Downloading and run
 
 
 
-### Working on Cloudwatch Dashboard updates:
+###  6.7. <a name='WorkingonCloudwatchDashboardupdates:'></a>Working on Cloudwatch Dashboard updates:
 
 ```bash
 
@@ -310,3 +336,11 @@ export PATH_TO_CONFIG=./config/dashtest.config.js
 npm run scale:up
 
 ```
+
+
+##  7. <a name='Backlog'></a>Backlog
+1. Unit Tests
+1. Better cli interface (right now it's all ENV vars)
+1. Properly compile ts in `docker build` (we are currently using `ts-node`)
+1. Add tests to ci/cd pipeline
+1. Add optional parallel scaling option
