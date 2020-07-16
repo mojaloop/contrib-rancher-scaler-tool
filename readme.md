@@ -1,6 +1,6 @@
 # Rancher Scaler
 [![Git Commit](https://img.shields.io/github/last-commit/mojaloop/rancher-scaler.svg?style=flat)](https://github.com/mojaloop/rancher-scaler/commits/master)
-[![Git Releases](https://img.shields.io/github/release/mojaloop/rancher-scaler.svg?style=flat)](https://github.com/mojaloop/rancher-scaler/releases)
+<!-- [![Git Releases](https://img.shields.io/github/release/mojaloop/rancher-scaler.svg?style=flat)](https://github.com/mojaloop/rancher-scaler/releases) -->
 [![Docker pulls](https://img.shields.io/docker/pulls/mojaloop/rancher-scaler.svg?style=flat)](https://hub.docker.com/r/mojaloop/rancher-scaler)
 [![CircleCI](https://circleci.com/gh/mojaloop/rancher-scaler.svg?style=svg)](https://app.circleci.com/pipelines/github/mojaloop/rancher-scaler)
 
@@ -8,9 +8,9 @@ Rancher Tooling for automatically scaling up and down Rancher node pools to save
 
 ## Contents:
 <!-- vscode-markdown-toc -->
-* 1. [Prerequisites:](#Prerequisites:)
+* 1. [Prerequisites:](#Prerequisites)
 	* 1.1. [Environment Variables](#EnvironmentVariables)
-* 2. [Running Rancher-Scaler:](#RunningRancher-Scaler:)
+* 2. [Running Rancher-Scaler:](#RunningRancher-Scaler)
 	* 2.1. [Kubernetes 1-Off Runs](#Kubernetes1-OffRuns)
 	* 2.2. [Local `npm` runner](#Localnpmrunner)
 * 3. [Installing Cron-Based Scaling with Helm](#InstallingCron-BasedScalingwithHelm)
@@ -20,16 +20,16 @@ Rancher Tooling for automatically scaling up and down Rancher node pools to save
 * 7. [Backlog](#Backlog)
 
 <!-- vscode-markdown-toc-config
-	numbering=true
+	numbering=false
 	autoSave=true
 	/vscode-markdown-toc-config -->
 <!-- /vscode-markdown-toc -->
 
 
-##  1. <a name='Prerequisites:'></a>Prerequisites:
+##  1. <a name='Prerequisites'></a>Prerequisites:
 
 - Rancher API Access, and an access token (see [rancher api](#rancher-api-examples) below)
-- An `.env` file, following the format outlined in `example.env` (see [Running Locally](#Running-Locally) for more information)
+- An `.env` file, following the format outlined in `example.env` (see [The .env File](#The.envFile) for more information)
 - `kubectl` access (this doesn't need to run on the same cluster that does the scaling), but it _does_ need to have internet access to talk to the Rancher and Slack APIs
 - `kubectx` and `kubetail`
 - A valid `rancher-scaler.config.js` file (see [The Config File](#The-Config-File))
@@ -40,9 +40,9 @@ Rancher-Scaler requires the following environment variables to be set.
 
 | Name | Description | Default | Required | Format |
 |---|---|---|---|---|
-| `CATTLE_ACCESS_KEY` | The Rancher API Access Key                 | N/A | **Yes** | string        |
-| `CATTLE_SECRET_KEY` | The Rancher API Secret Key                 | N/A | **Yes** | string        | 
-| `RANCHER_BASE_URL`  | The base URL of the master rancher cluster | N/A | **Yes** | `https://...` |
+| `CATTLE_ACCESS_KEY` | The Rancher API Access Key. Go to _your_rancher_base_url_/apikeys to create.      | N/A | **Yes** | string        |
+| `CATTLE_SECRET_KEY` | The Rancher API Secret Key. Go to _your_rancher_base_url_/apikeys to create.      | N/A | **Yes** | string        | 
+| `RANCHER_BASE_URL`  | The base URL of the master rancher cluster                                        | N/A | **Yes** | `https://...` |
 | `SLACK_WEBHOOK_URL` | A Slack Webhook url. Required if using `SLACK_NOTIFICATION` pre/post scale hooks. | N/A    | No | `https://...` |
 | `LOG_LEVEL`         | The log level for the logging framework. Defaults to `info`                       | `info` | No | `error`, `info`, `debug` |
 | `PATH_TO_CONFIG`    | Path to the rancher-scaler config file. | `./config/rancher-scaler.config.json`            | No | `error`, `info`, `debug` |
@@ -58,21 +58,15 @@ cp example.env .env
 
 # Edit the template and fill out the values
 vim .env
-
 ```
 
-##  2. <a name='RunningRancher-Scaler:'></a>Running Rancher-Scaler:
+##  2. <a name='RunningRancher-Scaler'></a>Running Rancher-Scaler:
 
-[ todo ]: update grafana with the memory usage stuff and submit a PR to the helm repo
-[ todo ]: check the cattle credentials? does miguel need to byo?
-
-###  2.1. <a name='Kubernetes1-OffRuns'></a>Kubernetes 1-Off Runs
+###  2.1. <a name='KubernetesOne-OffRuns'></a>Kubernetes One-Off Runs
 
 This runner executes a 1 off job to perform a scale up or scale down.
 
 For each run, it deletes the old helm deployment, and `helm install`s a new job from `./helm-once`.
-
-####  2.1.1. <a name='Prerequisites'></a>Prerequisites
 
 ```bash
 # copy the env var template
@@ -128,7 +122,7 @@ kubectl create secret generic rancher-scaler-secrets --from-env-file=.env
 helm install rancher-scaler ./helm-cron
 ```
 
-Take a look at the [`values.yaml`](./helm/values.yaml) for configuration options.
+Take a look at the [`values.yaml`](./helm-cron/values.yaml) for configuration options.
 
 ###  3.1. <a name='docker-composerunner:'></a>`docker-compose` runner:
 > This is useful as it mimics the way that K8s will run the job: inside a docker container
@@ -243,7 +237,7 @@ In building out the slack notifications, we provide some very simple template st
 ###  6.1. <a name='DebuggingHelmCharts'></a>Debugging Helm Charts 
 
 ```bash
-helm install --debug --dry-run goodly-guppy ./helm
+helm install --debug --dry-run goodly-guppy ./helm-cron
 ```
 
 ###  6.2. <a name='InstallingwithoutHelm'></a>Installing without Helm
@@ -253,8 +247,8 @@ helm install --debug --dry-run goodly-guppy ./helm
 kubectl create secret generic rancher-scaler-secrets --from-env-file=.env
 
 # create the cronjobs
-kubectl create -f ./rancher-scaler-cron-up.yaml
-kubectl create -f ./rancher-scaler-cron-down.yaml
+kubectl create -f ./kube/rancher-scaler-cron-up.yaml
+kubectl create -f ./kube/rancher-scaler-cron-down.yaml
 
 # monitor jobs
 kubectl get cronjob rancher-scaler-cron-up
@@ -270,12 +264,12 @@ kubectl get jobs --watch
 kubectl create secret generic rancher-scaler-secrets --from-env-file=.env
 
 # create the one time job
-kubectl create -f ./rancher-scaler-job-tmp.yaml
+kubectl create -f ./kube/rancher-scaler-job-tmp.yaml
 
 kubetail rancher-scaler-tmp
 
 # cleanup the job
-kubectl delete -f ./rancher-scaler-job-tmp.yaml
+kubectl delete -f ./kube/rancher-scaler-job-tmp.yaml
 ```
 
 ###  6.4. <a name='SuspendingCronJobs'></a>Suspending CronJobs
@@ -313,28 +307,6 @@ curl -u "${CATTLE_ACCESS_KEY}:${CATTLE_SECRET_KEY}" \
 -H 'Content-Type: application/json' \
 "${RANCHER_BASE_URL}/nodePools/c-vsm2w:np-mg5wr" \
 -d '{"quantity": 2, "nodeTemplateId": "cattle-global-nt:nt-user-s7l26-nt-2s4x5"}'
-```
-
-###  6.6. <a name='Verifyingbootstrap:'></a>Verifying bootstrap:
-
-```
-ssh -i ~/Downloads/worker5/id_rsa ubuntu@35.178.89.50 'echo "Downloading and running bootstrap script"; 
-                  wget https://raw.githubusercontent.com/mojaloop/rancher-scaler/master/config/_boostrap_nvme.sh?token=AAM3EDHBMSVJADMWLCSXALS67KU4O -O /tmp/_bootstrap_nvme.sh; _bootstrap_nvme.sh; 
-                  #TODO: reenable checksum
-                  #echo "edeb16aaaab9261ba060144fb9c4c34925de6d4045c77b1fb9c5c631b753b9d0 /tmp/_bootstrap_nvme.sh" | sha256sum --check;
-                  sudo sh /tmp/_bootstrap_nvme.sh'
-```
-
-
-
-###  6.7. <a name='WorkingonCloudwatchDashboardupdates:'></a>Working on Cloudwatch Dashboard updates:
-
-```bash
-
-export PATH_TO_CONFIG=./config/dashtest.config.js
-
-npm run scale:up
-
 ```
 
 
