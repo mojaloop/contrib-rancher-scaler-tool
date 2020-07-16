@@ -1,0 +1,6 @@
+apiVersion: v2
+name: rancher-scaler
+description: Kubernetes CronJobs for scaling clusters up and down
+type: application
+version: 0.1.0
+appVersion: 0.1.0

@@ -15,7 +15,7 @@ Rancher Tooling for automatically scaling up and down Rancher node pools to save
 - A valid `rancher-scaler.config.js` file (see [The Config File](#The-Config-File))
 - `kubectx` and `kubetail`
 
-## Running Locally:
+## Running Rancher-Scaler:
 
 [ todo ]: update grafana with the memory usage stuff and submit a PR to the helm repo
 [ todo ]: add prerequisites for running with kube? from npm ? as a job and repeat?
@@ -29,7 +29,30 @@ Rancher Tooling for automatically scaling up and down Rancher node pools to save
 [ todo ]: check the cattle credentials? does miguel need to byo?
 [ TODO]: list of environment variables!
 
-### `npm` runner
+### K
+
+This runner executes a 1 off job
+
+#### Prerequisites
+- access to the `public-rancher` kubernetes cluster
+- 
+
+
+```bash
+# set the correct kube context
+
+# set the cluster to be scaled with the config file
+export PATH_TO_CONFIG=./config/k8s-tanuki-perf1.config
+
+# Scale down:
+npm run kube-scale:down
+
+# Scale up:
+npm run kube-scale:up
+```
+
+
+### Local `npm` runner
 
 ```bash
 # copy the env var template
@@ -45,10 +68,10 @@ set -a; source .env ;set +a
 npm run verify
 
 # Scale down the node pools in ./config/rancher-scaler.config.js
-npm run scale:down
+npm run local-scale:down
 
 # Scale up the node pools in ./config/rancher-scaler.config.js
-npm run scale:up
+npm run local-scale:up
 ```
 
 ## Installing with Helm

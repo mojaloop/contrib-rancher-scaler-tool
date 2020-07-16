@@ -1,0 +1,60 @@
+# TODO: add secret here...
+apiVersion: v1
+kind: Secret
+metadata:
+  name: rancher-scaler-secrets
+data:
+  CATTLE_SECRET_KEY: {{ .Values.secrets.CATTLE_SECRET_KEY }}
+  RANCHER_BASE_URL: {{ .Values.secrets.RANCHER_BASE_URL }}
+  SLACK_WEBHOOK_URL: {{ .Values.secrets.SLACK_WEBHOOK_URL }}
+type: Opaque
+# ---
+# apiVersion: batch/v1
+# kind: Job
+# metadata:
+#   name: rancher-scaler-tmp
+# spec:
+#   template:
+#     # TODO: can we just use a node selector?
+#     spec:
+#       nodeSelector:
+#         node-role.kubernetes.io/controlplane: "true"
+#       tolerations:
+#         - effect: NoSchedule
+#           key: node-role.kubernetes.io/controlplane
+#           value: "true"
+#           operator: Equal
+#         - effect: NoExecute
+#           key: node-role.kubernetes.io/etcd
+#           value: "true"
+#           operator: Equal
+#       containers:
+#         - name: rancher-scaler-tmp
+#           image: mojaloop/rancher-scaler:latest
+#           # command: ["sh", "-c", "npm run scale:up && tail -f /dev/null"]
+#           command: ["sh", "-c", "{{ .Values.job.npmCommand }}"]
+#           # command: ["sh", "-c", "tail -f /dev/null"]
+#           env:
+#             - name: CATTLE_ACCESS_KEY
+#               # value: token-czddw
+#               value: {{ .Values.job.env.CATTLE_ACCESS_KEY }}
+#             - name: CATTLE_SECRET_KEY
+#               valueFrom:
+#                 secretKeyRef:
+#                   name: rancher-scaler-secrets
+#                   key: CATTLE_SECRET_KEY
+#             - name: LOG_LEVEL
+#               value: {{ .Values.job.env.LOG_LEVEL }}
+#             - name: RANCHER_BASE_URL
+#               valueFrom:
+#                 secretKeyRef:
+#                   name: rancher-scaler-secrets
+#                   key: RANCHER_BASE_URL
+#             - name: SLACK_WEBHOOK_URL
+#               valueFrom:
+#                 secretKeyRef:
+#                   name: rancher-scaler-secrets
+#                   key: SLACK_WEBHOOK_URL
+#       restartPolicy: Never
+
+

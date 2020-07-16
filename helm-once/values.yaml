@@ -1,0 +1,43 @@
+secrets:
+  # Change these values or set using `--set` at install time
+  CATTLE_SECRET_KEY: "__CATTLE_SECRET_KEY__"
+  RANCHER_BASE_URL: "__RANCHER_BASE_URL__"
+  SLACK_WEBHOOK_URL: "__SLACK_WEBHOOK_URL__"
+
+job:
+  npmCommand: "npm run scale:up"
+  env:
+    CATTLE_ACCESS_KEY: token-czddw
+    LOG_LEVEL: debug
+
+
+# scaleDown:
+#   enabled: true
+#   # once an hour, at the start of the hour
+#   schedule: "1 * * * *"
+#   # Timeout after 30 minutes
+#   # jobTimeout: 1800
+#   jobTimeout: 3600
+#   # Docker container runtime
+#   image: mojaloop/rancher-scaler:latest
+#   # command: ["sh", "-c", "npm run scale:down"]
+
+#   # Container variables
+#   logLevel: debug
+#   cattleAccessKey: token-czddw
+
+# scaleUp:
+#   enabled: true
+#   # once an hour, 31 minutes past the hour
+#   schedule: "40 * * * *"
+#   # Timeout after 30 minutes
+#   # jobTimeout: 1800
+#   jobTimeout: 3600
+
+#   # Docker container runtime
+#   image: mojaloop/rancher-scaler:latest
+#   # command: ["sh", "-c", "npm run scale:up"]
+
+#   # Container variables
+#   logLevel: debug
+#   cattleAccessKey: token-czddw
