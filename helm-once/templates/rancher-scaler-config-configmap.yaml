@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: rancher-scaler-config-configmap
 data:
-  config_js: {{ .Values.config.config_js | quote}}
+  config_js: {{ .Values.config.config_js | quote }}

@@ -19,10 +19,11 @@ spec:
       containers:
         - name: rancher-scaler-once
           image: mojaloop/rancher-scaler:latest
-          command: ["sh", "-c", "{{ .Values.job.npmCommand }}"]
+          command: ["sh", "-c", "npm run {{ .Values.job.npmCommand }}"]
+          volumeMounts:
+            - name: config-volume
+              mountPath: /opt/rancher-scaler/config
           env:
-            - name: CONFIG_JSON
-              value: {{ .Values.job.env.CONFIG_JSON }}
             - name: CATTLE_ACCESS_KEY
               value: {{ .Values.job.env.CATTLE_ACCESS_KEY }}
             - name: CATTLE_SECRET_KEY
@@ -43,5 +44,12 @@ spec:
                   name: rancher-scaler-once-secret
                   key: SLACK_WEBHOOK_URL
       restartPolicy: Never
+      volumes:
+        - name: config-volume
+          configMap:
+            name: rancher-scaler-config-configmap
+            items:
+            - key: config_js
+              path: rancher-scaler.config.js
 
 
