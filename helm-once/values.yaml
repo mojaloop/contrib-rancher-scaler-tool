@@ -1,4 +1,7 @@
-secrets:
+config:
+  config_js: "__CONTENTS__"
+
+secret:
   # Change these values or set using `--set` at install time
   CATTLE_SECRET_KEY: "__CATTLE_SECRET_KEY__"
   RANCHER_BASE_URL: "__RANCHER_BASE_URL__"

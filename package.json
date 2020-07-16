@@ -5,8 +5,8 @@
   "main": "index.ts",
   "scripts": {
     "start": "ts-node ./src/index.ts",
-    "kube-scale:up": "METHOD=SCALE SCALE=UP ./scripts/_scale.sh",
-    "kube-scale:down": "METHOD=SCALE SCALE=DOWN ./scripts/_scale.sh",
+    "kube-scale:up": "./scripts/_scale_once.sh local-scale:up",
+    "kube-scale:down": "./scripts/_scale_once.sh local-scale:down",
     "local-scale:pre_up": "METHOD=PRE_SCALE_UP_GLOBAL ts-node ./src/index.ts",
     "local-scale:up": "METHOD=SCALE SCALE=UP ts-node ./src/index.ts",
     "local-scale:post_up": "METHOD=POST_SCALE_UP_GLOBAL ts-node ./src/index.ts",
