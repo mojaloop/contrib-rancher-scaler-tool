@@ -44,8 +44,8 @@ Rancher-Scaler requires the following environment variables to be set.
 | `RANCHER_BASE_URL`  | The base URL of the master rancher cluster                                        | N/A | **Yes** | `https://...` |
 | `SLACK_WEBHOOK_URL` | A Slack Webhook url. Required if using `SLACK_NOTIFICATION` pre/post scale hooks. | N/A    | No | `https://...` |
 | `LOG_LEVEL`         | The log level for the logging framework. Defaults to `info`                       | `info` | No | `error`, `info`, `debug` |
-| `PATH_TO_CONFIG`    | Path to the rancher-scaler config file. | `./config/rancher-scaler.config.json`            | No | `error`, `info`, `debug` |
-| `ENV_FILE`          | Path to the Env file. Used only by `npm run kube-*` commands. | `./config/rancher-scaler.config.json`            | No | `error`, `info`, `debug` |
+| `PATH_TO_CONFIG`    | Path to the rancher-scaler config file. | `./config/rancher-scaler.config.json`            | No | string |
+| `ENV_FILE`          | Path to the Env file. Used only by `npm run kube-*` commands. | `./config/rancher-scaler.config.json`            | No | string |
 
 ####  1.1.1. <a name='The.envFile'></a>The .env File
 
@@ -79,7 +79,7 @@ kubectx public-rancher
 kubens rancher-scaler
 
 # set the cluster to be scaled with the config file
-export PATH_TO_CONFIG=./config/k8s-tanuki-perf1.config
+export PATH_TO_CONFIG=./config/k8s-tanuki-perf1.config.js
 
 # Scale down:
 npm run kube-scale:down
