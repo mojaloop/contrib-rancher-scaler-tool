@@ -4,32 +4,36 @@
 [![Docker pulls](https://img.shields.io/docker/pulls/mojaloop/rancher-scaler.svg?style=flat)](https://hub.docker.com/r/mojaloop/rancher-scaler)
 [![CircleCI](https://circleci.com/gh/mojaloop/rancher-scaler.svg?style=svg)](https://app.circleci.com/pipelines/github/mojaloop/rancher-scaler)
 
-
 Rancher Tooling for automatically scaling up and down Rancher node pools to save 💵💵💵.
 
 ## Prerequisites:
 
 - Rancher API Access, and an access token (see [rancher api](#rancher-api-examples) below)
 - An `.env` file, following the format outlined in `example.env` (see [Running Locally](#Running-Locally) for more information)
-- `kubectl` access (this doesn't need to run on the same cluster that does the scaling)
-- A valid `rancher-scaler.config.js` file (see [The Config File](#The-Config-File))
+- `kubectl` access (this doesn't need to run on the same cluster that does the scaling), but it _does_ need to have internet access to talk to the Rancher and Slack APIs
 - `kubectx` and `kubetail`
+- A valid `rancher-scaler.config.js` file (see [The Config File](#The-Config-File))
+
+### Environment Variables
+
+Rancher-Scaler requires the following environments
+
+| Name | Description | Default | Required | Format |
+|---|---|---|---|---|
+| `CATTLE_ACCESS_KEY` | The Rancher API Access Key                 | N/A | **Yes** | string        |
+| `CATTLE_SECRET_KEY` | The Rancher API Secret Key                 | N/A | **Yes** | string        | 
+| `RANCHER_BASE_URL`  | The base URL of the master rancher cluster | N/A | **Yes** | `https://...` |
+| `SLACK_WEBHOOK_URL` | A Slack Webhook url. Required if using `SLACK_NOTIFICATION` pre/post scale hooks. | N/A    | No | `https://...` |
+| `LOG_LEVEL`         | The log level for the logging framework. Defaults to `info`                       | `info` | No | `error`, `info`, `debug` |
+| `PATH_TO_CONFIG`    | Path to the rancher-scaler config file. | `./config/rancher-scaler.config.json`            | No | `error`, `info`, `debug` |
 
 ## Running Rancher-Scaler:
 
 [ todo ]: update grafana with the memory usage stuff and submit a PR to the helm repo
-[ todo ]: add prerequisites for running with kube? from npm ? as a job and repeat?
-  npm run scale:up-local
-  npm run scale:up
-  [ todo ]: warning if you have bootstrap actions defined and you are running locally
-
-[ todo ]: figure out how to mount config files in dynamically
-  - can we just make a super long env variable?
-  - or is there another better way to mount it in?
 [ todo ]: check the cattle credentials? does miguel need to byo?
 [ TODO]: list of environment variables!
 
-### K
+### Kubernetes 1-Off Runs
 
 This runner executes a 1 off job
 
@@ -76,16 +80,15 @@ npm run local-scale:down
 npm run local-scale:up
 ```
 
-## Installing with Helm
+## Installing Cron-Based Scaling with Helm
 
 ```bash
 # create the secrets from our `.env` file
-# [TODO] create values file and template the secret manually
 kubectl create secret generic rancher-scaler-secrets --from-env-file=.env
 
 # 
 # install the charts
-helm install rancher-scaler ./helm 
+helm install rancher-scaler ./helm-cron
 ```
 
 Take a look at the [`values.yaml`](./helm/values.yaml) for configuration options.
