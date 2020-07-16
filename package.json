@@ -9,6 +9,7 @@
     "kube-scale:down": "./scripts/_scale_once.sh local-scale:down",
     "local-scale:pre_up": "METHOD=PRE_SCALE_UP_GLOBAL ts-node ./src/index.ts",
     "local-scale:up": "METHOD=SCALE SCALE=UP ts-node ./src/index.ts",
+    "local-scale:down": "METHOD=SCALE SCALE=DOWN ts-node ./src/index.ts",
     "local-scale:post_up": "METHOD=POST_SCALE_UP_GLOBAL ts-node ./src/index.ts",
     "local-scale:pre_down": "METHOD=PRE_SCALE_DOWN_GLOBAL ts-node ./src/index.ts",
     "local-scale:post_down": "METHOD=POST_SCALE_DOWN_GLOBAL ts-node ./src/index.ts",

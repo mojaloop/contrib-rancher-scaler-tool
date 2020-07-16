@@ -40,6 +40,8 @@ This runner executes a 1 off job
 
 ```bash
 # set the correct kube context
+kubectx public-rancher
+kubens rancher-scaler
 
 # set the cluster to be scaled with the config file
 export PATH_TO_CONFIG=./config/k8s-tanuki-perf1.config
