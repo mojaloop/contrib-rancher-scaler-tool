@@ -101,7 +101,7 @@ vim .env
 set -a; source .env ;set +a
 
 # Verify your rancher env vars are correct
-npm run verify
+npm run local-verify
 
 # Scale down the node pools in ./config/rancher-scaler.config.js
 npm run local-scale:down

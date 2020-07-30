@@ -100,6 +100,17 @@ export class RancherRequests {
       }
     }
 
+    const curlCommand = `
+    curl -u "${this.baseRequestConfig.auth.username}:${this.baseRequestConfig.auth.password}" \
+-X PUT \
+-H 'Accept: application/json' \
+-H 'Content-Type: application/json' \
+${this.baseRequestConfig.baseURL}${requestConfig.url} \
+-d '{"quantity": ${config.quantity}, "nodeTemplateId": "${config.nodeTemplateId}"}'
+`
+
+    this.logger.debug(`CURL command is: \n${curlCommand}`)
+
     try {
       this.logger.debug(`putNodePoolQuantity::requestConfig - ${JSON.stringify(requestConfig)}`)
       const response = await this.requests(requestConfig)
@@ -107,6 +118,9 @@ export class RancherRequests {
       return response.data;
     } catch (err) {
       this.logger.error(`RancherRequests.putNodePoolQuantity() Error - ${err.message}`)
+      if (err.response && err.response.data) {
+        this.logger.error(`RancherRequests.putNodePoolQuantity() Error data - ${JSON.stringify(err.response.data)}`)
+      }
       throw err;
     }
   }
