@@ -7,8 +7,8 @@ set -a; source ${ENV_FILE} ;set +a
 
 echo "Using Config File: ${PATH_TO_CONFIG}"
 
-# set -u
-# set -e
+set -u
+set -e
 
 echo 'Cleaning up last Run'
 helm --namespace ${K8S_NAMESPACE} del rancher-scaler-once || '[WARN] Non fatal error running `helm del rancher-scaler-once`'
