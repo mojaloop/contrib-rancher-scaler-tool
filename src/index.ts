@@ -94,26 +94,28 @@ async function main() {
   const bootstrapper = makeRancherBootstrapper(rancherRequests, config, wrapWithRetries, exec, Logger);
   const cloudwatchUpdater = makeCloudwatchUpdater(rancherRequests, cloudwatchClient, config, Logger)
   const hooksHandler = makeHooksHandler(Logger, slack, bootstrapper, cloudwatchUpdater)
+  const scaler = makeRancherScaler(rancherRequests, Logger, hooksHandler, config);
+
 
   Logger.info(`Running method: ${method}`)
   switch (method) {
     case 'VERIFY': {
-      // Verify that the config works by calling `getNodePool`
-      const result = await rancherRequests.getNodePool(config.nodes[0].nodePoolId)
-      Logger.info(`VERIFY: getNodePool reply: ${JSON.stringify(result)}`)
+      // Verify the config is valid by doing GETs on all Rancher resources
+      // Throws if an error occours
+      await scaler.verifyNodePoolsAndTemplates()
+
       return;
     }
     case 'BOOTSTRAP': {
       throw new Error('no longer supported, use hooks instead...')
     }
     case Method.SCALE: {
-      const scaler = makeRancherScaler(rancherRequests, Logger, hooksHandler, config);
       return runScale(scaler, hooksHandler, scale, config)
     }
     // Manually run the hooks
-    case Method.PRE_SCALE_UP_GLOBAL: return runGlobals(config.global.preScaleUp || [], hooksHandler, scale, config)
-    case Method.POST_SCALE_UP_GLOBAL: return runGlobals(config.global.postScaleUp || [], hooksHandler, scale, config)
-    case Method.PRE_SCALE_DOWN_GLOBAL: return runGlobals(config.global.preScaleDown || [], hooksHandler, scale, config)
+    case Method.PRE_SCALE_UP_GLOBAL:    return runGlobals(config.global.preScaleUp    || [], hooksHandler, scale, config)
+    case Method.POST_SCALE_UP_GLOBAL:   return runGlobals(config.global.postScaleUp   || [], hooksHandler, scale, config)
+    case Method.PRE_SCALE_DOWN_GLOBAL:  return runGlobals(config.global.preScaleDown  || [], hooksHandler, scale, config)
     case Method.POST_SCALE_DOWN_GLOBAL: return runGlobals(config.global.postScaleDown || [], hooksHandler, scale, config)
     default: {
       throw new Error(`Unhandled method: ${method}`);

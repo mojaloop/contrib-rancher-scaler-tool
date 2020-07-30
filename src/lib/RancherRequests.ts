@@ -59,6 +59,7 @@ export class RancherRequests {
    * @param nodePoolId
    */
   public async getNodePool(nodePoolId: string) {
+    this.logger.debug(`RancherRequests.getNodePool() - nodePoolId: ${nodePoolId}`)
     const requestConfig: AxiosRequestConfig = {
       ...this.baseRequestConfig,
       method: 'get',
@@ -76,6 +77,29 @@ export class RancherRequests {
       throw err;
     }
   }
+
+  /**
+   * @function getNodeTemplate
+   * @description gets the node template
+   * @param nodeTemplateId
+   */
+  public async getNodeTemplate(nodeTemplateId: string) {
+    const requestConfig: AxiosRequestConfig = {
+      ...this.baseRequestConfig,
+      method: 'get',
+      url: `/nodetemplates/${nodeTemplateId}`,
+    }
+
+    try {
+      const response = await this.requests(requestConfig)
+
+      return response.data;
+    } catch (err) {
+      this.logger.error(`RancherRequests.getNodeTemplate() Error: ${err.message}`)
+      throw err;
+    }
+  }
+
   /**
    * @function getNodePool
    * @description gets the node pool

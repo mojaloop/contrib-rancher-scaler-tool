@@ -18,7 +18,7 @@ export class RancherScaler {
 
   /**
    * @function scaleUp
-   * @description Scale up the cluster by iterating through each of the nodes, 
+   * @description Scale up the cluster by iterating through each of the nodes,
   *   and applying the maxQuantity
    */
   public async scaleUp() {
@@ -44,14 +44,14 @@ export class RancherScaler {
 
   /**
   * @function scaleDown
-  * @description Scale down the cluster by iterating through each of the nodes, 
+  * @description Scale down the cluster by iterating through each of the nodes,
   *   and applying the minQuantity
-  * 
+  *
   */
   public async scaleDown() {
     const errors: any = []
 
-    // Note: this serializes scaling for easy debugging, but we may want to run in paralell in the future
+    // Note: this serializes scaling for easy debugging, but we may want to run in parallel in the future
     await this.nodes.reduce(async (acc: Promise<void>, node: NodeType) => {
       return acc
         .then(() => this._scaleNodePoolDown(node))
@@ -67,6 +67,31 @@ export class RancherScaler {
       this.logger.error(message)
       throw new Error(message)
     }
+  }
+
+  /**
+   * @function verifyNodePoolsAndTemplates
+   * @description Go through all of the node pools and templates in the config, and make sure they are valid
+   */
+  public async verifyNodePoolsAndTemplates() {
+    const errors: any = []
+
+    // Note: this serializes scaling for easy debugging, but we may want to run in parallel in the future
+    await this.nodes.reduce(async (acc: Promise<void>, node: NodeType) => {
+      return acc
+        .then(() => this.rancherRequests.getNodePool(node.nodePoolId))
+        .then(() => this.rancherRequests.getNodeTemplate(node.nodeTemplateId))
+        .catch(err => {
+          errors.push(err)
+        })
+    }, Promise.resolve())
+
+    if (errors.length > 0) {
+      const message = `RancherScaler.verifyNodePoolsAndTemplates - Failed with errors: \n${errors.map((e: any) => `${e}\n`)}`
+      this.logger.error(message)
+      throw new Error(message)
+    }
+
   }
 
   public async _scaleNodePoolUp(node: NodeType): Promise<void> {
