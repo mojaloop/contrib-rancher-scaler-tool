@@ -24,5 +24,3 @@ helm --debug --namespace ${K8S_NAMESPACE} \
   --set secret.SLACK_WEBHOOK_URL=${SLACK_WEBHOOK_URL} \
   --set job.npmCommand=${1} \
   rancher-scaler-once ${HELM_ONCE_DIR}
-
-echo 
