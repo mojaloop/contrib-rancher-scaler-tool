@@ -90,7 +90,6 @@ export class RancherRequests {
       '.../v3/nodePools/c-vsm2w:np-mg5wr' \
       -d '{"quantity": 2, "nodeTemplateId": "cattle-global-nt:nt-user-s7l26-nt-2s4x5"}'
     */
-
     const requestConfig: AxiosRequestConfig = {
       ...this.baseRequestConfig,
       method: 'put',
@@ -114,7 +113,7 @@ ${this.baseRequestConfig.baseURL}${requestConfig.url} \
     try {
       this.logger.debug(`putNodePoolQuantity::requestConfig - ${JSON.stringify(requestConfig)}`)
       const response = await this.requests(requestConfig)
-      this.logger.debug(`putNodePoolQuantity::response - ${JSON.stringify(response)}`)
+      // this.logger.debug(`putNodePoolQuantity::response - ${JSON.stringify(response)}`)
       return response.data;
     } catch (err) {
       this.logger.error(`RancherRequests.putNodePoolQuantity() Error - ${err.message}`)
