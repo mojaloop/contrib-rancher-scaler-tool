@@ -101,8 +101,9 @@ export class RancherRequests {
     }
 
     try {
+      this.logger.debug(`putNodePoolQuantity::requestConfig - ${JSON.stringify(requestConfig)}`)
       const response = await this.requests(requestConfig)
-
+      this.logger.debug(`putNodePoolQuantity::response - ${JSON.stringify(response)}`)
       return response.data;
     } catch (err) {
       this.logger.error(`RancherRequests.putNodePoolQuantity() Error - ${err.message}`)
