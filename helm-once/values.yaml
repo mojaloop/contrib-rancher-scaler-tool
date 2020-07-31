@@ -10,7 +10,6 @@ secret:
 job:
   npmCommand: "npm run scale:up"
   env:
-    CATTLE_ACCESS_KEY: token-czddw
     LOG_LEVEL: debug
 
 

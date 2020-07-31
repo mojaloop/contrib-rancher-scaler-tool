@@ -114,7 +114,6 @@ export class RancherRequests {
       '.../v3/nodePools/c-vsm2w:np-mg5wr' \
       -d '{"quantity": 2, "nodeTemplateId": "cattle-global-nt:nt-user-s7l26-nt-2s4x5"}'
     */
-
     const requestConfig: AxiosRequestConfig = {
       ...this.baseRequestConfig,
       method: 'put',
@@ -124,12 +123,27 @@ export class RancherRequests {
       }
     }
 
-    try {
-      const response = await this.requests(requestConfig)
+    const curlCommand = `
+    curl -u "${this.baseRequestConfig.auth.username}:${this.baseRequestConfig.auth.password}" \
+-X PUT \
+-H 'Accept: application/json' \
+-H 'Content-Type: application/json' \
+${this.baseRequestConfig.baseURL}${requestConfig.url} \
+-d '{"quantity": ${config.quantity}, "nodeTemplateId": "${config.nodeTemplateId}"}'
+`
 
+    this.logger.debug(`CURL command is: \n${curlCommand}`)
+
+    try {
+      this.logger.debug(`putNodePoolQuantity::requestConfig - ${JSON.stringify(requestConfig)}`)
+      const response = await this.requests(requestConfig)
+      // this.logger.debug(`putNodePoolQuantity::response - ${JSON.stringify(response)}`)
       return response.data;
     } catch (err) {
       this.logger.error(`RancherRequests.putNodePoolQuantity() Error - ${err.message}`)
+      if (err.response && err.response.data) {
+        this.logger.error(`RancherRequests.putNodePoolQuantity() Error data - ${JSON.stringify(err.response.data)}`)
+      }
       throw err;
     }
   }

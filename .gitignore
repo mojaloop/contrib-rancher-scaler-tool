@@ -73,3 +73,5 @@ dist/
 
 # JUnit report
 junit.xml
+
+*IGNORE*
