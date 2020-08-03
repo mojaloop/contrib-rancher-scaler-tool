@@ -226,18 +226,18 @@ workflows:
 
   build_test_branch:
     jobs:
-      - test-setup:
-          context: org-global
+      # - test-setup:
+      #     context: org-global
 
-      - test-unit:
-          context: org-global
-          requires:
-            - test-setup
+      # - test-unit:
+      #     context: org-global
+      #     requires:
+      #       - test-setup
 
-      - test-coverage:
-          context: org-global
-          requires:
-            - test-setup
+      # - test-coverage:
+      #     context: org-global
+      #     requires:
+      #       - test-setup
 
       - build-local:
           context: org-global
@@ -246,8 +246,8 @@ workflows:
           context: org-global
           requires:
             - build-local
-            - test-unit
-            - test-coverage
+            # - test-unit
+            # - test-coverage
           # TODO: make master only
           # filters:
           #   branches:
