@@ -36,9 +36,6 @@ function getEnvConfig(): EnvConfig {
     METHOD,
     PATH_TO_CONFIG,
     SLACK_WEBHOOK_URL: slackWebhookUrl,
-    // AWS_ACCESS_KEY_ID: awsAccessKeyId,
-    // AWS_SECRET_ACCESS_KEY: awsSecretAccessKey,
-    AWS_REGION: awsRegion
   } = process.env;
   let { SCALE } = process.env;
 
