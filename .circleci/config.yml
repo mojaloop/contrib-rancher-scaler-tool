@@ -239,48 +239,47 @@ workflows:
             tags:
               only: /.*/
 
-      # TODO: reenable
-      # - test-setup:
-      #     context: org-global
-      #     filters:
-      #       tags:
-      #         only: /.*/
+      - test-setup:
+          context: org-global
+          filters:
+            tags:
+              only: /.*/
 
-      # - test-unit:
-      #     requires:
-      #       - test-setup
-      #     context: org-global
-      #     filters:
-      #       tags:
-      #         only: /.*/
+      - test-unit:
+          requires:
+            - test-setup
+          context: org-global
+          filters:
+            tags:
+              only: /.*/
 
-      # - test-coverage:
-      #     requires:
-      #       - test-setup
-      #     context: org-global
-      #     filters:
-      #       tags:
-      #         only: /.*/
+      - test-coverage:
+          requires:
+            - test-setup
+          context: org-global
+          filters:
+            tags:
+              only: /.*/
 
-      # # New commits to master release automatically
-      # - release:
-      #     context: org-global
-      #     requires:
-      #       - build-local
-      #       - test-unit
-      #       - test-coverage
-      #     filters:
-      #       branches:
-      #         only:
-      #           - master
+      # New commits to master release automatically
+      - release:
+          context: org-global
+          requires:
+            - build-local
+            - test-unit
+            - test-coverage
+          filters:
+            branches:
+              only:
+                - master
 
       # New Tags are built and deployed as docker artifacts
       - publish:
           context: org-global
           requires:
             - build-local
-            # - test-unit
-            # - test-coverage
+            - test-unit
+            - test-coverage
           filters:
             tags:
               only: /.*/
