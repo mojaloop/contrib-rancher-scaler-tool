@@ -1,9 +1,10 @@
 {
   "name": "rancher-scaler",
-  "version": "0.1.0",
+  "version": "0.1.3",
   "description": "A simple cli tool to scale rancher clusters",
   "main": "index.ts",
   "scripts": {
+    "build": "tsc",
     "start": "ts-node ./src/index.ts",
     "kube-scale:up": "./scripts/_scale_once.sh local-scale:up",
     "kube-scale:down": "./scripts/_scale_once.sh local-scale:down",
@@ -19,8 +20,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "test:unit": "jest --testMatch '**/src/**/*.unit.ts'",
     "test:service": "jest --testMatch '**/src/**/*.service.ts'",
+    "test:coverage": "jest --testMatch '**/src/**/*.unit.ts' --coverage --coverageThreshold='{}'",
+    "test:coverage-check": "jest --testMatch '**/src/**/*.unit.ts' --coverage",
     "lint": "eslint ./src/**/*.ts *.js",
-    "build": "tsc",
+    "release": "standard-version --releaseCommitMessageFormat 'chore(release): {{currentTag}} [skip ci]'",
     "watch": "tsc -w"
   },
   "author": "Lewis Daly",
@@ -31,7 +34,8 @@
     "@slack/webhook": "^5.0.3",
     "aws-sdk": "^2.713.0",
     "axios": "^0.19.2",
-    "unzipper": "^0.10.11"
+    "unzipper": "^0.10.11",
+    "standard-version": "^8.0.2"
   },
   "devDependencies": {
     "@types/hapi__joi": "^17.1.2",

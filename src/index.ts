@@ -4,7 +4,6 @@ import axios from 'axios'
 import { execSync } from 'child_process'
 import { IncomingWebhook } from '@slack/webhook'
 import Logger from '@mojaloop/central-services-logger'
-import { CloudWatch, AWSError } from 'aws-sdk'
 
 import makeRancherScaler, { RancherScaler } from './domain/RancherScaler'
 import makeRancherRequests from './lib/RancherRequests'
@@ -19,8 +18,7 @@ import makeSlack, { NoMessager, Messager } from './lib/Slack'
 import makeScalerConfig from './lib/ScalerConfig'
 import configValidator from './lib/ConfigValidator'
 import makeTemplater, { Templater } from './lib/Templater'
-import makeCloudwatchUpdater from './domain/CloudwatchUpdater'
-import { AbstractCloudwatchClient, NoCloudwatchClient, CloudwatchClient } from './lib/CloudwatchClient'
+import sleep from 'lib/Sleep'
 
 async function runGlobals(hooks: Array<AnyHookType>, hooksHandler: HooksHandler, scale: 'UP' | 'DOWN', config: RancherScalerConfigType) {
   try {
@@ -61,9 +59,6 @@ async function main() {
     method,
     pathToConfig,
     slackWebhookUrl,
-    // awsAccessKeyId,
-    // awsSecretAccessKey,
-    awsRegion,
   } = getEnvConfig()
 
   /* Init all dependencies */
@@ -80,20 +75,13 @@ async function main() {
     slack = makeSlack(Logger, incomingWebhookClient, templater)
   }
 
-  let cloudwatchClient: AbstractCloudwatchClient = new NoCloudwatchClient(Logger); // Default to No AWS
-  if (awsRegion) {
-    Logger.debug(`index.ts - found AWS Region, setting up cloudwatch client`)
-    const cloudWatchApi = new CloudWatch({ region: awsRegion})
-    cloudwatchClient = new CloudwatchClient(Logger, cloudWatchApi)
-  }
 
   const rancherRequests = makeRancherRequests(fs, axios, Logger, cattleAccessKey, cattleSecretKey, rancherBaseUrl);
   const exec = makeExec(fs, unzipper, execSync, Logger);
 
   /* Inject dependencies into Domain */
-  const bootstrapper = makeRancherBootstrapper(rancherRequests, config, wrapWithRetries, exec, Logger);
-  const cloudwatchUpdater = makeCloudwatchUpdater(rancherRequests, cloudwatchClient, config, Logger)
-  const hooksHandler = makeHooksHandler(Logger, slack, bootstrapper, cloudwatchUpdater)
+  const bootstrapper = makeRancherBootstrapper(rancherRequests, config, wrapWithRetries, sleep, exec, Logger);
+  const hooksHandler = makeHooksHandler(Logger, slack, bootstrapper)
   const scaler = makeRancherScaler(rancherRequests, Logger, hooksHandler, config);
 
 

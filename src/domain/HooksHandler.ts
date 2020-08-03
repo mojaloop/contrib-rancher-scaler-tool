@@ -3,24 +3,17 @@ import LoggerType from '../types/LoggerType';
 import { ActionEnum } from '../types/ActionEnum';
 import { RancherBootstrapper } from './RancherBootstrapper';
 import { Messager } from '../lib/Slack';
-import { CloudwatchUpdater } from './CloudwatchUpdater';
 
-
-// For now, just support global hooks...
 export class HooksHandler {
   logger: LoggerType;
   slackHandler: Messager;
   bootstrapper: RancherBootstrapper;
-  cloudwatchUpdater: CloudwatchUpdater;
 
-  constructor(logger: LoggerType, slackHandler: Messager, bootstrapper: RancherBootstrapper, cloudwatchUpdater: CloudwatchUpdater) {
+  constructor(logger: LoggerType, slackHandler: Messager, bootstrapper: RancherBootstrapper) {
     this.logger = logger;
     this.slackHandler = slackHandler;
     this.bootstrapper = bootstrapper;
-    this.cloudwatchUpdater = cloudwatchUpdater;
   }
-
-  // TODO: separate between global and local hooks?
 
   /**
    * @function runHooks
@@ -58,20 +51,13 @@ export class HooksHandler {
         }
         return this.bootstrapper.runScriptForNodePool(nodePoolId, hook)
       }
-      case ActionEnum.CLOUDWATCH_ADD_NODES:
-      case ActionEnum.CLOUDWATCH_REMOVE_NODES: {
-        if (!nodePoolId) {
-          throw new Error(`${hook.hookType} action cannot be global, requires a nodePoolId.`)
-        }
-        return this.cloudwatchUpdater.updateCloudwatchDashboard(nodePoolId, hook)
-      }
     }
   }
 }
 
 /* Dependency injection */
-const makeHooksHandler = (logger: LoggerType, slackHandler: Messager, bootstrapper: RancherBootstrapper, cloudwatchUpdater: CloudwatchUpdater) => {
-  const hooksHandler = new HooksHandler(logger, slackHandler, bootstrapper, cloudwatchUpdater);
+const makeHooksHandler = (logger: LoggerType, slackHandler: Messager, bootstrapper: RancherBootstrapper) => {
+  const hooksHandler = new HooksHandler(logger, slackHandler, bootstrapper);
 
   return hooksHandler;
 }

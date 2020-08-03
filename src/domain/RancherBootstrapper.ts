@@ -1,13 +1,11 @@
 // TODO: remove these hard dependencies
 import fs from 'fs'
 import path from 'path'
-import sleep from '../lib/Sleep';
 
 import { RancherNode } from '../types/RancherRequestsTypes';
 import { RancherRequests } from '../lib/RancherRequests';
 import RancherScalerConfigType from '../types/RancherScalerConfigType';
-import NodeType from '../types/NodeType';
-import { Exec } from 'lib/Exec';
+import { Exec } from '../lib/Exec';
 import { BootstrapHookType } from '../types/HookTypes';
 import LoggerType from '../types/LoggerType';
 
@@ -17,8 +15,8 @@ import LoggerType from '../types/LoggerType';
  */
 export class RancherBootstrapper {
   private rancherRequests: RancherRequests;
-  private nodes: Array<NodeType>;
   private wrapWithRetries: (func: any, retries: number, waitTimeMs: number) => Promise<any>
+  private sleep: (timeMs: number) => Promise<void>
   private exec: Exec;
   private logger: LoggerType;
 
@@ -26,12 +24,13 @@ export class RancherBootstrapper {
     rancherRequests: RancherRequests,
     config: RancherScalerConfigType,
     wrapWithRetries: (func: any, retries: number, waitTimeMs: number) => Promise<any>,
+    sleep: (timeMs: number) => Promise<void>,
     exec: Exec,
     logger: LoggerType
   ) {
-    this.rancherRequests = rancherRequests;
-    this.nodes = config.nodes
-    this.wrapWithRetries = wrapWithRetries;
+    this.rancherRequests = rancherRequests
+    this.wrapWithRetries = wrapWithRetries
+    this.sleep = sleep
     this.exec = exec
     this.logger = logger
   }
@@ -46,7 +45,7 @@ export class RancherBootstrapper {
     // TODO: fix this hack - for some reason immediately after creating a new node, transitioning is false
     // a better option would be to pass in the expected node count, but that's also a pain
     // Wait for 25 seconds for node pool to at least show `transitioning`
-    await sleep(1000 * 25)
+    await this.sleep(1000 * 25)
 
     //wait for nodePoolId's nodes to be ready
     await this.wrapWithRetries(() => this._isNodePoolReady(nodePoolId), 15, 1000 * 30)
@@ -148,10 +147,11 @@ const makeRancherBootstrapper = (
   rancherRequests: RancherRequests,
   config: RancherScalerConfigType,
   wrapWithRetries: (func: any, retries: number, waitTimeMs: number) => Promise<any>,
+  sleep: (timeMs: number) => Promise<void>,
   exec: Exec,
   logger: LoggerType,
 ): RancherBootstrapper => {
-  const rancherBootstrapper = new RancherBootstrapper(rancherRequests, config, wrapWithRetries, exec, logger)
+  const rancherBootstrapper = new RancherBootstrapper(rancherRequests, config, wrapWithRetries, sleep, exec, logger)
 
   return rancherBootstrapper;
 }
