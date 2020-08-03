@@ -165,6 +165,8 @@ jobs:
             git config user.email "mojaloop@circleci.com"
             git config user.name "circleci"
             git checkout ${CIRCLE_BRANCH}
+            ssh-keyscan -p 443 ssh.github.com >> ~/.ssh/known_hosts
+            ssh-keyscan github.com >> ~/.ssh/known_hosts
       - run:
           name: Generate changelog and bump package version
           command: npm run release
