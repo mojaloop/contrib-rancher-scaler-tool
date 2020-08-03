@@ -258,8 +258,8 @@ workflows:
           context: org-global
           requires:
             - build-local
-            - test-unit
-            - test-coverage
+            # - test-unit
+            # - test-coverage
           # TODO: tag only!
           # filters:
           #   tags:
