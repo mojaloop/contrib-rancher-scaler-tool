@@ -4,8 +4,6 @@ import { ActionEnum } from '../types/ActionEnum';
 import { RancherBootstrapper } from './RancherBootstrapper';
 import { Messager } from '../lib/Slack';
 
-
-// For now, just support global hooks...
 export class HooksHandler {
   logger: LoggerType;
   slackHandler: Messager;
@@ -16,8 +14,6 @@ export class HooksHandler {
     this.slackHandler = slackHandler;
     this.bootstrapper = bootstrapper;
   }
-
-  // TODO: separate between global and local hooks?
 
   /**
    * @function runHooks
@@ -54,13 +50,6 @@ export class HooksHandler {
           throw new Error(`RUN_STARTUP_SCRIPT action cannot be global, requires a nodePoolId.`)
         }
         return this.bootstrapper.runScriptForNodePool(nodePoolId, hook)
-      }
-      case ActionEnum.CLOUDWATCH_ADD_NODES:
-      case ActionEnum.CLOUDWATCH_REMOVE_NODES: {
-        if (!nodePoolId) {
-          throw new Error(`${hook.hookType} action cannot be global, requires a nodePoolId.`)
-        }
-        return this.cloudwatchUpdater.updateCloudwatchDashboard(nodePoolId, hook)
       }
     }
   }

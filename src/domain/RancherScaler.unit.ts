@@ -1,7 +1,5 @@
 import { RancherScaler } from "./RancherScaler"
-import { RancherRequests } from '../lib/RancherRequests'
 import RancherScalerConfigType from '../types/RancherScalerConfigType'
-import { HooksHandler } from './HooksHandler'
 import { ActionEnum } from '../types/ActionEnum'
 
 const mockLogger = {

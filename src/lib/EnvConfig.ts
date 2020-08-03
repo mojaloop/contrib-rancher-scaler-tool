@@ -95,9 +95,6 @@ function getEnvConfig(): EnvConfig {
     method,
     pathToConfig,
     slackWebhookUrl,
-    awsRegion
-    // awsAccessKeyId,
-    // awsSecretAccessKey,
   };
 }
 
