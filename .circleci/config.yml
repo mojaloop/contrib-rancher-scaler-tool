@@ -212,6 +212,10 @@ jobs:
           command: |
             echo "Changes are: ${RELEASE_CHANGES}"
       - github-release/create:
+          # TODO: GITHUB_RELEASE_TOKEN is a personal access token for Lewis!
+          # This is less than ideal, but there are currently no ways to give
+          # more permissions to the default CircleCI ${GITHUB_TOKEN}!
+          github-token-variable: ${GITHUB_RELEASE_TOKEN}
           tag: ${CIRCLE_TAG}
           title: ${CIRCLE_TAG} Release
           description: ${RELEASE_CHANGES}
