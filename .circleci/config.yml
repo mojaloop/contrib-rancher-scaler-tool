@@ -201,9 +201,19 @@ jobs:
             docker push $DOCKER_ORG/$CIRCLE_PROJECT_REPONAME:latest
             echo "Publishing $DOCKER_ORG/$CIRCLE_PROJECT_REPONAME:${CIRCLE_TAG}"
             docker push $DOCKER_ORG/$CIRCLE_PROJECT_REPONAME:${CIRCLE_TAG}
+      - run:
+          name: Format the changelog into the github release body
+          command: |
+            git diff --no-indent-heuristic master~1 HEAD CHANGELOG.md | sed -n '/^+[^+]/ s/^+//p' > /tmp/changes
+            echo 'export RELEASE_CHANGES=`cat /tmp/changes`' >> $BASH_ENV
+      - run:
+          name: check the release changes
+          command: |
+            echo "Changes are: ${RELEASE_CHANGES}"
       - github-release/create:
           release-name: ${CIRCLE_TAG}
-          release-body: ${CIRCLE_TAG} release
+          release-body: ${RELEASE_CHANGES}
+          path: CHANGELOG.md
       # - slack/status:
       #     webhook: "$SLACK_WEBHOOK_ANNOUNCEMENT"
       #     success_message: '*"${CIRCLE_PROJECT_REPONAME}"* - Release \`"${CIRCLE_TAG}"\` \nhttps://github.com/mojaloop/"${CIRCLE_PROJECT_REPONAME}"/releases/tag/"${CIRCLE_TAG}"'
