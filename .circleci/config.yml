@@ -149,7 +149,6 @@ jobs:
           paths:
             - ./docker-image.tar
 
-  # TODO: run on only master
   release:
     executor: default-docker
     steps:
@@ -176,7 +175,6 @@ jobs:
           name: Push the release
           command: git push --follow-tags origin ${CIRCLE_BRANCH}
 
-  # TODO: modify git release message to be changelog
   publish:
     executor: default-machine
     steps:
@@ -220,9 +218,9 @@ jobs:
           title: ${CIRCLE_TAG} Release
           description: ${RELEASE_CHANGES}
           file-path: CHANGELOG.md
-      # - slack/status:
-      #     webhook: "$SLACK_WEBHOOK_ANNOUNCEMENT"
-      #     success_message: '*"${CIRCLE_PROJECT_REPONAME}"* - Release \`"${CIRCLE_TAG}"\` \nhttps://github.com/mojaloop/"${CIRCLE_PROJECT_REPONAME}"/releases/tag/"${CIRCLE_TAG}"'
+      - slack/status:
+          webhook: "$SLACK_WEBHOOK_ANNOUNCEMENT"
+          success_message: '*"${CIRCLE_PROJECT_REPONAME}"* - Release \`"${CIRCLE_TAG}"\` \nhttps://github.com/mojaloop/"${CIRCLE_PROJECT_REPONAME}"/releases/tag/"${CIRCLE_TAG}"'
 
 ##
 # Workflows
