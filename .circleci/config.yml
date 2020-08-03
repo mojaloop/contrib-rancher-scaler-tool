@@ -207,7 +207,7 @@ jobs:
           # Note: this is rather imperfect, but will do for now
           name: Format the changelog into the github release body
           command: |
-            git diff --no-indent-heuristic master~5 HEAD CHANGELOG.md | sed -n '/^+[^+]/ s/^+//p' > /tmp/changes
+            git diff --no-indent-heuristic master~2 HEAD CHANGELOG.md | sed -n '/^+[^+]/ s/^+//p' > /tmp/changes
             echo 'export RELEASE_CHANGES=`cat /tmp/changes`' >> $BASH_ENV
       - run:
           name: check the release changes
