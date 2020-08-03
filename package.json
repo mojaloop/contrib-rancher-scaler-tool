@@ -1,6 +1,6 @@
 {
   "name": "rancher-scaler",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A simple cli tool to scale rancher clusters",
   "main": "index.ts",
   "scripts": {
@@ -23,7 +23,7 @@
     "test:coverage": "jest --testMatch '**/src/**/*.unit.ts' --coverage --coverageThreshold='{}'",
     "test:coverage-check": "jest --testMatch '**/src/**/*.unit.ts' --coverage",
     "lint": "eslint ./src/**/*.ts *.js",
-    "release": "standard-version",
+    "release": "standard-version --releaseCommitMessageFormat 'chore(release): {{currentTag}} [skip ci]'",
     "watch": "tsc -w"
   },
   "author": "Lewis Daly",
