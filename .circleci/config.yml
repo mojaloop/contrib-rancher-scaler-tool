@@ -68,6 +68,9 @@ jobs:
       - run:
           name: Install general dependencies
           command: *defaults_Dependencies
+      - restore_cache:
+          keys:
+            - dependency-cache-{{ checksum "package-lock.json" }}
       - run:
           name: Access npm folder as root
           command: cd $(npm root -g)/npm
@@ -166,12 +169,6 @@ jobs:
           name: Generate changelog and bump package version
           command: npm run release
       - run:
-          name: git stuff
-          command: |
-            git branch
-            git tag
-            git log
-      - run:
           name: Push the release
           command: git push --follow-tags origin ${CIRCLE_BRANCH}
 
@@ -226,8 +223,8 @@ workflows:
 
   build_test_branch:
     jobs:
-      # - test-setup:
-      #     context: org-global
+      - test-setup:
+          context: org-global
 
       # - test-unit:
       #     context: org-global
@@ -245,6 +242,7 @@ workflows:
       - release:
           context: org-global
           requires:
+            - test-setup
             - build-local
             # - test-unit
             # - test-coverage
