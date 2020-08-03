@@ -4,7 +4,6 @@ import axios from 'axios'
 import { execSync } from 'child_process'
 import { IncomingWebhook } from '@slack/webhook'
 import Logger from '@mojaloop/central-services-logger'
-import { CloudWatch, AWSError } from 'aws-sdk'
 
 import makeRancherScaler, { RancherScaler } from './domain/RancherScaler'
 import makeRancherRequests from './lib/RancherRequests'
@@ -19,6 +18,7 @@ import makeSlack, { NoMessager, Messager } from './lib/Slack'
 import makeScalerConfig from './lib/ScalerConfig'
 import configValidator from './lib/ConfigValidator'
 import makeTemplater, { Templater } from './lib/Templater'
+import sleep from 'lib/Sleep'
 
 async function runGlobals(hooks: Array<AnyHookType>, hooksHandler: HooksHandler, scale: 'UP' | 'DOWN', config: RancherScalerConfigType) {
   try {
@@ -59,9 +59,6 @@ async function main() {
     method,
     pathToConfig,
     slackWebhookUrl,
-    // awsAccessKeyId,
-    // awsSecretAccessKey,
-    awsRegion,
   } = getEnvConfig()
 
   /* Init all dependencies */
@@ -83,7 +80,7 @@ async function main() {
   const exec = makeExec(fs, unzipper, execSync, Logger);
 
   /* Inject dependencies into Domain */
-  const bootstrapper = makeRancherBootstrapper(rancherRequests, config, wrapWithRetries, exec, Logger);
+  const bootstrapper = makeRancherBootstrapper(rancherRequests, config, wrapWithRetries, sleep, exec, Logger);
   const hooksHandler = makeHooksHandler(Logger, slack, bootstrapper)
   const scaler = makeRancherScaler(rancherRequests, Logger, hooksHandler, config);
 
