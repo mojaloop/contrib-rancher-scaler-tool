@@ -61,6 +61,73 @@ executors:
 # A map of CircleCI jobs
 ##
 jobs:
+  test-setup:
+    executor: default-docker
+    steps:
+      - checkout
+      - run:
+          name: Install general dependencies
+          command: *defaults_Dependencies
+      - run:
+          name: Access npm folder as root
+          command: cd $(npm root -g)/npm
+      - run:
+          name: Update NPM install
+          command: npm ci
+      - run:
+          name: Delete build dependencies
+          command: apk del build-dependencies
+      - save_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
+
+  test-unit:
+    executor: default-docker
+    steps:
+      - checkout
+      - run:
+          name: Install general dependencies
+          command: *defaults_Dependencies
+      - restore_cache:
+          keys:
+          - dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: Execute unit tests
+          command: npm run test:unit
+      - run:
+          name: prepare test/results
+          command: |
+            mkdir -p test/results
+            mv junit.xml test/results
+      - store_artifacts:
+          path: ./test/results
+          prefix: test
+      - store_test_results:
+          path: ./test/results
+
+  test-coverage:
+    executor: default-docker
+    steps:
+      - checkout
+      - run:
+          name: Install general dependencies
+          command: *defaults_Dependencies
+      - run:
+          name: Install AWS CLI dependencies
+          command: *defaults_awsCliDependencies
+      - restore_cache:
+          keys:
+            - dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: Execute code coverage check
+          command: npm run test:coverage-check
+      - store_artifacts:
+          path: coverage
+          prefix: test
+      - store_test_results:
+          path: coverage
+
   build-local:
     executor: default-machine
     steps:
@@ -113,8 +180,8 @@ jobs:
       # - slack/status:
       #     webhook: "$SLACK_WEBHOOK_ANNOUNCEMENT"
       #     success_message: '*"${CIRCLE_PROJECT_REPONAME}"* - Release \`"${CIRCLE_TAG}"\` \nhttps://github.com/mojaloop/"${CIRCLE_PROJECT_REPONAME}"/releases/tag/"${CIRCLE_TAG}"'
-      
-  
+
+
 ##
 # Workflows
 #
@@ -122,18 +189,37 @@ jobs:
 ##
 workflows:
   version: 2
-  build_and_test:
+
+  build_test_branch:
     jobs:
+      - test-setup:
+          context: org-global
+
+      - test-unit:
+          context: org-global
+          requires:
+            - test-setup
+
+      - test-coverage:
+          context: org-global
+          requires:
+            - test-setup
+
       - build-local:
           context: org-global
-    
+
+      # TODO: move this to tag only
       - publish:
           context: org-global
           requires:
             - build-local
+            - test-unit
+            - test-coverage
           # filters:
           #   tags:
           #     only: /v[0-9]+(\.[0-9]+)*(\-snapshot)?(\-hotfix(\.[0-9]+))?/
           #   branches:
           #     ignore:
           #       - /.*/
+
+  # TODO: add a build and publish
