@@ -65,10 +65,10 @@ jobs:
   test-setup:
     executor: default-docker
     steps:
-      - checkout
       - run:
           name: Install general dependencies
           command: *defaults_Dependencies
+      - checkout
       - restore_cache:
           keys:
             - dependency-cache-{{ checksum "package-lock.json" }}
@@ -89,10 +89,10 @@ jobs:
   test-unit:
     executor: default-docker
     steps:
-      - checkout
       - run:
           name: Install general dependencies
           command: *defaults_Dependencies
+      - checkout
       - restore_cache:
           keys:
           - dependency-cache-{{ checksum "package-lock.json" }}
@@ -113,10 +113,10 @@ jobs:
   test-coverage:
     executor: default-docker
     steps:
-      - checkout
       - run:
           name: Install general dependencies
           command: *defaults_Dependencies
+      - checkout
       - run:
           name: Install AWS CLI dependencies
           command: *defaults_awsCliDependencies
@@ -152,10 +152,10 @@ jobs:
   release:
     executor: default-docker
     steps:
-      - run:
-        name: Install general dependencies
-        command: *defaults_Dependencies
       - checkout
+      - run:
+          name: Install general dependencies
+          command: *defaults_Dependencies
       - restore_cache:
           keys:
           - dependency-cache-{{ checksum "package-lock.json" }}
@@ -178,6 +178,10 @@ jobs:
   publish:
     executor: default-machine
     steps:
+      - run:
+          name: Install git
+          command: |
+            apt-get install -y git
       - checkout
       - attach_workspace:
           at: /tmp
