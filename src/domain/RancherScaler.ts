@@ -33,6 +33,10 @@ export class RancherScaler {
 
           return this.hooksHandler.runHooks(node.hooks && node.hooks.onFailure || [])
         })
+        // handle an error hook failure
+        .catch(err => {
+          errors.push(err)
+        })
     }, Promise.resolve())
 
     if (errors.length > 0) {
@@ -59,6 +63,10 @@ export class RancherScaler {
           errors.push(err)
           // Run the individual failure hooks
           return this.hooksHandler.runHooks(node.hooks && node.hooks.onFailure || [])
+        })
+        // handle an error hook failure
+        .catch(err => {
+          errors.push(err)
         })
     }, Promise.resolve())
 

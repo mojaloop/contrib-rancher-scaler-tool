@@ -19,6 +19,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "test:unit": "jest --testMatch '**/src/**/*.unit.ts'",
     "test:service": "jest --testMatch '**/src/**/*.service.ts'",
+    "test:coverage": "jest --testMatch '**/src/**/*.unit.ts' --coverage --coverageThreshold='{}'",
+    "test:coverage-check": "jest --testMatch '**/src/**/*.unit.ts' --coverage",
     "lint": "eslint ./src/**/*.ts *.js",
     "build": "tsc",
     "watch": "tsc -w"
