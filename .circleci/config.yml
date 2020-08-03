@@ -159,14 +159,14 @@ jobs:
       - run:
           name: configure git
           command: |
-            git config user.email "username@mydomain.com"
-            git config user.name "My Name"
+            git config user.email "mojaloop@circleci.com"
+            git config user.name "CircleCI"
       - run:
           name: Generate changelog and bump package version
           command: npm run release
       - run:
-          name: Push the release tags and
-          command: git push --follow-tags origin ${CIRCLE_BRANCH}
+          name: Push the release
+          command: git push --follow-tags origin feature/unit-tests
 
   # TODO: run on only tags
   publish:
