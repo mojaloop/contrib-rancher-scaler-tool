@@ -160,11 +160,12 @@ jobs:
           keys:
           - dependency-cache-{{ checksum "package-lock.json" }}
       - run:
-          name: configure git
+          name: Configure git + ssh
           command: |
             git config user.email "mojaloop@circleci.com"
             git config user.name "circleci"
             git checkout ${CIRCLE_BRANCH}
+            mkdir -p ~/.ssh
             ssh-keyscan -p 443 ssh.github.com >> ~/.ssh/known_hosts
             ssh-keyscan github.com >> ~/.ssh/known_hosts
       - run:
@@ -228,6 +229,7 @@ workflows:
       - test-setup:
           context: org-global
 
+      # todo: reenable
       # - test-unit:
       #     context: org-global
       #     requires:
@@ -241,6 +243,7 @@ workflows:
       - build-local:
           context: org-global
 
+      # New commits to master release automatically
       - release:
           context: org-global
           requires:
@@ -258,14 +261,14 @@ workflows:
           context: org-global
           requires:
             - build-local
-            # - test-unit
-            # - test-coverage
+            - test-unit
+            - test-coverage
           # TODO: tag only!
-          # filters:
-          #   tags:
-          #     only: /v[0-9]+(\.[0-9]+)*(\-snapshot)?(\-hotfix(\.[0-9]+))?/
-          #   branches:
-          #     ignore:
-          #       - /.*/
+          filters:
+            tags:
+              only: /v[0-9]+(\.[0-9]+)*(\-snapshot)?(\-hotfix(\.[0-9]+))?/
+            branches:
+              ignore:
+                - /.*/
 
   # TODO: add a build and publish
