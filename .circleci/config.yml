@@ -217,19 +217,32 @@ workflows:
     jobs:
       - build-local:
           context: org-global
+          filters:
+            tags:
+              only: /.*/
 
       - test-setup:
           context: org-global
+          filters:
+            tags:
+              only: /.*/
 
       - test-unit:
-          context: org-global
           requires:
             - test-setup
+          context: org-global
+          filters:
+            tags:
+              only: /.*/
 
       - test-coverage:
-          context: org-global
           requires:
             - test-setup
+          context: org-global
+          filters:
+            tags:
+              only: /.*/
+
 
       # New commits to master release automatically
       - release:
