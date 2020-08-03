@@ -145,6 +145,30 @@ jobs:
           paths:
             - ./docker-image.tar
 
+  # TODO: run on only master
+  release:
+    executor: default-docker
+    steps:
+      - checkout
+      - run:
+          name: Install general dependencies
+          command: *defaults_Dependencies
+      - restore_cache:
+          keys:
+          - dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: configure git
+          command: |
+            git config user.email "username@mydomain.com"
+            git config user.name "My Name"
+      - run:
+          name: Generate changelog and bump package version
+          command: npm run release
+      - run:
+          name: Push the release tags and
+          command: git push --follow-tags origin ${CIRCLE_BRANCH}
+
+  # TODO: run on only tags
   publish:
     executor: default-machine
     steps:
@@ -170,13 +194,16 @@ jobs:
       #       docker push $DOCKER_ORG/$CIRCLE_PROJECT_REPONAME:$CIRCLE_TAG
       #       echo "Publishing $DOCKER_ORG/$CIRCLE_PROJECT_REPONAME:$RELEASE_TAG"
       #       docker push $DOCKER_ORG/$CIRCLE_PROJECT_REPONAME:$RELEASE_TAG
-      - run:
-          name: Publish Docker image latest tag to Docker Hub
-          command: |
-            echo "Publishing $DOCKER_ORG/$CIRCLE_PROJECT_REPONAME:latest"
-            docker push $DOCKER_ORG/$CIRCLE_PROJECT_REPONAME:latest
-            # echo "Publishing $DOCKER_ORG/$CIRCLE_PROJECT_REPONAME:$RELEASE_TAG"
-            # docker push $DOCKER_ORG/$CIRCLE_PROJECT_REPONAME:$RELEASE_TAG
+
+      # TODO: reenable!
+      # - run:
+      #     name: Publish Docker image latest tag to Docker Hub
+      #     command: |
+      #       echo "Publishing $DOCKER_ORG/$CIRCLE_PROJECT_REPONAME:latest"
+      #       docker push $DOCKER_ORG/$CIRCLE_PROJECT_REPONAME:latest
+      #       # echo "Publishing $DOCKER_ORG/$CIRCLE_PROJECT_REPONAME:$RELEASE_TAG"
+      #       # docker push $DOCKER_ORG/$CIRCLE_PROJECT_REPONAME:$RELEASE_TAG
+
       # - slack/status:
       #     webhook: "$SLACK_WEBHOOK_ANNOUNCEMENT"
       #     success_message: '*"${CIRCLE_PROJECT_REPONAME}"* - Release \`"${CIRCLE_TAG}"\` \nhttps://github.com/mojaloop/"${CIRCLE_PROJECT_REPONAME}"/releases/tag/"${CIRCLE_TAG}"'
@@ -208,13 +235,25 @@ workflows:
       - build-local:
           context: org-global
 
-      # TODO: move this to tag only
+      - release:
+          context: org-global
+          requires:
+            - build-local
+            - test-unit
+            - test-coverage
+          # TODO: make master only
+          # filters:
+          #   branches:
+          #     only:
+          #       - master
+
       - publish:
           context: org-global
           requires:
             - build-local
             - test-unit
             - test-coverage
+          # TODO: tag only!
           # filters:
           #   tags:
           #     only: /v[0-9]+(\.[0-9]+)*(\-snapshot)?(\-hotfix(\.[0-9]+))?/
