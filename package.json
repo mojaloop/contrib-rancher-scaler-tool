@@ -1,6 +1,6 @@
 {
   "name": "rancher-scaler",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "A simple cli tool to scale rancher clusters",
   "main": "index.ts",
   "scripts": {
