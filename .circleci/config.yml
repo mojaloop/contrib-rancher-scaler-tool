@@ -175,7 +175,7 @@ jobs:
           name: Push the release
           command: git push --follow-tags origin ${CIRCLE_BRANCH}
 
-  # TODO: run on only tags
+  # TODO: modify git release message to be changelog
   publish:
     executor: default-machine
     steps:
@@ -191,30 +191,19 @@ jobs:
       - run:
           name: Re-tag pre built image
           command: |
-            # docker tag $DOCKER_ORG/$CIRCLE_PROJECT_REPONAME:$CIRCLE_TAG $DOCKER_ORG/$CIRCLE_PROJECT_REPONAME:$RELEASE_TAG
-            # TODO: configure this better...
             docker tag $DOCKER_ORG/$CIRCLE_PROJECT_REPONAME:local $DOCKER_ORG/$CIRCLE_PROJECT_REPONAME:latest
-      # - run:
-      #     name: Publish Docker image $CIRCLE_TAG & Latest tag to Docker Hub
-      #     command: |
-      #       echo "Publishing $DOCKER_ORG/$CIRCLE_PROJECT_REPONAME:$CIRCLE_TAG"
-      #       docker push $DOCKER_ORG/$CIRCLE_PROJECT_REPONAME:$CIRCLE_TAG
-      #       echo "Publishing $DOCKER_ORG/$CIRCLE_PROJECT_REPONAME:$RELEASE_TAG"
-      #       docker push $DOCKER_ORG/$CIRCLE_PROJECT_REPONAME:$RELEASE_TAG
-
-      # TODO: reenable!
-      # - run:
-      #     name: Publish Docker image latest tag to Docker Hub
-      #     command: |
-      #       echo "Publishing $DOCKER_ORG/$CIRCLE_PROJECT_REPONAME:latest"
-      #       docker push $DOCKER_ORG/$CIRCLE_PROJECT_REPONAME:latest
-      #       # echo "Publishing $DOCKER_ORG/$CIRCLE_PROJECT_REPONAME:$RELEASE_TAG"
-      #       # docker push $DOCKER_ORG/$CIRCLE_PROJECT_REPONAME:$RELEASE_TAG
+            docker tag $DOCKER_ORG/$CIRCLE_PROJECT_REPONAME:local $DOCKER_ORG/$CIRCLE_PROJECT_REPONAME:${CIRCLE_TAG}
+      - run:
+          name: Publish Docker image latest tag to Docker Hub
+          command: |
+            echo "Publishing $DOCKER_ORG/$CIRCLE_PROJECT_REPONAME:latest"
+            docker push $DOCKER_ORG/$CIRCLE_PROJECT_REPONAME:latest
+            echo "Publishing $DOCKER_ORG/$CIRCLE_PROJECT_REPONAME:${CIRCLE_TAG}"
+            docker push $DOCKER_ORG/$CIRCLE_PROJECT_REPONAME:${CIRCLE_TAG}
 
       # - slack/status:
       #     webhook: "$SLACK_WEBHOOK_ANNOUNCEMENT"
       #     success_message: '*"${CIRCLE_PROJECT_REPONAME}"* - Release \`"${CIRCLE_TAG}"\` \nhttps://github.com/mojaloop/"${CIRCLE_PROJECT_REPONAME}"/releases/tag/"${CIRCLE_TAG}"'
-
 
 ##
 # Workflows
@@ -224,52 +213,61 @@ jobs:
 workflows:
   version: 2
 
-  build_test_branch:
+  commit:
     jobs:
-      - test-setup:
-          context: org-global
+      - build-local
+      - test-setup
+      - test-unit:
+          requires:
+            - test-setup
+      - test-coverage:
+          requires:
+            - test-setup
 
-      # todo: reenable
-      # - test-unit:
-      #     context: org-global
-      #     requires:
-      #       - test-setup
-
-      # - test-coverage:
-      #     context: org-global
-      #     requires:
-      #       - test-setup
-
+  release:
+    jobs:
       - build-local:
-          context: org-global
-
+          filters:
+            branches:
+              only:
+                - master
+      - test-setup
+      - test-unit:
+          requires:
+            - test-setup
+      - test-coverage:
+          requires:
+            - test-setup
       # New commits to master release automatically
       - release:
           context: org-global
           requires:
-            - test-setup
             - build-local
-            # - test-unit
-            # - test-coverage
-          # TODO: make master only
-          # filters:
-          #   branches:
-          #     only:
-          #       - master
+            - test-unit
+            - test-coverage
 
-      - publish:
-          context: org-global
-          requires:
-            - build-local
-            # TODO: reenable
-            # - test-unit
-            # - test-coverage
-          # TODO: tag only!
+  publish:
+    jobs:
+      - build-local:
           filters:
             tags:
               only: /v[0-9]+(\.[0-9]+)*(\-snapshot)?(\-hotfix(\.[0-9]+))?/
             branches:
               ignore:
                 - /.*/
+      - test-setup
+      - test-unit:
+          requires:
+            - test-setup
+      - test-coverage:
+          requires:
+            - test-setup
 
-  # TODO: add a build and publish
+      # New Tags are built and deployed as docker artifacts
+      - publish:
+          context: org-global
+          requires:
+            - build-local
+            - test-unit
+            - test-coverage
+
