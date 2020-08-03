@@ -315,3 +315,8 @@ curl -u "${CATTLE_ACCESS_KEY}:${CATTLE_SECRET_KEY}" \
 1. Properly compile ts in `docker build` (we are currently using `ts-node`)
 1. Add tests to ci/cd pipeline
 1. Add optional parallel scaling option
+
+# TODO
+- Add support for renaming rancher nodes based on the host names (i.e. not showing the IP Address in the redis console)
+- Add support for applying taints
+- Add support for applying labels
