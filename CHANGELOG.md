@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.13](https://github.com/mojaloop/rancher-scaler/compare/v0.1.12...v0.1.13) (2020-08-04)
+
+
+### Features
+
+* **ci:** Replace `GITHUB_RELEASE_TOKEN` with `GITHUB_TOKEN` in ci/cd ([#7](https://github.com/mojaloop/rancher-scaler/issues/7)) ([8ce5ad8](https://github.com/mojaloop/rancher-scaler/commit/8ce5ad8335696f34315d58bd2f4077bce46ce0cc))
+
 ### [0.1.12](https://github.com/mojaloop/rancher-scaler/compare/v0.1.11...v0.1.12) (2020-08-03)
 
 ### [0.1.11](https://github.com/mojaloop/rancher-scaler/compare/v0.1.10...v0.1.11) (2020-08-03)
