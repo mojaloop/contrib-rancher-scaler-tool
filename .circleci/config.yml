@@ -162,8 +162,8 @@ jobs:
       - run:
           name: Configure git + ssh
           command: |
-            git config user.email "mojaloop@circleci.com"
-            git config user.name "circleci"
+            git config user.email ${GIT_CI_EMAIL}
+            git config user.name ${GIT_CI_USER}
             git checkout ${CIRCLE_BRANCH}
             mkdir -p ~/.ssh
             ssh-keyscan -p 443 ssh.github.com >> ~/.ssh/known_hosts
@@ -214,10 +214,7 @@ jobs:
           command: |
             echo "Changes are: ${RELEASE_CHANGES}"
       - github-release/create:
-          # TODO: GITHUB_RELEASE_TOKEN is a personal access token for Lewis!
-          # This is less than ideal, but there are currently no ways to give
-          # more permissions to the default CircleCI ${GITHUB_TOKEN}!
-          github-token-variable: ${GITHUB_RELEASE_TOKEN}
+          github-token-variable: ${GITHUB_TOKEN}
           tag: ${CIRCLE_TAG}
           title: ${CIRCLE_TAG} Release
           description: ${RELEASE_CHANGES}
